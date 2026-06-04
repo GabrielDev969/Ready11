@@ -34,6 +34,7 @@ DATABASE_ROUTERS = (
 
 SHARED_APPS = (
     'django_tenants',  # OBRIGATÓRIO: Deve ser a primeira aplicação
+    'widget_tweaks',
     'tenants',
     'users',
     
@@ -65,6 +66,10 @@ AUTH_USER_MODEL = 'users.CustomUser'
 TENANT_MODEL = "tenants.Workspace" # app.Model
 TENANT_DOMAIN_MODEL = "tenants.Domain"
 
+# Joga os e-mails disparados pelo Django direto no terminal (console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'nao-responda@seusistema.com'
+
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -82,7 +87,7 @@ ROOT_URLCONF = 'Ready11.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,3 +156,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
