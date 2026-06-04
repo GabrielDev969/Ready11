@@ -28,19 +28,42 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 
-# Application definition
-
-INSTALLED_APPS = [
+SHARED_APPS = (
+    'django_tenants',  # OBRIGATÓRIO: Deve ser a primeira aplicação
+    'tenants',         # O app que acabamos de criar
+    
+    # Apps nativos do Django que precisam ser globais
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+    
+    # Futuros apps globais (ex: 'users', 'invites') entrarão aqui
+)
+
+TENANT_APPS = (
+    # Apps nativos do Django opcionais para os tenants
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    
+    # Seus futuros apps de negócio entrarão aqui (ex: 'core', 'vendas')
+)
+
+# Application definition
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "tenants.Workspace" # app.Model
+TENANT_DOMAIN_MODEL = "tenants.Domain"
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,6 +103,7 @@ if DATABASE_URL:
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
+            engine='django_tenants.postgresql_backend',
             conn_max_age=600,
             conn_health_checks=True,
         )
@@ -88,10 +112,10 @@ else:
     # Configuração de Desenvolvimento (Seu Docker Local)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'meu_banco_django',
-            'USER': 'meu_usuario',
-            'PASSWORD': 'minha_senha_segura',
+            'ENGINE': 'django_tenants.postgresql_backend',
+            'NAME': 'ready_db',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
             'HOST': '127.0.0.1',
             'PORT': '5432',
         }
