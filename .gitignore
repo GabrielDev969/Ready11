@@ -1,0 +1,56 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyo
+
+# =========================
+# Ambientes Virtuais
+# =========================
+venv/
+.venv/
+env/
+
+# =========================
+# Configurações e Segredos
+# =========================
+# Nunca comite suas variáveis de ambiente reais
+.env
+.env.local
+
+# =========================
+# Django
+# =========================
+# Ignora o banco SQLite local (se você voltar a usá-lo para testes)
+db.sqlite3
+db.sqlite3-journal
+
+# Ignora os arquivos estáticos coletados e uploads de usuários locais
+staticfiles/
+media/
+*.log
+
+# =========================
+# Docker
+# =========================
+# Ignora a pasta onde o banco do Postgres salva os dados locais
+postgres_data/
+
+# =========================
+# Sistema Operacional (macOS)
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# =========================
+# IDEs (VS Code, PyCharm, etc)
+# =========================
+.vscode/
+.idea/
+*.swp
