@@ -12,11 +12,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 import dj_database_url
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -27,6 +28,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sua-chave-local-aqui'
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+
+# Domínio base para a criação dos tenants
+# Em produção, você mudará isso para 'suaempresa.com.br' ou usará variáveis de ambiente (.env)
+TENANT_BASE_DOMAIN = os.environ.get('PUBLIC_DOMAIN', 'localhost')
+SESSION_COOKIE_DOMAIN = f".{TENANT_BASE_DOMAIN}"
 
 DATABASE_ROUTERS = (
     'django_tenants.routers.TenantSyncRouter',

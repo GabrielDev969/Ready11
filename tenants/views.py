@@ -3,6 +3,11 @@ from django.contrib.auth import get_user_model, login
 from django.utils.text import slugify
 from django.db import transaction
 from django.contrib import messages
+from .decorators import tenant_permission_required
+from django.conf import settings
+
+# Importe provisório para evitar erro no retorno
+from django.http import HttpResponse
 
 from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus
 from .forms import GenesisSetupForm
@@ -42,8 +47,8 @@ def genesis_setup_view(request, token):
 
                     # 3. Cria o Schema físico da Empresa no PostgreSQL
                     # Substitui hifens por underlines para evitar problemas de sintaxe no Postgres
-                    schema_name = slugify(company_name).replace('-', '_') 
-                    
+                    schema_name = slugify(company_name).replace('-', '_')
+
                     # Garante que o schema seja único (adiciona um sufixo se necessário)
                     base_schema_name = schema_name
                     counter = 1
@@ -58,7 +63,7 @@ def genesis_setup_view(request, token):
 
                     # 4. Cria o Domínio Virtual
                     # No futuro, 'localhost' será substituído pela variável do seu domínio de produção
-                    domain_name = f"{schema_name}.localhost" 
+                    domain_name = f"{slugify(company_name)}.{settings.TENANT_BASE_DOMAIN}"
                     Domain.objects.create(
                         domain=domain_name,
                         tenant=workspace,
@@ -91,5 +96,13 @@ def genesis_setup_view(request, token):
 
     return render(request, 'tenants/genesis_setup.html', {'form': form, 'invite': invite})
 
-# Importe provisório para evitar erro no retorno
-from django.http import HttpResponse
+@tenant_permission_required() # Usa as regras de segurança padrão (pertencer ao tenant)
+def tenant_dashboard_view(request):
+    # O django-tenants já sabe qual é a empresa pela URL e injeta o objeto aqui!
+    workspace = request.tenant
+    
+    context = {
+        'workspace_name': workspace.name,
+    }
+    
+    return render(request, 'tenants/dashboard.html', context)

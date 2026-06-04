@@ -95,7 +95,19 @@ def login_view(request):
                 # Tudo certo! Cria a sessão do usuário
                 login(request, user)
                 
-                # Redireciona para o painel principal (vamos criar uma rota provisória para não dar erro)
+                # Roteamento Inteligente: Busca o Workspace Padrão do usuário
+                if user.default_workspace:
+                    # Busca o domínio registrado para esse workspace
+                    dominio_principal = user.default_workspace.domains.filter(is_primary=True).first()
+                    if dominio_principal:
+                        # Captura a porta atual para não quebrar o desenvolvimento local (:8000)
+                        host_completo = request.get_host()
+                        porta = f":{host_completo.split(':')[1]}" if ":" in host_completo else ""
+                        
+                        # Redireciona fisicamente o navegador para o subdomínio correto
+                        return redirect(f"http://{dominio_principal.domain}{porta}/dashboard/")
+                
+                # Se por algum motivo ele não tiver workspace padrão (ex: funcionário recém-convidado)
                 return redirect('dashboard_placeholder')
             else:
                 messages.error(request, "E-mail ou senha incorretos.")
