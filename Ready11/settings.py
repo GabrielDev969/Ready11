@@ -34,7 +34,8 @@ DATABASE_ROUTERS = (
 
 SHARED_APPS = (
     'django_tenants',  # OBRIGATÓRIO: Deve ser a primeira aplicação
-    'tenants',         # O app que acabamos de criar
+    'tenants',
+    'users',
     
     # Apps nativos do Django que precisam ser globais
     'django.contrib.admin',
@@ -58,6 +59,8 @@ TENANT_APPS = (
 
 # Application definition
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 TENANT_MODEL = "tenants.Workspace" # app.Model
 TENANT_DOMAIN_MODEL = "tenants.Domain"
@@ -126,16 +129,7 @@ else:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'users.validators.StrictPasswordValidator',
     },
 ]
 
