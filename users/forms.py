@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.password_validation import validate_password
 from .models import CustomUser
+from django.contrib.auth.forms import AuthenticationForm
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(
@@ -25,3 +26,14 @@ class RegisterForm(forms.ModelForm):
         if password and confirm_password and password != confirm_password:
             self.add_error('confirm_password', "As senhas não coincidem.")
         return cleaned_data
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        label='E-mail',
+        widget=forms.EmailInput(attrs={'autofocus': True})
+    )
+    password = forms.CharField(
+        label='Senha',
+        strip=False,
+        widget=forms.PasswordInput,
+    )
