@@ -54,3 +54,5 @@ postgres_data/
 .vscode/
 .idea/
 *.swp
+
+node_modules
