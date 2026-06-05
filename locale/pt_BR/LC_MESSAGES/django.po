@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 10:32-0300\n"
+"POT-Creation-Date: 2026-06-05 10:48-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,24 +16,24 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:229
+#: Ready11/settings.py:230
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:230
+#: Ready11/settings.py:231
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
-#: templates/base.html:24
+#: templates/base.html:25
 msgid "Log out"
 msgstr "Sair"
 
-#: templates/base.html:26 templates/users/login.html:4
+#: templates/base.html:27 templates/users/login.html:4
 #: templates/users/login.html:39 templates/users/register.html:58
 msgid "Sign in"
 msgstr "Entrar"
 
-#: templates/base.html:41
+#: templates/base.html:42
 msgid "Ready11 — base project for B2B SaaS systems."
 msgstr "Ready11 — projeto base para sistemas SaaS B2B."
 
@@ -214,6 +214,29 @@ msgstr ""
 #: templates/partials/language_switcher.html:7
 msgid "Language"
 msgstr "Idioma"
+
+#: templates/partials/workspace_switcher.html:9
+#| msgid "Workspace created"
+msgid "Workspaces"
+msgstr "Workspaces"
+
+#: templates/partials/workspace_switcher.html:16
+#| msgid "Start your workspace"
+msgid "Your workspaces"
+msgstr "Seus workspaces"
+
+#: templates/partials/workspace_switcher.html:22
+msgid "current"
+msgstr "atual"
+
+#: templates/partials/workspace_switcher.html:27 users/models.py:28
+msgid "Default workspace"
+msgstr "Workspace padrão"
+
+#: templates/partials/workspace_switcher.html:32
+#| msgid "System default"
+msgid "Set as default"
+msgstr "Definir como padrão"
 
 #: templates/tenants/accept_invite.html:4
 msgid "Accept invitation"
@@ -550,12 +573,10 @@ msgstr ""
 "acessar o sistema."
 
 #: tenants/decorators.py:30
-#| msgid "You don't have permission to invite new members."
 msgid "You don't have access to this environment."
 msgstr "Você não tem acesso a este ambiente."
 
 #: tenants/decorators.py:37
-#| msgid "You don't have permission to invite new members."
 msgid "You don't have permission to perform this action."
 msgstr "Você não tem permissão para realizar esta ação."
 
@@ -698,10 +719,6 @@ msgstr "Ativo"
 msgid "Email verified"
 msgstr "E-mail verificado"
 
-#: users/models.py:28
-msgid "Default workspace"
-msgstr "Workspace padrão"
-
 #: users/validators.py:8
 msgid "The password must be at least 8 characters long."
 msgstr "A senha deve ter no mínimo 8 caracteres."
@@ -730,11 +747,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: users/views.py:55
+#: users/views.py:56
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: users/views.py:56
+#: users/views.py:57
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -749,26 +766,36 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: users/views.py:89
+#: users/views.py:90
 msgid "Email verified successfully!"
 msgstr "E-mail verificado com sucesso!"
 
-#: users/views.py:90
+#: users/views.py:91
 msgid "You can now log in."
 msgstr "Você já pode fazer login."
 
-#: users/views.py:93
+#: users/views.py:94
 msgid "Invalid or expired link."
 msgstr "Link inválido ou expirado."
 
-#: users/views.py:112
+#: users/views.py:113
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: users/views.py:117
+#: users/views.py:118
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: users/views.py:137
+#: users/views.py:138
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
+
+#: users/views.py:164
+#| msgid "Default workspace"
+msgid "Default workspace updated."
+msgstr "Workspace padrão atualizado."
+
+#: users/views.py:166
+#| msgid "You don't have access to this environment."
+msgid "You don't have access to that workspace."
+msgstr "Você não tem acesso a esse workspace."

@@ -10,6 +10,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
+from tenants.models import WorkspaceMembership
 from tenants.utils import effective_workspace, workspace_home_url
 
 User = get_user_model()
@@ -144,4 +145,31 @@ def login_view(request):
 def logout_view(request):
     """Log the user out and return to the public landing page."""
     logout(request)
+    return redirect('landing')
+
+
+def set_default_workspace(request, workspace_id):
+    """Set the user's default workspace (only if they're a member of it)."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method != 'POST':
+        return redirect('landing')
+
+    is_member = WorkspaceMembership.objects.filter(
+        user=request.user, workspace_id=workspace_id
+    ).exists()
+    if is_member:
+        request.user.default_workspace_id = workspace_id
+        request.user.save(update_fields=['default_workspace'])
+        messages.success(request, _("Default workspace updated."))
+    else:
+        messages.error(request, _("You don't have access to that workspace."))
+
+    next_url = request.POST.get('next')
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        return redirect(next_url)
     return redirect('landing')

@@ -20,6 +20,7 @@
             </a>
             <nav class="flex items-center gap-4">
                 {% if user.is_authenticated %}
+                    {% include 'partials/workspace_switcher.html' %}
                     <span class="hidden text-sm text-gray-500 sm:inline">{{ user.email }}</span>
                     <a href="{% url 'logout' %}" class="text-sm font-medium text-gray-700 hover:text-gray-900">{% trans "Log out" %}</a>
                 {% else %}

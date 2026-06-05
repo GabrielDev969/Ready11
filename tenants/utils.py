@@ -43,3 +43,37 @@ def workspace_home_url(request, workspace, path='/home/'):
     host = request.get_host()
     port = f":{host.split(':')[1]}" if ':' in host else ''
     return f"{request.scheme}://{domain.domain}{port}{path}"
+
+
+def user_workspaces(request):
+    """
+    List every workspace the current user belongs to, for the header switcher.
+
+    Each item carries the workspace, its home URL, and flags for the workspace the
+    user is currently viewing and the one set as their default. Returns ``[]`` for
+    anonymous users.
+    """
+    user = getattr(request, 'user', None)
+    if not user or not user.is_authenticated:
+        return []
+
+    current_schema = getattr(getattr(request, 'tenant', None), 'schema_name', 'public')
+
+    memberships = (
+        WorkspaceMembership.objects
+        .filter(user=user)
+        .select_related('workspace', 'role')
+        .order_by('workspace__name')
+    )
+
+    items = []
+    for membership in memberships:
+        workspace = membership.workspace
+        items.append({
+            'workspace': workspace,
+            'url': workspace_home_url(request, workspace),
+            'is_current': workspace.schema_name == current_schema,
+            'is_default': user.default_workspace_id == workspace.id,
+            'role': membership.role.name,
+        })
+    return items
