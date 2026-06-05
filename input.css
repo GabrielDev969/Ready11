@@ -59,3 +59,49 @@
 /* Remove the default disclosure triangle from dropdown summaries. */
 details.ui-dropdown > summary::-webkit-details-marker { display: none; }
 details.ui-dropdown > summary { list-style: none; }
+
+/* ==========================================
+   Real-time notification toasts
+   ========================================== */
+.toast-root {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 92%;
+    max-width: 24rem;
+    pointer-events: none;
+}
+.toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    padding: 0.875rem 1rem;
+    animation: toast-in 0.2s ease;
+}
+.toast-content { flex: 1 1 auto; min-width: 0; cursor: pointer; }
+.toast-title { font-size: 0.875rem; font-weight: 600; color: #111827; }
+.toast-body { margin-top: 0.125rem; font-size: 0.8125rem; color: #4b5563; }
+.toast-close {
+    flex-shrink: 0;
+    border: 0;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 1.125rem;
+    line-height: 1;
+    cursor: pointer;
+}
+.toast-close:hover { color: #4b5563; }
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}

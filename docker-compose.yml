@@ -13,5 +13,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # Channel layer for real-time notifications (Channels). Used in production /
+  # multi-process setups. Local `runserver` falls back to the in-memory layer,
+  # so Redis is optional in plain dev.
+  redis:
+    image: redis:7
+    container_name: ready_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
 volumes:
   postgres_data:

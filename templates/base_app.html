@@ -44,6 +44,8 @@
         </div>
     </div>
 
+    {% if user.is_authenticated %}{% include 'partials/realtime.html' %}{% endif %}
+
     <script>
         function toggleSidebar() {
             if (window.matchMedia('(min-width: 768px)').matches) {

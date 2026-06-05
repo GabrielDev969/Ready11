@@ -15,12 +15,7 @@ python manage.py migrate_schemas --tenant --noinput
 echo "--> Coletando arquivos estáticos..."
 python manage.py collectstatic --noinput
 
-echo "--> Iniciando o servidor Gunicorn..."
-# Executa o Gunicorn substituindo o processo do shell (essencial para o Docker gerenciar os sinais de parada)
-exec gunicorn \
-    --bind 0.0.0.0:8000 \
-    --workers "${GUNICORN_WORKERS:-3}" \
-    --timeout "${GUNICORN_TIMEOUT:-60}" \
-    --access-logfile - \
-    --error-logfile - \
-    Ready11.wsgi:application
+echo "--> Iniciando o servidor Daphne (ASGI: HTTP + WebSocket)..."
+# Daphne serve HTTP e WebSocket (Channels) no mesmo processo. Em produção com
+# múltiplas réplicas, defina REDIS_URL para o channel layer compartilhado.
+exec daphne -b 0.0.0.0 -p 8000 Ready11.asgi:application

@@ -35,6 +35,8 @@
     </footer>
     {% endblock %}
 
+    {% if user.is_authenticated %}{% include 'partials/realtime.html' %}{% endif %}
+
     <script>
         // Close any open dropdown (<details class="ui-dropdown">) when clicking outside.
         document.addEventListener('click', function (e) {

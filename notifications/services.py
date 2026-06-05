@@ -1,6 +1,22 @@
 from .models import Notification, NotificationRead, NotificationType
 
 
+def recent_notifications(user, limit=8):
+    """
+    Return ``(items, unread_count)`` for the current user, where each item has an
+    ``unread`` attribute. Shared by the bell context processor and the live feed.
+    """
+    visible = Notification.objects.visible_to(user).select_related('workspace', 'invite', 'invite__role')
+    read_ids = set(user.notification_reads.values_list('notification_id', flat=True))
+
+    items = list(visible[:limit])
+    for n in items:
+        n.unread = n.id not in read_ids
+
+    unread_count = visible.exclude(reads__user=user).count()
+    return items, unread_count
+
+
 def create_invite_notification(invite):
     """
     If the invited email already has an account, surface the invite as an in-app

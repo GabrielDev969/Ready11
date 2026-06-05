@@ -72,7 +72,8 @@ DATABASE_ROUTERS = (
 )
 
 SHARED_APPS = (
-    'django_tenants',  # MUST be first
+    'daphne',          # ASGI server + enables Channels' runserver (must precede staticfiles)
+    'django_tenants',  # tenant routing
     'widget_tweaks',
     'axes',            # brute-force protection (global access-attempt log)
     'core',            # landing page + healthcheck (public)
@@ -168,6 +169,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Ready11.wsgi.application'
+ASGI_APPLICATION = 'Ready11.asgi.application'
+
+# Channels channel layer: Redis in production, in-memory for local dev.
+# In-memory works for a single process only (fine for `runserver`); production
+# behind multiple workers needs REDIS_URL.
+REDIS_URL = os.environ.get('REDIS_URL')
+if REDIS_URL:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {'hosts': [REDIS_URL]},
+        }
+    }
+else:
+    CHANNEL_LAYERS = {
+        'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'}
+    }
 
 
 # ==========================================

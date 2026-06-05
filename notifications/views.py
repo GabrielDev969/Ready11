@@ -1,12 +1,14 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 
 from tenants.models import InviteStatus, WorkspaceMembership
 from tenants.utils import workspace_home_url
 
-from .models import Notification
-from .services import mark_read, mark_all_read
+from .models import Notification, NotificationType
+from .services import mark_read, mark_all_read, recent_notifications
 
 
 def _require_login(request):
@@ -29,6 +31,35 @@ def notification_list(request):
         'notifications': notifications,
         'has_workspace': WorkspaceMembership.objects.filter(user=request.user).exists(),
     })
+
+
+def notifications_feed(request):
+    """Live feed for the bell: rendered recent items + unread count (JSON)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({'detail': 'auth required'}, status=401)
+
+    recent, unread_count = recent_notifications(request.user)
+    html = render_to_string(
+        'partials/notification_bell_items.html',
+        {'notif_recent': recent},
+        request=request,
+    )
+    return JsonResponse({'unread': unread_count, 'html': html})
+
+
+def notification_detail(request, notification_id):
+    """Show the full content of a notification (non-invite); marks it read."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    notification = get_object_or_404(Notification.objects.visible_to(request.user), id=notification_id)
+
+    # Invites are action-only (Accept/Decline) — no detail page.
+    if notification.notification_type == NotificationType.INVITE:
+        return redirect('notifications')
+
+    mark_read(request.user, notification)
+    return render(request, 'notifications/detail.html', {'notification': notification})
 
 
 def mark_read_view(request, notification_id):

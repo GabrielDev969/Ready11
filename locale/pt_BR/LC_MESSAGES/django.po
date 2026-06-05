@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 15:49-0300\n"
+"POT-Creation-Date: 2026-06-05 16:52-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,16 +16,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:233
+#: Ready11/settings.py:251
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:234
+#: Ready11/settings.py:252
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
 #: notifications/models.py:8
-#| msgid "Send invitation"
 msgid "Invitation"
 msgstr "Convite"
 
@@ -41,18 +40,16 @@ msgstr "Workspace"
 msgid "Personal"
 msgstr "Pessoal"
 
-#: notifications/views.py:66
-#| msgid "This invitation is no longer available"
+#: notifications/views.py:97
 msgid "This invitation is no longer available."
 msgstr "Este convite não está mais disponível."
 
-#: notifications/views.py:83 tenants/views.py:368
+#: notifications/views.py:114 tenants/views.py:368
 #, python-format
 msgid "You have joined %(workspace)s."
 msgstr "Você entrou em %(workspace)s."
 
-#: notifications/views.py:105
-#| msgid "Invitation to %(email)s cancelled."
+#: notifications/views.py:136
 msgid "Invitation declined."
 msgstr "Convite recusado."
 
@@ -238,15 +235,19 @@ msgstr ""
 "Depois abra a aplicação, crie um super admin e envie seu primeiro convite "
 "gênesis pelo admin do Django."
 
+#: templates/notifications/detail.html:10
+#| msgid "No notifications."
+msgid "Back to notifications"
+msgstr "Voltar para notificações"
+
 #: templates/notifications/list.html:4 templates/notifications/list.html:11
 #: templates/partials/notification_bell.html:3
-#: templates/partials/notification_bell.html:13
-#| msgid "Actions"
+#: templates/partials/notification_bell.html:11
 msgid "Notifications"
 msgstr "Notificações"
 
 #: templates/notifications/list.html:16
-#: templates/partials/notification_bell.html:18
+#: templates/partials/notification_bell.html:16
 msgid "Mark all read"
 msgstr "Marcar todas como lidas"
 
@@ -259,7 +260,7 @@ msgstr ""
 "aguarde ser convidado."
 
 #: templates/notifications/list.html:39
-#: templates/partials/notification_bell.html:26
+#: templates/partials/notification_bell_items.html:5
 msgid "No notifications."
 msgstr "Nenhuma notificação."
 
@@ -267,20 +268,17 @@ msgstr "Nenhuma notificação."
 msgid "Change language"
 msgstr "Mudar idioma"
 
-#: templates/partials/notification_bell.html:30
-#| msgid "View team"
+#: templates/partials/notification_bell.html:24
 msgid "View all"
 msgstr "Ver todas"
 
 #: templates/partials/notification_item.html:7
 #, python-format
-#| msgid "You were invited by <strong>%(inviter)s</strong>."
 msgid "You were invited to <strong>%(workspace)s</strong> as %(role)s."
 msgstr ""
 "Você foi convidado(a) para <strong>%(workspace)s</strong> como %(role)s."
 
 #: templates/partials/notification_item.html:13
-#| msgid "Accepted"
 msgid "Accept"
 msgstr "Aceitar"
 
@@ -300,6 +298,14 @@ msgstr "Configurações"
 #: templates/partials/profile_menu.html:27
 msgid "Log out"
 msgstr "Sair"
+
+#: templates/partials/realtime.html:41
+msgid "New notification"
+msgstr "Nova notificação"
+
+#: templates/partials/realtime.html:55
+msgid "Close"
+msgstr "Fechar"
 
 #: templates/partials/sidebar.html:3 templates/partials/sidebar.html:6
 #: templates/tenants/home.html:4
