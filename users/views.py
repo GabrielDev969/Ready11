@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.core.mail import send_mail
 from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, url_has_allowed_host_and_scheme
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
@@ -29,9 +29,10 @@ def register_view(request):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
 
-            # Constrói o link absoluto
-            domain = request.get_host()
-            link = f"http://{domain}{reverse('verify_email', kwargs={'uidb64': uid, 'token': token})}"
+            # Constrói o link absoluto (respeita http/https automaticamente)
+            link = request.build_absolute_uri(
+                reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
+            )
 
             # Monta e envia o e-mail (aparecerá no seu terminal)
             assunto = 'Verifique seu E-mail para acessar o Workspace'
@@ -94,7 +95,17 @@ def login_view(request):
 
                 # Tudo certo! Cria a sessão do usuário
                 login(request, user)
-                
+
+                # Respeita o ?next= (ex.: voltar para aceitar um convite), validado
+                # para impedir open redirect para hosts/esquemas não confiáveis.
+                next_url = request.POST.get('next') or request.GET.get('next')
+                if next_url and url_has_allowed_host_and_scheme(
+                    next_url,
+                    allowed_hosts={request.get_host()},
+                    require_https=request.is_secure(),
+                ):
+                    return redirect(next_url)
+
                 # Roteamento Inteligente: Busca o Workspace Padrão do usuário
                 if user.default_workspace:
                     # Busca o domínio registrado para esse workspace
@@ -103,9 +114,9 @@ def login_view(request):
                         # Captura a porta atual para não quebrar o desenvolvimento local (:8000)
                         host_completo = request.get_host()
                         porta = f":{host_completo.split(':')[1]}" if ":" in host_completo else ""
-                        
-                        # Redireciona fisicamente o navegador para o subdomínio correto
-                        return redirect(f"http://{dominio_principal.domain}{porta}/dashboard/")
+
+                        # Redireciona para o subdomínio correto preservando o esquema (http/https)
+                        return redirect(f"{request.scheme}://{dominio_principal.domain}{porta}/dashboard/")
                 
                 # Se por algum motivo ele não tiver workspace padrão (ex: funcionário recém-convidado)
                 return redirect('dashboard_placeholder')
@@ -115,6 +126,12 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, 'users/login.html', {'form': form})
+
+def logout_view(request):
+    """Log the user out and return to the public landing page."""
+    logout(request)
+    return redirect('landing')
+
 
 # Uma view provisória apenas para termos onde cair após o login
 def dashboard_placeholder(request):

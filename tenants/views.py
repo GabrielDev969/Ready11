@@ -1,5 +1,9 @@
+import logging
+import uuid
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, login
+from django.urls import reverse
 from django.utils.text import slugify
 from django.db import transaction
 from django.contrib import messages
@@ -10,13 +14,50 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 
 # Adicionei o Role aqui nos imports
-from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role 
+from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
+
+# PostgreSQL identifiers (schema names) are limited to 63 bytes.
+MAX_SCHEMA_LENGTH = 63
+RESERVED_SCHEMA_NAMES = {'public', 'pg_catalog', 'information_schema'}
+
+
+def build_schema_name(company_name):
+    """
+    Derive a safe PostgreSQL schema name from a company name.
+
+    Returns a slug (underscores, <=63 chars) or 'workspace' as a safe fallback
+    when the name produces an empty/reserved identifier.
+    """
+    schema = slugify(company_name).replace('-', '_')[:MAX_SCHEMA_LENGTH].strip('_')
+    if not schema or schema in RESERVED_SCHEMA_NAMES or schema.startswith('pg_'):
+        schema = 'workspace'
+    return schema
+
+
+def _send_invite_email(request, invite):
+    """Send (or resend) the team invitation email with an absolute, scheme-aware link."""
+    link = request.build_absolute_uri(f"/aceitar-convite/{invite.token}/")
+    assunto = f'Convite para juntar-se à {invite.workspace.name}'
+    mensagem = (
+        f'Olá!\n\nVocê foi convidado por {request.user.first_name} para participar '
+        f'do workspace {invite.workspace.name} como {invite.role.name}.\n\n'
+        f'Clique no link para acessar (válido por 24 horas):\n\n{link}'
+    )
+    send_mail(assunto, mensagem, settings.DEFAULT_FROM_EMAIL, [invite.email], fail_silently=False)
 
 def genesis_setup_view(request, token):
-    invite = get_object_or_404(WorkspaceInvite, token=token, status=InviteStatus.PENDING)
+    invite = get_object_or_404(WorkspaceInvite, token=token)
+
+    # Lazily mark expired invites, then block any link that is no longer usable
+    # (expired, cancelled or already accepted).
+    if invite.status == InviteStatus.PENDING and invite.is_expired:
+        invite.expire()
+    if not invite.is_usable:
+        return render(request, 'tenants/invite_unavailable.html', status=410)
 
     if request.method == 'POST':
         form = GenesisSetupForm(request.POST)
@@ -42,16 +83,18 @@ def genesis_setup_view(request, token):
                         user.set_password(password)
                         user.save()
 
-                    schema_name = slugify(company_name).replace('-', '_')
+                    schema_name = build_schema_name(company_name)
 
                     base_schema_name = schema_name
+                    base_domain_slug = schema_name.replace('_', '-')
                     counter = 1
                     # Ajuste fino: Se o schema tiver contador, o domínio também deve ter
-                    domain_slug = slugify(company_name)
-                    
+                    domain_slug = base_domain_slug
+
                     while Workspace.objects.filter(schema_name=schema_name).exists():
-                        schema_name = f"{base_schema_name}_{counter}"
-                        domain_slug = f"{slugify(company_name)}-{counter}"
+                        suffix = f"_{counter}"
+                        schema_name = f"{base_schema_name[:MAX_SCHEMA_LENGTH - len(suffix)]}{suffix}"
+                        domain_slug = f"{base_domain_slug}-{counter}"
                         counter += 1
 
                     workspace = Workspace.objects.create(
@@ -100,8 +143,9 @@ def genesis_setup_view(request, token):
                     login(request, user)
                     return HttpResponse(f"<h1>Workspace {workspace.name} criado com sucesso!</h1><p>Seu banco isolado está pronto.</p>")
 
-            except Exception as e:
-                messages.error(request, f"Ocorreu um erro ao provisionar o sistema: {str(e)}")
+            except Exception:
+                logger.exception("Failed to provision workspace from genesis invite %s", invite.pk)
+                messages.error(request, "Something went wrong while provisioning your workspace. Please try again.")
     else:
         form = GenesisSetupForm()
 
@@ -158,47 +202,94 @@ def team_invite_view(request):
             invite.invited_by = request.user
             invite.save()
 
-            domain = request.get_host()
-            link = f"http://{domain}/aceitar-convite/{invite.token}/"
-            
-            assunto = f'Convite para juntar-se à {workspace.name}'
-            mensagem = f'Olá!\n\nVocê foi convidado por {request.user.first_name} para participar do workspace {workspace.name} como {invite.role.name}.\n\nClique no link para acessar:\n\n{link}'
-            
-            send_mail(
-                assunto,
-                mensagem,
-                settings.DEFAULT_FROM_EMAIL,
-                [invite.email],
-                fail_silently=False,
-            )
-            
+            _send_invite_email(request, invite)
             messages.success(request, f"Convite enviado com sucesso para {invite.email}!")
         else:
             messages.error(request, "Erro ao enviar o convite. Verifique os dados.")
-            
+
+    return redirect('team_list')
+
+
+@tenant_permission_required('users.invite')
+def invite_cancel_view(request, invite_id):
+    """Cancel a pending invite (revokes its link)."""
+    if request.method != 'POST':
+        return redirect('team_list')
+
+    invite = get_object_or_404(WorkspaceInvite, id=invite_id, workspace=request.tenant)
+    if invite.status == InviteStatus.PENDING:
+        invite.cancel()
+        messages.success(request, f"Convite para {invite.email} cancelado.")
+    else:
+        messages.error(request, "Este convite não pode ser cancelado.")
+
+    return redirect('team_list')
+
+
+@tenant_permission_required('users.invite')
+def invite_resend_view(request, invite_id):
+    """Resend an invite, generating a brand-new token and a fresh 24h window."""
+    if request.method != 'POST':
+        return redirect('team_list')
+
+    invite = get_object_or_404(WorkspaceInvite, id=invite_id, workspace=request.tenant)
+    if invite.status in (InviteStatus.ACCEPTED, InviteStatus.CANCELLED):
+        messages.error(request, "Este convite não pode ser reenviado.")
+        return redirect('team_list')
+
+    # New token invalidates the previous link; reset status and expiration window.
+    invite.token = uuid.uuid4()
+    invite.status = InviteStatus.PENDING
+    invite.expires_at = default_expiration()
+    invite.save(update_fields=['token', 'status', 'expires_at'])
+
+    _send_invite_email(request, invite)
+    messages.success(request, f"Convite reenviado para {invite.email}.")
     return redirect('team_list')
 
 def accept_invite_view(request, token):
     workspace = request.tenant
-    invite = get_object_or_404(WorkspaceInvite, token=token, workspace=workspace, status=InviteStatus.PENDING)
-    
+    invite = get_object_or_404(WorkspaceInvite, token=token, workspace=workspace)
+
+    # Lazily mark expired invites, then block any link that is no longer usable
+    # (expired, cancelled or already accepted).
+    if invite.status == InviteStatus.PENDING and invite.is_expired:
+        invite.expire()
+    if not invite.is_usable:
+        return render(request, 'tenants/invite_unavailable.html', status=410)
+
     user_exists = User.objects.filter(email=invite.email).exists()
 
     if request.method == 'POST':
         if user_exists:
-            user = User.objects.get(email=invite.email)
+            # Existing accounts must be authenticated as the invited e-mail before
+            # being added to the workspace. Possession of the link is not enough.
+            if not request.user.is_authenticated:
+                messages.info(request, "Please log in to accept this invitation.")
+                return redirect(f"{reverse('login')}?next={request.get_full_path()}")
+
+            if request.user.email.lower() != invite.email.lower():
+                messages.error(request, "This invitation was sent to a different account.")
+                return redirect('login')
+
+            user = request.user
             WorkspaceMembership.objects.get_or_create(
                 workspace=workspace,
                 user=user,
                 # Usa o cargo que foi definido no convite
-                defaults={'role': invite.role} 
+                defaults={'role': invite.role}
             )
+            # First workspace a user joins becomes their default.
+            if user.default_workspace is None:
+                user.default_workspace = workspace
+                user.save(update_fields=['default_workspace'])
+
             invite.status = InviteStatus.ACCEPTED
             invite.save()
-            
+
             messages.success(request, f"Você entrou no workspace {workspace.name} com sucesso!")
-            return redirect('login') 
-            
+            return redirect('tenant_dashboard')
+
         else:
             form = EmployeeSetupForm(request.POST)
             if form.is_valid():
@@ -229,8 +320,9 @@ def accept_invite_view(request, token):
                         login(request, user)
                         return redirect('tenant_dashboard')
 
-                except Exception as e:
-                    messages.error(request, f"Erro ao processar convite: {str(e)}")
+                except Exception:
+                    logger.exception("Failed to accept invite %s for new user", invite.pk)
+                    messages.error(request, "Something went wrong while processing your invitation. Please try again.")
     else:
         form = EmployeeSetupForm() if not user_exists else None
 

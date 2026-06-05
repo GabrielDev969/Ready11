@@ -5,15 +5,15 @@ from django.utils.translation import gettext as _
 class StrictPasswordValidator:
     def validate(self, password, user=None):
         if len(password) < 8:
-            raise ValidationError(_("A senha deve ter no mínimo 8 caracteres."))
+            raise ValidationError(_("The password must be at least 8 characters long."))
         if not re.search(r'[A-Z]', password):
-            raise ValidationError(_("A senha deve conter pelo menos uma letra maiúscula."))
+            raise ValidationError(_("The password must contain at least one uppercase letter."))
         if not re.search(r'[a-z]', password):
-            raise ValidationError(_("A senha deve conter pelo menos uma letra minúscula."))
+            raise ValidationError(_("The password must contain at least one lowercase letter."))
         if not re.search(r'[0-9]', password):
-            raise ValidationError(_("A senha deve conter pelo menos um número."))
+            raise ValidationError(_("The password must contain at least one number."))
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-            raise ValidationError(_("A senha deve conter pelo menos um caractere especial."))
+            raise ValidationError(_("The password must contain at least one special character."))
 
     def get_help_text(self):
-        return _("Sua senha deve ter no mínimo 8 caracteres, contendo maiúsculas, minúsculas, números e símbolos.")
+        return _("Your password must be at least 8 characters long and include uppercase, lowercase, numbers and symbols.")

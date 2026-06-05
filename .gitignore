@@ -33,6 +33,12 @@ staticfiles/
 media/
 *.log
 
+# CSS compilado pelo Tailwind (gerado no build, não versionado)
+static/css/output.css
+
+# Traduções compiladas (geradas via compilemessages)
+*.mo
+
 # =========================
 # Docker
 # =========================

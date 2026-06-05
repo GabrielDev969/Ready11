@@ -6,12 +6,24 @@ class GenesisSetupForm(forms.Form):
     first_name = forms.CharField(label='Nome', max_length=50)
     last_name = forms.CharField(label='Sobrenome', max_length=50)
     company_name = forms.CharField(label='Nome da Empresa', max_length=100)
-    
+
     password = forms.CharField(
         label='Crie sua Senha',
         widget=forms.PasswordInput,
         validators=[validate_password]
     )
+    confirm_password = forms.CharField(
+        label='Confirmar Senha',
+        widget=forms.PasswordInput
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', "As senhas não coincidem.")
+        return cleaned_data
 
 class TeamInviteForm(forms.ModelForm):
     class Meta:
@@ -45,6 +57,18 @@ class EmployeeSetupForm(forms.Form):
         widget=forms.PasswordInput,
         validators=[validate_password]
     )
+    confirm_password = forms.CharField(
+        label='Confirmar Senha',
+        widget=forms.PasswordInput
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        if password and confirm_password and password != confirm_password:
+            self.add_error('confirm_password', "As senhas não coincidem.")
+        return cleaned_data
 
 class RoleForm(forms.ModelForm):
     # Transforma a lista do models em opções para os checkboxes

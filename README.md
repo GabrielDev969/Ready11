@@ -1,8 +1,10 @@
 # Ready11
 
-Projeto Django 6 com banco de dados PostgreSQL, pronto para rodar localmente (com PostgreSQL via Docker) ou totalmente dentro de containers Docker.
+Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenancy isolado por schema** (`django-tenants`), contas globais, controle de acesso por cargos (RBAC), onboarding por convite, proteção contra força bruta (`django-axes`) e **internacionalização** (inglês + português do Brasil, com auto-detecção). Roda localmente (PostgreSQL via Docker) ou totalmente em containers.
 
 Este guia foi escrito para quem **acabou de clonar o repositório** e nunca rodou o projeto antes. Há instruções separadas para **Windows** e **macOS**.
+
+> A página inicial (`/`) é uma landing de apresentação que também resume a instalação.
 
 ---
 
@@ -23,16 +25,20 @@ Este guia foi escrito para quem **acabou de clonar o repositório** e nunca rodo
 
 ## Stack do projeto
 
-| Componente         | Versão / Tecnologia     |
-|--------------------|-------------------------|
-| Linguagem          | Python 3.12             |
-| Framework          | Django 6.0              |
-| Banco de dados     | PostgreSQL 17           |
-| Servidor (prod)    | Gunicorn                |
-| Arquivos estáticos | WhiteNoise              |
-| Container          | Docker / Docker Compose |
+| Componente         | Versão / Tecnologia        |
+|--------------------|----------------------------|
+| Linguagem          | Python 3.12                |
+| Framework          | Django 6.0                 |
+| Multi-tenancy      | django-tenants (por schema)|
+| Banco de dados     | PostgreSQL 17              |
+| Segurança          | django-axes (anti força bruta) |
+| Front-end          | Django Templates + Tailwind CSS v3 |
+| i18n               | en + pt-BR (auto-detecção) |
+| Servidor (prod)    | Gunicorn                   |
+| Arquivos estáticos | WhiteNoise (manifest)      |
+| Container          | Docker / Docker Compose    |
 
-Dependências Python completas em [`requirements.txt`](requirements.txt).
+Dependências Python completas em [`requirements.txt`](requirements.txt) e de front-end em [`package.json`](package.json).
 
 ---
 
@@ -48,6 +54,10 @@ Antes de começar, instale:
 - **Python 3.12** — https://www.python.org/downloads/
   - **Windows:** durante a instalação, marque a opção **"Add Python to PATH"**.
   - **macOS:** recomendado instalar via [Homebrew](https://brew.sh): `brew install python@3.12`
+- **Node.js 18+** (para compilar o CSS com Tailwind) — https://nodejs.org/
+- **GNU gettext** (para compilar as traduções i18n)
+  - **macOS:** `brew install gettext`
+  - **Windows:** já incluso no Git for Windows, ou instale o pacote gettext.
 
 > Para verificar o que já está instalado:
 > ```bash
@@ -108,30 +118,36 @@ docker compose up -d
 python3 -m venv venv
 source venv/bin/activate
 
-# 4. Instale as dependências
+# 4. Instale as dependências Python
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Defina as variáveis de ambiente (válidas para a sessão atual do terminal)
-export DATABASE_URL="postgres://postgres:postgres@127.0.0.1:5432/ready_db"
-export SECRET_KEY="chave-de-desenvolvimento-troque-aqui"
-export DEBUG="True"
-export ALLOWED_HOSTS="127.0.0.1,localhost"
+# 5. Crie seu .env (carregado automaticamente pelo Django)
+cp .env.example .env
+# Para dev local, os valores padrão já funcionam (DEBUG=True usa o Postgres do docker-compose).
 
-# 6. Aplique as migrações do banco
-python manage.py migrate
+# 6. Compile o CSS do Tailwind
+npm install
+npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. (Opcional) Crie um usuário administrador
+# 7. Compile as traduções (en + pt-BR)
+python manage.py compilemessages
+
+# 8. Aplique as migrações do schema público e crie o tenant público
+python manage.py migrate_schemas --shared
+python manage.py setup_public_tenant
+
+# 9. (Opcional) Crie um superusuário para o /admin
 python manage.py createsuperuser
 
-# 8. Suba o servidor de desenvolvimento
+# 10. Suba o servidor de desenvolvimento
 python manage.py runserver
 ```
 
-Acesse: **http://127.0.0.1:8000** • Admin: **http://127.0.0.1:8000/admin**
+Acesse: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
 
 > Para reativar o ambiente virtual numa nova sessão: `source venv/bin/activate`
-> Lembre-se de **redefinir os `export`** acima sempre que abrir um novo terminal (ou coloque-os num script).
+> O arquivo `.env` é carregado automaticamente — não é preciso exportar variáveis manualmente.
 
 ---
 
@@ -150,27 +166,33 @@ docker compose up -d
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 
-# 4. Instale as dependências
+# 4. Instale as dependências Python
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Defina as variáveis de ambiente (válidas para a sessão atual do terminal)
-$env:DATABASE_URL  = "postgres://postgres:postgres@127.0.0.1:5432/ready_db"
-$env:SECRET_KEY    = "chave-de-desenvolvimento-troque-aqui"
-$env:DEBUG         = "True"
-$env:ALLOWED_HOSTS = "127.0.0.1,localhost"
+# 5. Crie seu .env (carregado automaticamente pelo Django)
+Copy-Item .env.example .env
+# Para dev local, os valores padrão já funcionam (DEBUG=True usa o Postgres do docker-compose).
 
-# 6. Aplique as migrações do banco
-python manage.py migrate
+# 6. Compile o CSS do Tailwind
+npm install
+npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. (Opcional) Crie um usuário administrador
+# 7. Compile as traduções (en + pt-BR)
+python manage.py compilemessages
+
+# 8. Aplique as migrações do schema público e crie o tenant público
+python manage.py migrate_schemas --shared
+python manage.py setup_public_tenant
+
+# 9. (Opcional) Crie um superusuário para o /admin
 python manage.py createsuperuser
 
-# 8. Suba o servidor de desenvolvimento
+# 10. Suba o servidor de desenvolvimento
 python manage.py runserver
 ```
 
-Acesse: **http://127.0.0.1:8000** • Admin: **http://127.0.0.1:8000/admin**
+Acesse: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
 
 > **Se o PowerShell bloquear a ativação do venv** com erro *"execution of scripts is disabled"*, rode uma vez:
 > ```powershell
@@ -210,9 +232,24 @@ docker run --rm -p 8000:8000 \
 
 > **Por que `django_postgres_db` no host?** Dentro da rede do Docker, os containers se enxergam pelo nome. O container do banco se chama `django_postgres_db` (definido no `docker-compose.yml`).
 >
-> O [`entrypoint.sh`](entrypoint.sh) roda automaticamente `migrate` e inicia o **Gunicorn** ao subir o container.
+> O [`entrypoint.sh`](entrypoint.sh) roda automaticamente as migrações (`migrate_schemas --shared`), garante o tenant público, coleta os estáticos e inicia o **Gunicorn** ao subir o container. O `Dockerfile` compila o CSS (Tailwind) e as traduções (`compilemessages`) durante o build.
 
 Acesse: **http://127.0.0.1:8000**
+
+---
+
+## Multi-tenancy: criando o primeiro workspace
+
+A entrada é **apenas por convite**. Para criar a primeira empresa (workspace):
+
+1. Crie um superusuário e acesse o `/admin`.
+2. Em **Workspace invites**, crie um convite **sem workspace** (convite "gênesis"). O link aparece no console do servidor.
+3. Abra o link, preencha nome e **Nome da Empresa** — o backend cria um **schema isolado** no PostgreSQL e um subdomínio (`empresa.localhost`).
+4. O dono acessa o painel no subdomínio e convida a equipe em **/equipe/**.
+
+> **Subdomínios em dev:** navegadores resolvem `*.localhost` para `127.0.0.1` automaticamente (ex.: `http://minhaempresa.localhost:8000/dashboard/`). O `ALLOWED_HOSTS` já inclui `.localhost`.
+
+> **Idioma:** o site detecta o idioma do navegador (inglês ou português) e tem um seletor no topo. A fonte das mensagens é em inglês; o pt-BR vem das traduções em `locale/`.
 
 Para criar um superusuário com a aplicação em Docker:
 ```bash
@@ -227,15 +264,19 @@ docker run --rm -it \
 
 ## Comandos úteis do Django
 
-> Rode com o `venv` ativado e as variáveis de ambiente definidas.
+> Rode com o `venv` ativado (o `.env` é carregado automaticamente).
 
-| Comando                            | O que faz                                              |
-|------------------------------------|--------------------------------------------------------|
-| `python manage.py runserver`       | Sobe o servidor de desenvolvimento.                    |
-| `python manage.py migrate`         | Aplica as migrações ao banco.                          |
-| `python manage.py makemigrations`  | Cria novas migrações a partir de mudanças nos models.  |
-| `python manage.py createsuperuser` | Cria um usuário administrador.                         |
-| `python manage.py collectstatic`   | Coleta arquivos estáticos em `staticfiles/`.           |
+| Comando                                      | O que faz                                              |
+|----------------------------------------------|--------------------------------------------------------|
+| `python manage.py runserver`                 | Sobe o servidor de desenvolvimento.                    |
+| `python manage.py migrate_schemas --shared`  | Aplica as migrações no schema público (compartilhado). |
+| `python manage.py migrate_schemas --tenant`  | Aplica as migrações nos schemas de tenants.            |
+| `python manage.py setup_public_tenant`       | Cria o tenant/domínio público (idempotente).           |
+| `python manage.py makemigrations`            | Cria novas migrações a partir de mudanças nos models.  |
+| `python manage.py createsuperuser`           | Cria um usuário administrador.                          |
+| `python manage.py makemessages -l pt_BR`     | Extrai/atualiza as strings para tradução.              |
+| `python manage.py compilemessages`           | Compila as traduções (`.po` → `.mo`).                  |
+| `npx tailwindcss -i input.css -o static/css/output.css` | Recompila o CSS do Tailwind.                |
 | `python manage.py shell`           | Abre um shell Python com o contexto do Django.         |
 
 Comandos úteis do Docker:

@@ -33,14 +33,29 @@
             </div>
             <ul class="divide-y divide-gray-100">
                 {% for invite in pending_invites %}
-                <li class="px-6 py-4 flex items-center justify-between opacity-75">
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">{{ invite.email }}</p>
-                        <p class="text-xs text-gray-500">Enviado em {{ invite.created_at|date:"d/m/Y" }}</p>
+                <li class="px-6 py-4 flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">{{ invite.email }}</p>
+                        <p class="text-xs text-gray-500">
+                            {{ invite.role.name }} ·
+                            {% if invite.is_expired %}Expirado{% else %}Expira em {{ invite.expires_at|date:"d/m/Y H:i" }}{% endif %}
+                        </p>
                     </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                        Pendente
-                    </span>
+                    <div class="flex items-center gap-3 shrink-0">
+                        {% if invite.is_expired %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">Expirado</span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pendente</span>
+                        {% endif %}
+                        <form action="{% url 'invite_resend' invite.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="text-xs font-medium text-gray-700 hover:text-black">Reenviar</button>
+                        </form>
+                        <form action="{% url 'invite_cancel' invite.id %}" method="post" onsubmit="return confirm('Cancelar este convite?');">
+                            {% csrf_token %}
+                            <button type="submit" class="text-xs font-medium text-red-600 hover:text-red-800">Cancelar</button>
+                        </form>
+                    </div>
                 </li>
                 {% endfor %}
             </ul>

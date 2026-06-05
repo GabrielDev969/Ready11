@@ -1,0 +1,258 @@
+# Brazilian Portuguese translation for Ready11.
+# Copyright (C) 2026 Ready11
+# This file is distributed under the same license as the Ready11 package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Ready11 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-05 09:47-0300\n"
+"PO-Revision-Date: 2026-06-05 09:20-0300\n"
+"Last-Translator: Ready11 <no-reply@example.com>\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: Ready11/settings.py:229
+msgid "English"
+msgstr "Inglês"
+
+#: Ready11/settings.py:230
+msgid "Portuguese (Brazil)"
+msgstr "Português (Brasil)"
+
+#: templates/base.html:24
+msgid "Log out"
+msgstr "Sair"
+
+#: templates/base.html:26
+msgid "Sign in"
+msgstr "Entrar"
+
+#: templates/base.html:41
+msgid "Ready11 — base project for B2B SaaS systems."
+msgstr "Ready11 — projeto base para sistemas SaaS B2B."
+
+#: templates/core/landing.html:4
+msgid "Ready11 — B2B SaaS base project"
+msgstr "Ready11 — projeto base para SaaS B2B"
+
+#: templates/core/landing.html:13
+msgid "Open base project · Django + PostgreSQL"
+msgstr "Projeto base aberto · Django + PostgreSQL"
+
+#: templates/core/landing.html:16
+msgid "A production-ready foundation for multi-tenant B2B SaaS"
+msgstr "Uma base pronta para produção para SaaS B2B multi-tenant"
+
+#: templates/core/landing.html:19
+msgid ""
+"Ready11 is a starter codebase with schema-isolated multi-tenancy, global "
+"accounts, role-based access control and an invite-only onboarding flow — so "
+"you can start building your product instead of the plumbing."
+msgstr ""
+"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema, "
+"contas globais, controle de acesso por cargos e onboarding apenas por "
+"convite — para você começar a construir seu produto em vez da infraestrutura."
+
+#: templates/core/landing.html:23
+msgid "Get started"
+msgstr "Começar"
+
+#: templates/core/landing.html:26
+msgid "View on GitHub"
+msgstr "Ver no GitHub"
+
+#: templates/core/landing.html:35
+msgid "What's included"
+msgstr "O que está incluído"
+
+#: templates/core/landing.html:38
+msgid "Schema isolation"
+msgstr "Isolamento por schema"
+
+#: templates/core/landing.html:39
+msgid ""
+"Each customer (Workspace) lives in its own PostgreSQL schema via django-"
+"tenants. No data leaks between clients."
+msgstr ""
+"Cada cliente (Workspace) vive em seu próprio schema PostgreSQL via django-"
+"tenants. Sem vazamento de dados entre clientes."
+
+#: templates/core/landing.html:42
+msgid "Global identity"
+msgstr "Identidade global"
+
+#: templates/core/landing.html:43
+msgid ""
+"A single account works across workspaces, with email verification and a "
+"strict password policy out of the box."
+msgstr ""
+"Uma única conta funciona em vários workspaces, com verificação de e-mail e "
+"política de senha rígida já incluídas."
+
+#: templates/core/landing.html:46
+msgid "Role-based access"
+msgstr "Acesso por cargos"
+
+#: templates/core/landing.html:47
+msgid ""
+"Per-workspace roles and permissions. The same person can be Owner in one "
+"workspace and Viewer in another."
+msgstr ""
+"Cargos e permissões por workspace. A mesma pessoa pode ser Dono em um "
+"workspace e Visualizador em outro."
+
+#: templates/core/landing.html:50
+msgid "Invite-only onboarding"
+msgstr "Onboarding apenas por convite"
+
+#: templates/core/landing.html:51
+msgid ""
+"Controlled signup through expiring invitations, for both new company owners "
+"and internal team members."
+msgstr ""
+"Cadastro controlado por convites com expiração, tanto para novos donos de "
+"empresa quanto para membros internos da equipe."
+
+#: templates/core/landing.html:54
+msgid "Hardened & i18n-ready"
+msgstr "Seguro e pronto para i18n"
+
+#: templates/core/landing.html:55
+msgid ""
+"Security headers, brute-force protection and full internationalization — "
+"English and Brazilian Portuguese included."
+msgstr ""
+"Cabeçalhos de segurança, proteção contra força bruta e internacionalização "
+"completa — inglês e português do Brasil incluídos."
+
+#: templates/core/landing.html:58
+msgid "Docker-first"
+msgstr "Docker em primeiro lugar"
+
+#: templates/core/landing.html:59
+msgid ""
+"Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, ready "
+"to deploy behind a reverse proxy."
+msgstr ""
+"Já vem com Docker, Gunicorn, WhiteNoise e um endpoint de health check, "
+"pronto para implantar atrás de um proxy reverso."
+
+#: templates/core/landing.html:68
+msgid "How it works"
+msgstr "Como funciona"
+
+#: templates/core/landing.html:72
+msgid ""
+"A super admin sends a \"genesis\" invitation to a future workspace owner."
+msgstr ""
+"Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
+
+#: templates/core/landing.html:76
+msgid ""
+"The owner sets their name and company. The backend creates an isolated "
+"database schema on demand."
+msgstr ""
+"O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
+"sob demanda."
+
+#: templates/core/landing.html:80
+msgid ""
+"The owner invites their team and assigns roles. Members access the workspace "
+"on its own subdomain."
+msgstr ""
+"O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
+"em seu próprio subdomínio."
+
+#: templates/core/landing.html:89
+msgid "Install & run"
+msgstr "Instalar e rodar"
+
+#: templates/core/landing.html:90
+msgid ""
+"Requires Python 3.12, Docker and Node. The full guide lives in the README."
+msgstr "Requer Python 3.12, Docker e Node. O guia completo está no README."
+
+#: templates/core/landing.html:91
+msgid "Start the PostgreSQL database"
+msgstr "Suba o banco de dados PostgreSQL"
+
+#: templates/core/landing.html:94
+msgid "Create the virtualenv and install dependencies"
+msgstr "Crie o ambiente virtual e instale as dependências"
+
+#: templates/core/landing.html:98
+msgid "Build the CSS (Tailwind)"
+msgstr "Compile o CSS (Tailwind)"
+
+#: templates/core/landing.html:102
+msgid "Apply migrations and create the public tenant"
+msgstr "Aplique as migrações e crie o tenant público"
+
+#: templates/core/landing.html:106
+msgid "Run the development server"
+msgstr "Rode o servidor de desenvolvimento"
+
+#: templates/core/landing.html:109
+msgid ""
+"Then open the app, create a super admin and send your first genesis "
+"invitation from the Django admin."
+msgstr ""
+"Depois abra a aplicação, crie um super admin e envie seu primeiro convite "
+"gênesis pelo admin do Django."
+
+#: templates/partials/language_switcher.html:7
+msgid "Language"
+msgstr "Idioma"
+
+#: templates/tenants/invite_unavailable.html:4
+msgid "Invitation unavailable"
+msgstr "Convite indisponível"
+
+#: templates/tenants/invite_unavailable.html:13
+msgid "This invitation is no longer available"
+msgstr "Este convite não está mais disponível"
+
+#: templates/tenants/invite_unavailable.html:15
+msgid ""
+"The link may have expired, been cancelled or already been used. Please ask "
+"the person who invited you to send a new invitation."
+msgstr ""
+"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa "
+"que convidou você para enviar um novo convite."
+
+#: templates/tenants/invite_unavailable.html:18
+msgid "Back to home"
+msgstr "Voltar ao início"
+
+#: users/validators.py:8
+msgid "The password must be at least 8 characters long."
+msgstr "A senha deve ter no mínimo 8 caracteres."
+
+#: users/validators.py:10
+msgid "The password must contain at least one uppercase letter."
+msgstr "A senha deve conter pelo menos uma letra maiúscula."
+
+#: users/validators.py:12
+msgid "The password must contain at least one lowercase letter."
+msgstr "A senha deve conter pelo menos uma letra minúscula."
+
+#: users/validators.py:14
+msgid "The password must contain at least one number."
+msgstr "A senha deve conter pelo menos um número."
+
+#: users/validators.py:16
+msgid "The password must contain at least one special character."
+msgstr "A senha deve conter pelo menos um caractere especial."
+
+#: users/validators.py:19
+msgid ""
+"Your password must be at least 8 characters long and include uppercase, "
+"lowercase, numbers and symbols."
+msgstr ""
+"Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
+"números e símbolos."

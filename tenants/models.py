@@ -92,9 +92,11 @@ class InviteStatus(models.TextChoices):
     PENDING = 'pending', 'Pendente'
     ACCEPTED = 'accepted', 'Aceito'
     EXPIRED = 'expired', 'Expirado'
+    CANCELLED = 'cancelled', 'Cancelado'
 
 def default_expiration():
-    return timezone.now() + timedelta(days=3)
+    # Convites valem por 24 horas a partir da criação/reenvio.
+    return timezone.now() + timedelta(hours=24)
 
 class WorkspaceInvite(models.Model):
     email = models.EmailField(verbose_name="E-mail Convidado")
@@ -112,3 +114,25 @@ class WorkspaceInvite(models.Model):
 
     def __str__(self):
         return f"Convite para {self.email} ({self.status})"
+
+    @property
+    def is_expired(self):
+        """True if the invite passed its expiration date."""
+        return timezone.now() > self.expires_at
+
+    @property
+    def is_usable(self):
+        """True only if the invite can still be accepted (pending and not expired)."""
+        return self.status == InviteStatus.PENDING and not self.is_expired
+
+    def expire(self):
+        """Mark this invite as expired and persist the change."""
+        if self.status == InviteStatus.PENDING:
+            self.status = InviteStatus.EXPIRED
+            self.save(update_fields=['status'])
+
+    def cancel(self):
+        """Cancel a pending invite (revokes the link)."""
+        if self.status == InviteStatus.PENDING:
+            self.status = InviteStatus.CANCELLED
+            self.save(update_fields=['status'])

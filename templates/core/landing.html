@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Ready11 — B2B SaaS base project" %}{% endblock %}
+
+{% block main_class %}flex-grow{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gradient-to-b from-white to-gray-50">
+    <div class="mx-auto max-w-5xl px-6 py-20 text-center">
+        <span class="inline-flex items-center rounded-full bg-gray-900/5 px-3 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-200">
+            {% trans "Open base project · Django + PostgreSQL" %}
+        </span>
+        <h1 class="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+            {% trans "A production-ready foundation for multi-tenant B2B SaaS" %}
+        </h1>
+        <p class="mx-auto mt-5 max-w-2xl text-lg text-gray-600">
+            {% blocktrans %}Ready11 is a starter codebase with schema-isolated multi-tenancy, global accounts, role-based access control and an invite-only onboarding flow — so you can start building your product instead of the plumbing.{% endblocktrans %}
+        </p>
+        <div class="mt-8 flex items-center justify-center gap-3">
+            <a href="#install" class="rounded-lg bg-gray-900 px-5 py-3 text-sm font-medium text-white hover:bg-gray-700">
+                {% trans "Get started" %}
+            </a>
+            <a href="https://github.com/GabrielDev969/Ready11" class="rounded-lg px-5 py-3 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+                {% trans "View on GitHub" %}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-6xl px-6 py-16">
+        <h2 class="text-center text-2xl font-semibold text-gray-900">{% trans "What's included" %}</h2>
+        <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Schema isolation" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}Each customer (Workspace) lives in its own PostgreSQL schema via django-tenants. No data leaks between clients.{% endblocktrans %}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Global identity" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}A single account works across workspaces, with email verification and a strict password policy out of the box.{% endblocktrans %}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Role-based access" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}Per-workspace roles and permissions. The same person can be Owner in one workspace and Viewer in another.{% endblocktrans %}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Invite-only onboarding" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}Controlled signup through expiring invitations, for both new company owners and internal team members.{% endblocktrans %}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Hardened & i18n-ready" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}Security headers, brute-force protection and full internationalization — English and Brazilian Portuguese included.{% endblocktrans %}</p>
+            </div>
+            <div class="rounded-xl border border-gray-100 p-6 shadow-sm">
+                <h3 class="font-semibold text-gray-900">{% trans "Docker-first" %}</h3>
+                <p class="mt-2 text-sm text-gray-600">{% blocktrans %}Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, ready to deploy behind a reverse proxy.{% endblocktrans %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="border-t border-gray-200 bg-gray-50">
+    <div class="mx-auto max-w-5xl px-6 py-16">
+        <h2 class="text-center text-2xl font-semibold text-gray-900">{% trans "How it works" %}</h2>
+        <ol class="mt-10 space-y-6">
+            <li class="flex gap-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">1</span>
+                <p class="text-gray-600">{% blocktrans %}A super admin sends a "genesis" invitation to a future workspace owner.{% endblocktrans %}</p>
+            </li>
+            <li class="flex gap-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">2</span>
+                <p class="text-gray-600">{% blocktrans %}The owner sets their name and company. The backend creates an isolated database schema on demand.{% endblocktrans %}</p>
+            </li>
+            <li class="flex gap-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white">3</span>
+                <p class="text-gray-600">{% blocktrans %}The owner invites their team and assigns roles. Members access the workspace on its own subdomain.{% endblocktrans %}</p>
+            </li>
+        </ol>
+    </div>
+</section>
+
+<!-- Install -->
+<section id="install" class="border-t border-gray-200 bg-white">
+    <div class="mx-auto max-w-3xl px-6 py-16">
+        <h2 class="text-2xl font-semibold text-gray-900">{% trans "Install & run" %}</h2>
+        <p class="mt-3 text-gray-600">{% blocktrans %}Requires Python 3.12, Docker and Node. The full guide lives in the README.{% endblocktrans %}</p>
+        <pre class="mt-6 overflow-x-auto rounded-xl bg-gray-900 p-5 text-sm leading-relaxed text-gray-100"><code># 1. {% trans "Start the PostgreSQL database" %}
+docker compose up -d
+
+# 2. {% trans "Create the virtualenv and install dependencies" %}
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+
+# 3. {% trans "Build the CSS (Tailwind)" %}
+npm install
+npx tailwindcss -i input.css -o static/css/output.css
+
+# 4. {% trans "Apply migrations and create the public tenant" %}
+python manage.py migrate_schemas --shared
+python manage.py setup_public_tenant
+
+# 5. {% trans "Run the development server" %}
+python manage.py runserver</code></pre>
+        <p class="mt-6 text-sm text-gray-500">
+            {% blocktrans %}Then open the app, create a super admin and send your first genesis invitation from the Django admin.{% endblocktrans %}
+        </p>
+    </div>
+</section>
+{% endblock %}

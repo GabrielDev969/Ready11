@@ -20,7 +20,8 @@
 
     <form method="post" class="space-y-5">
         {% csrf_token %}
-        
+        {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
+
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">E-mail corporativo</label>
             {% render_field form.email class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="joao@empresa.com" %}
