@@ -1,0 +1,26 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html><head><meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  body{margin:0;font-family:'IBM Plex Sans',sans-serif;background:#FAFAF7;padding:18px;}
+  .kpi{background:#FFF;border:1px solid #E8E6DF;border-radius:10px;padding:18px;width:230px;}
+  .eyebrow{font-family:'IBM Plex Mono';font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6E6E76;font-weight:500;}
+  .metric{font-weight:500;font-size:44px;line-height:1;letter-spacing:-0.03em;font-variant-numeric:tabular-nums;margin-top:12px;}
+  .trend{font-family:'IBM Plex Mono';font-size:11px;color:oklch(0.42 0.10 145);}
+  .head{display:flex;justify-content:space-between;align-items:flex-start;}
+  .foot{font-size:12px;color:#6E6E76;margin-top:12px;}
+  .wrap{display:flex;gap:14px;}
+</style></head><body>
+<div class="wrap">
+  <div class="kpi">
+    <div class="head"><span class="eyebrow">Wellness médio</span><span class="trend">▲ +0.3</span></div>
+    <div class="metric">4.2</div>
+    <div class="foot">Plantel · últimos 14 dias</div>
+  </div>
+  <div class="kpi">
+    <div class="head"><span class="eyebrow">Em atenção</span><span class="trend" style="color:oklch(0.45 0.16 25)">▼ +2</span></div>
+    <div class="metric">5</div>
+    <div class="foot">2 crítico · 3 alerta</div>
+  </div>
+</div>
+</body></html>

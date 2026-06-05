@@ -1,0 +1,115 @@
+/* ============================================================================
+   GSS MONITORING — DESIGN TOKENS (fonte da verdade)
+   ----------------------------------------------------------------------------
+   Estes são os tokens primitivos do design system. Tudo (Tailwind, componentes,
+   estilos inline) deriva daqui. Edite SOMENTE este arquivo para mudar a marca.
+
+   Cores semânticas usam oklch() — formato perceptualmente uniforme, suportado
+   por todos os navegadores modernos. Para ajustar uma cor, mexa nos 3 valores:
+   oklch(LIGHTNESS CHROMA HUE) → claridade 0–1 · saturação 0–0.4 · matiz 0–360.
+   ============================================================================ */
+
+:root {
+  /* ---- Superfícies (neutros quentes) ---- */
+  --gss-bg:          #FAFAF7;  /* fundo da aplicação */
+  --gss-bg-elev:     #FFFFFF;  /* cards, painéis elevados */
+  --gss-bg-sunken:   #F3F2EE;  /* áreas rebaixadas, headers de tabela */
+  --gss-bg-inverse:  #0B0B0D;  /* superfícies escuras (login art, etc.) */
+
+  /* ---- Texto ---- */
+  --gss-fg:          #0B0B0D;  /* texto principal */
+  --gss-fg-2:        #3D3D42;  /* texto secundário */
+  --gss-fg-3:        #6E6E76;  /* texto terciário / legendas */
+  --gss-fg-4:        #9C9CA3;  /* texto desabilitado / placeholder */
+  --gss-fg-on-dark:  #FAFAF7;  /* texto sobre superfície escura */
+  --gss-fg-on-dark-2:#B8B8BE;  /* texto secundário sobre escuro */
+
+  /* ---- Linhas / bordas ---- */
+  --gss-line:        #E8E6DF;  /* divisória padrão */
+  --gss-line-2:      #DAD7CE;  /* borda de input / card hover */
+  --gss-line-strong: #C5C2B7;  /* borda enfatizada */
+
+  /* ---- Acento (reservado — minimalismo estruturado) ---- */
+  --gss-accent:      #0B0B0D;
+
+  /* ============================================================
+     SEMÂNTICO — o "wellnessEngine" pinta a UI com estas cores.
+     Cor NUNCA é decorativa: ela carrega significado clínico.
+     ============================================================ */
+
+  /* Wellness Status */
+  --gss-excellent-bg:   oklch(0.96 0.04 145);
+  --gss-excellent-fg:   oklch(0.42 0.10 145);
+  --gss-excellent-ring: oklch(0.78 0.14 145);
+
+  --gss-good-bg:        oklch(0.96 0.03 235);
+  --gss-good-fg:        oklch(0.40 0.11 235);
+  --gss-good-ring:      oklch(0.72 0.12 235);
+
+  --gss-warning-bg:     oklch(0.96 0.05 85);
+  --gss-warning-fg:     oklch(0.45 0.12 75);
+  --gss-warning-ring:   oklch(0.80 0.15 80);
+
+  --gss-critical-bg:    oklch(0.95 0.04 25);
+  --gss-critical-fg:    oklch(0.45 0.16 25);
+  --gss-critical-ring:  oklch(0.70 0.18 25);
+
+  /* Hydration Status */
+  --gss-hydrated-bg:    oklch(0.95 0.03 225);
+  --gss-hydrated-fg:    oklch(0.38 0.10 225);
+  --gss-attention-bg:   oklch(0.95 0.05 55);
+  --gss-attention-fg:   oklch(0.50 0.14 55);
+  --gss-dehydrated-bg:  oklch(0.94 0.06 25);
+  --gss-dehydrated-fg:  oklch(0.45 0.18 25);
+
+  /* Recovery Status (semáforo) */
+  --gss-rec-green:      oklch(0.62 0.16 150);
+  --gss-rec-yellow:     oklch(0.78 0.16 85);
+  --gss-rec-red:        oklch(0.58 0.20 25);
+
+  /* ---- Tipografia ---- */
+  --gss-font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --gss-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Escala de tamanho (px) */
+  --gss-text-display: 42px;
+  --gss-text-h1:      28px;
+  --gss-text-h2:      20px;
+  --gss-text-h3:      15px;
+  --gss-text-body:    14px;
+  --gss-text-sm:      13px;
+  --gss-text-xs:      12px;
+  --gss-text-eyebrow: 10px;
+
+  /* Métricas / números (sempre tabular) */
+  --gss-metric-xl:    44px;
+  --gss-metric-lg:    30px;
+  --gss-metric-md:    20px;
+
+  /* ---- Raios ---- */
+  --gss-r-sm: 6px;
+  --gss-r-md: 10px;
+  --gss-r-lg: 14px;
+  --gss-r-xl: 20px;
+
+  /* ---- Sombras (sutis, neutras) ---- */
+  --gss-shadow-sm: 0 1px 0 rgba(11,11,13,0.04), 0 1px 2px rgba(11,11,13,0.04);
+  --gss-shadow-md: 0 1px 0 rgba(11,11,13,0.04), 0 6px 18px -8px rgba(11,11,13,0.10);
+  --gss-shadow-lg: 0 1px 0 rgba(11,11,13,0.04), 0 24px 48px -24px rgba(11,11,13,0.20);
+
+  /* ---- Espaçamento base (escala de 4px) ---- */
+  --gss-space-1: 4px;
+  --gss-space-2: 8px;
+  --gss-space-3: 12px;
+  --gss-space-4: 16px;
+  --gss-space-5: 20px;
+  --gss-space-6: 24px;
+  --gss-space-8: 32px;
+  --gss-space-10: 40px;
+
+  /* ---- Movimento ---- */
+  --gss-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --gss-dur-fast: 0.12s;
+  --gss-dur: 0.15s;
+  --gss-dur-slow: 0.32s;
+}

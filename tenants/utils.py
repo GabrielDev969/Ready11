@@ -1,4 +1,37 @@
-from .models import WorkspaceMembership
+from .models import WorkspaceMembership, AVAILABLE_PERMISSIONS, expand_permissions
+
+
+def tenant_permission_set(request):
+    """
+    Return ``(permissions, is_owner)`` for the current user in the current tenant.
+
+    ``permissions`` is a set of permission strings; the system owner gets every
+    available permission (so template checks like ``'users.invite' in perms`` just
+    work). Returns ``(set(), False)`` on the public schema or for non-members.
+
+    Reuses ``request.tenant_membership`` (set by ``tenant_permission_required``)
+    when available, to avoid an extra query.
+    """
+    user = getattr(request, 'user', None)
+    tenant = getattr(request, 'tenant', None)
+    if (not user or not user.is_authenticated
+            or tenant is None or getattr(tenant, 'schema_name', 'public') == 'public'):
+        return set(), False
+
+    membership = getattr(request, 'tenant_membership', None)
+    if membership is None:
+        membership = (
+            WorkspaceMembership.objects
+            .select_related('role')
+            .filter(workspace=tenant, user=user)
+            .first()
+        )
+    if membership is None:
+        return set(), False
+
+    if membership.role.is_system_owner:
+        return set(AVAILABLE_PERMISSIONS), True
+    return expand_permissions(membership.role.permissions), False
 
 
 def effective_workspace(user):

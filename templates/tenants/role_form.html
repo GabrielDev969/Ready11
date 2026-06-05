@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load widget_tweaks i18n %}
 
-{% block title %}{% trans "New role" %} | {{ request.tenant.name }}{% endblock %}
+{% block title %}{% if role %}{% trans "Edit role" %}{% else %}{% trans "New role" %}{% endif %} | {{ request.tenant.name }}{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-8">
     <div class="mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{% trans "Create a new role" %}</h2>
+        <h2 class="text-xl font-semibold text-gray-900">{% if role %}{% trans "Edit role" %}{% else %}{% trans "Create a new role" %}{% endif %}</h2>
         <p class="text-sm text-gray-500 mt-1">{% trans "Define the name and what members with this role can do." %}</p>
     </div>
 

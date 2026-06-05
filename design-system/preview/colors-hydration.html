@@ -1,0 +1,30 @@
+<!-- @dsCard group="Colors" -->
+<!doctype html><html><head><meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  body{margin:0;font-family:'IBM Plex Mono',monospace;background:#FAFAF7;padding:18px;}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.03em;}
+  .dot{width:6px;height:6px;border-radius:999px;}
+  .sec{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#6E6E76;margin:0 0 10px;}
+  .row{display:flex;gap:8px;margin-bottom:18px;}
+  .urine{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;}
+  .u{height:30px;border-radius:4px;display:grid;place-items:center;font-size:10px;}
+</style></head><body>
+<p class="sec">Hydration</p>
+<div class="row">
+  <span class="pill" style="background:oklch(0.95 0.03 225);color:oklch(0.38 0.10 225);"><span class="dot" style="background:oklch(0.38 0.10 225)"></span>HYDRATED</span>
+  <span class="pill" style="background:oklch(0.95 0.05 55);color:oklch(0.50 0.14 55);"><span class="dot" style="background:oklch(0.50 0.14 55)"></span>ATTENTION</span>
+  <span class="pill" style="background:oklch(0.94 0.06 25);color:oklch(0.45 0.18 25);"><span class="dot" style="background:oklch(0.45 0.18 25)"></span>DEHYDRATED</span>
+</div>
+<p class="sec">Escala de cor de urina (Armstrong · 1–8)</p>
+<div class="urine">
+  <div class="u" style="background:#F8F0BD;color:rgba(0,0,0,.6)">1</div>
+  <div class="u" style="background:#F5E27D;color:rgba(0,0,0,.6)">2</div>
+  <div class="u" style="background:#F1CE3D;color:rgba(0,0,0,.6)">3</div>
+  <div class="u" style="background:#E5B11C;color:rgba(0,0,0,.6)">4</div>
+  <div class="u" style="background:#D08C0E;color:#fff">5</div>
+  <div class="u" style="background:#B66A07;color:#fff">6</div>
+  <div class="u" style="background:#955306;color:#fff">7</div>
+  <div class="u" style="background:#6B3A04;color:#fff">8</div>
+</div>
+</body></html>

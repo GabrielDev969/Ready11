@@ -65,6 +65,7 @@
         {% endif %}
     </div>
 
+    {% if 'users.invite' in tenant_perms %}
     <div class="w-full md:w-80">
         <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">{% trans "Invite people" %}</h3>
@@ -77,6 +78,12 @@
                 {% endfor %}
             {% endif %}
 
+            {% if 'roles.view' not in tenant_perms %}
+            <div class="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+                <p class="font-medium">{% trans "You can't assign a role yet." %}</p>
+                <p class="mt-1">{% blocktrans %}Inviting requires choosing a role, but you don't have permission to view roles. Ask an administrator to grant it (or to send the invite).{% endblocktrans %}</p>
+            </div>
+            {% elif has_invitable_role %}
             <form action="{% url 'team_invite' %}" method="post" class="space-y-4">
                 {% csrf_token %}
                 <div>
@@ -93,7 +100,19 @@
                     {% trans "Send invitation" %}
                 </button>
             </form>
+            {% else %}
+            <div class="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+                <p class="font-medium">{% trans "A role is required to invite people." %}</p>
+                {% if 'roles.create' in tenant_perms %}
+                <p class="mt-1">{% blocktrans %}Create a role first, then you can assign it to new members.{% endblocktrans %}</p>
+                <a href="{% url 'role_create' %}" class="mt-3 inline-block rounded-md bg-amber-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-700">{% trans "Create a role" %}</a>
+                {% else %}
+                <p class="mt-1">{% blocktrans %}Ask someone with permission to create roles to add one first.{% endblocktrans %}</p>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 from django.db import transaction
+from django.db.models import Count
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import send_mail
@@ -15,7 +16,7 @@ from .decorators import tenant_permission_required
 from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 from .services import provision_workspace_defaults
-from .utils import workspace_home_url
+from .utils import workspace_home_url, tenant_permission_set
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -162,7 +163,7 @@ def tenant_dashboard_view(request):
     return render(request, 'tenants/dashboard.html', context)
 
 
-@tenant_permission_required()
+@tenant_permission_required('users.view')
 def team_list_view(request):
     workspace = request.tenant
 
@@ -177,23 +178,28 @@ def team_list_view(request):
     # Pass the workspace so the form lists only this workspace's roles.
     form = TeamInviteForm(workspace=workspace)
 
+    # Inviting requires at least one assignable (non-owner) role to exist.
+    has_invitable_role = Role.objects.filter(workspace=workspace, is_system_owner=False).exists()
+
     context = {
         'members': members,
         'pending_invites': pending_invites,
         'form': form,
+        'has_invitable_role': has_invitable_role,
     }
     return render(request, 'tenants/team_list.html', context)
 
 
-@tenant_permission_required()
+@tenant_permission_required('users.invite')
 def team_invite_view(request):
     workspace = request.tenant
 
-    # Role-based permission check.
-    membership = WorkspaceMembership.objects.select_related('role').get(workspace=workspace, user=request.user)
-
-    if not (membership.role.is_system_owner or 'users.invite' in membership.role.permissions):
-        messages.error(request, _("You don't have permission to invite new members."))
+    # Assigning a role requires being able to see roles. Without 'roles.view' the
+    # inviter can't pick a role, so they can't send the invite — this prevents
+    # handing out roles you have no visibility/authority over (privilege escalation).
+    perms, _is_owner = tenant_permission_set(request)
+    if 'roles.view' not in perms:
+        messages.error(request, _("You need permission to view roles before you can assign one. Ask an administrator."))
         return redirect('team_list')
 
     if request.method == 'POST':
@@ -336,14 +342,19 @@ def accept_invite_view(request, token):
     return render(request, 'tenants/accept_invite.html', context)
 
 
-@tenant_permission_required('roles.manage')
+@tenant_permission_required('roles.view')
 def role_list_view(request):
     workspace = request.tenant
-    roles = Role.objects.filter(workspace=workspace).order_by('-is_system_owner', 'name')
+    roles = (
+        Role.objects
+        .filter(workspace=workspace)
+        .annotate(member_count=Count('members'))
+        .order_by('-is_system_owner', 'name')
+    )
     return render(request, 'tenants/role_list.html', {'roles': roles})
 
 
-@tenant_permission_required('roles.manage')
+@tenant_permission_required('roles.create')
 def role_create_view(request):
     workspace = request.tenant
 
@@ -366,3 +377,55 @@ def role_create_view(request):
         form = RoleForm()
 
     return render(request, 'tenants/role_form.html', {'form': form})
+
+
+@tenant_permission_required('roles.edit')
+def role_update_view(request, role_id):
+    workspace = request.tenant
+    role = get_object_or_404(Role, id=role_id, workspace=workspace)
+
+    # The absolute owner role is locked.
+    if role.is_system_owner:
+        messages.error(request, _("The owner role cannot be edited."))
+        return redirect('role_list')
+
+    if request.method == 'POST':
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            role = form.save(commit=False)
+
+            if role.is_default:
+                Role.objects.filter(workspace=workspace, is_default=True).exclude(pk=role.pk).update(is_default=False)
+
+            role.permissions = form.cleaned_data['permissions']
+            role.save()
+
+            messages.success(request, _("Role '%(name)s' updated.") % {'name': role.name})
+            return redirect('role_list')
+    else:
+        form = RoleForm(instance=role, initial={'permissions': role.permissions})
+
+    return render(request, 'tenants/role_form.html', {'form': form, 'role': role})
+
+
+@tenant_permission_required('roles.delete')
+def role_delete_view(request, role_id):
+    workspace = request.tenant
+    role = get_object_or_404(Role, id=role_id, workspace=workspace)
+
+    if request.method != 'POST':
+        return redirect('role_list')
+
+    # Guardrails: never delete the owner role, nor a role still assigned to members.
+    if role.is_system_owner:
+        messages.error(request, _("The owner role cannot be deleted."))
+        return redirect('role_list')
+
+    if role.members.exists():
+        messages.error(request, _("This role can't be deleted while members are using it."))
+        return redirect('role_list')
+
+    name = role.name
+    role.delete()
+    messages.success(request, _("Role '%(name)s' deleted.") % {'name': name})
+    return redirect('role_list')

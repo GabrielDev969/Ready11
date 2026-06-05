@@ -9,15 +9,43 @@ from datetime import timedelta
 # ==========================================
 # PERMISSION CONSTANTS
 # ==========================================
-# This list powers the checkboxes on the "create role" screen.
+# Granular permissions, one per action. These power the checkboxes on the
+# "create/edit role" screen — assign exactly what each role needs.
 AVAILABLE_PERMISSIONS = [
+    # Team / members
+    'users.view',             # Can view the team
+    'users.invite',           # Can invite new people (includes picking a role to assign)
+    'users.remove',           # Can remove members
+    # Roles
+    'roles.view',             # Can view the roles list
+    'roles.create',           # Can create new roles
+    'roles.edit',             # Can edit existing roles
+    'roles.delete',           # Can delete roles
+    # Workspace
     'tenant.update',          # Can edit company data
     'tenant.delete',          # Can delete the company (usually owner-only)
-    'users.view',             # Can view the team
-    'users.invite',           # Can invite new people
-    'users.remove',           # Can remove members
-    'roles.manage',           # Can create/edit roles
 ]
+
+# Umbrella permissions that imply a set of granular ones. Not offered as new
+# checkboxes (assign the granular ones), but still honored if present — e.g. a
+# legacy role or one set via the Django admin.
+PERMISSION_IMPLIES = {
+    'roles.manage': ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
+    'users.manage': ['users.view', 'users.invite', 'users.remove'],
+    'tenant.manage': ['tenant.update', 'tenant.delete'],
+}
+
+
+def expand_permissions(permissions):
+    """
+    Expand a role's stored permissions into the full effective set, resolving any
+    umbrella permissions (e.g. 'roles.manage' -> all 'roles.*' actions).
+    """
+    effective = set(permissions or [])
+    for umbrella, implied in PERMISSION_IMPLIES.items():
+        if umbrella in effective:
+            effective.update(implied)
+    return effective
 
 # ==========================================
 # CORE MODELS (TENANT)

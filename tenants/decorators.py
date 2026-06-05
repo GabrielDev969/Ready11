@@ -2,7 +2,7 @@ from functools import wraps
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.utils.translation import gettext as _
-from .models import WorkspaceMembership
+from .models import WorkspaceMembership, expand_permissions
 
 def tenant_permission_required(required_permission=None):
     """
@@ -32,8 +32,10 @@ def tenant_permission_required(required_permission=None):
 
             # 4. Specific permission check (RBAC).
             if required_permission:
-                # The absolute owner bypasses checks; others need the permission in their list.
-                if not (membership.role.is_system_owner or required_permission in membership.role.permissions):
+                # The absolute owner bypasses checks; others need the permission in
+                # their (umbrella-expanded) permission set.
+                effective = expand_permissions(membership.role.permissions)
+                if not (membership.role.is_system_owner or required_permission in effective):
                     messages.error(request, _("You don't have permission to perform this action."))
                     return redirect('tenant_dashboard')
 

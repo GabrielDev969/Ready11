@@ -1,0 +1,21 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html><head><meta charset="utf-8"/>
+<link rel="stylesheet" href="../tokens.css"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  body{margin:0;font-family:var(--gss-font-sans);background:#FAFAF7;padding:18px;}
+  .cap{font-family:'IBM Plex Mono';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6E6E76;margin:0 0 10px;}
+  .scale-row{display:flex;gap:6px;margin-bottom:18px;}
+  .sb{flex:1;height:44px;display:grid;place-items:center;font-family:'IBM Plex Mono';font-size:14px;border:1px solid #DAD7CE;border-radius:6px;background:#fff;color:#3D3D42;}
+  .sb.active{background:#0B0B0D;color:#FAFAF7;border-color:#0B0B0D;}
+  .urine{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;}
+  .u{height:40px;border-radius:6px;display:flex;align-items:flex-end;justify-content:center;padding:4px;font-family:'IBM Plex Mono';font-size:10px;border:2px solid transparent;color:rgba(0,0,0,.6);}
+  .u.active{border-color:#0B0B0D;box-shadow:0 0 0 2px #FAFAF7,0 0 0 4px #0B0B0D;}
+</style></head><body>
+<p class="cap">Escala discreta 1–5</p>
+<div class="scale-row"><div class="sb">1</div><div class="sb">2</div><div class="sb active">3</div><div class="sb">4</div><div class="sb">5</div></div>
+<p class="cap">Escala de cor de urina · Armstrong 1–8</p>
+<div class="urine">
+  <div class="u" style="background:#F8F0BD;">1</div><div class="u active" style="background:#F5E27D;">2</div><div class="u" style="background:#F1CE3D;">3</div><div class="u" style="background:#E5B11C;">4</div><div class="u" style="background:#D08C0E;color:#fff;">5</div><div class="u" style="background:#B66A07;color:#fff;">6</div><div class="u" style="background:#955306;color:#fff;">7</div><div class="u" style="background:#6B3A04;color:#fff;">8</div>
+</div>
+</body></html>

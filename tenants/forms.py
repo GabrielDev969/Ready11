@@ -42,6 +42,9 @@ class TeamInviteForm(forms.ModelForm):
         workspace = kwargs.pop('workspace', None)
         super(TeamInviteForm, self).__init__(*args, **kwargs)
 
+        # A role is mandatory: every membership needs one, so the invite must carry it.
+        self.fields['role'].required = True
+
         if workspace:
             # Only show this workspace's roles. Security: exclude the system owner
             # role so nobody can accidentally invite another absolute owner.

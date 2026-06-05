@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>GSS Monitoring — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="tokens.css"/>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--gss-bg); color: var(--gss-fg);
+    font-family: var(--gss-font-sans);
+    -webkit-font-smoothing: antialiased; letter-spacing: -0.005em;
+  }
+  .mono { font-family: var(--gss-font-mono); }
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* Layout */
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
+  header.hero {
+    border-bottom: 1px solid var(--gss-line);
+    background: var(--gss-bg-elev);
+    padding: 56px 0 48px;
+  }
+  .eyebrow {
+    font-family: var(--gss-font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gss-fg-3); font-weight: 500;
+  }
+  .brand-mark {
+    width: 36px; height: 36px; background: var(--gss-fg); color: var(--gss-fg-on-dark);
+    display: grid; place-items: center; border-radius: 8px;
+    font-family: var(--gss-font-mono); font-weight: 600; font-size: 14px;
+  }
+  h1.title { font-size: 42px; line-height: 1.05; letter-spacing: -0.025em; font-weight: 500; margin: 24px 0 12px; }
+  .lede { font-size: 16px; color: var(--gss-fg-3); max-width: 560px; line-height: 1.55; }
+
+  section { padding: 56px 0; border-bottom: 1px solid var(--gss-line); }
+  .sec-head { margin-bottom: 32px; }
+  .sec-head h2 { font-size: 24px; letter-spacing: -0.02em; font-weight: 500; margin: 6px 0 8px; }
+  .sec-head p { color: var(--gss-fg-3); font-size: 14px; margin: 0; max-width: 600px; }
+
+  .grid { display: grid; gap: 16px; }
+  .card {
+    background: var(--gss-bg-elev); border: 1px solid var(--gss-line);
+    border-radius: var(--gss-r-md); padding: 22px;
+  }
+  .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .token-name { font-family: var(--gss-font-mono); font-size: 11px; color: var(--gss-fg-3); }
+
+  /* Color swatch */
+  .swatch { height: 64px; border-radius: var(--gss-r-sm); border: 1px solid rgba(0,0,0,0.06); }
+  .swatch-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+  /* Pills */
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 999px;
+    font-family: var(--gss-font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+  .pill-excellent { background: var(--gss-excellent-bg); color: var(--gss-excellent-fg); }
+  .pill-good { background: var(--gss-good-bg); color: var(--gss-good-fg); }
+  .pill-warning { background: var(--gss-warning-bg); color: var(--gss-warning-fg); }
+  .pill-critical { background: var(--gss-critical-bg); color: var(--gss-critical-fg); }
+  .pill-hydrated { background: var(--gss-hydrated-bg); color: var(--gss-hydrated-fg); }
+  .pill-attention { background: var(--gss-attention-bg); color: var(--gss-attention-fg); }
+  .pill-dehydrated { background: var(--gss-dehydrated-bg); color: var(--gss-dehydrated-fg); }
+  .pill-neutral { background: var(--gss-bg-sunken); color: var(--gss-fg-2); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: var(--gss-r-sm);
+    font-size: 13px; font-weight: 500; border: 1px solid transparent; cursor: pointer; font-family: inherit;
+  }
+  .btn-primary { background: var(--gss-fg); color: var(--gss-fg-on-dark); }
+  .btn-secondary { background: var(--gss-bg-elev); color: var(--gss-fg); border-color: var(--gss-line-2); }
+  .btn-ghost { background: transparent; color: var(--gss-fg); }
+
+  .input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--gss-line-2);
+    border-radius: var(--gss-r-sm); font-size: 14px; font-family: inherit; background: var(--gss-bg-elev);
+  }
+
+  .code {
+    font-family: var(--gss-font-mono); font-size: 12px; background: var(--gss-bg-sunken);
+    padding: 2px 6px; border-radius: 4px; color: var(--gss-fg-2);
+  }
+  .codeblock {
+    font-family: var(--gss-font-mono); font-size: 12.5px; line-height: 1.7;
+    background: var(--gss-bg-inverse); color: #E6E6E6; padding: 18px 20px;
+    border-radius: var(--gss-r-md); overflow-x: auto; white-space: pre;
+  }
+  .codeblock .cm { color: #7C7C85; }
+  .codeblock .at { color: #9DD6A0; }
+  .codeblock .tag { color: #7FB3E0; }
+
+  /* Type specimen */
+  .spec { display: flex; align-items: baseline; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--gss-line); }
+  .spec:last-child { border-bottom: none; }
+  .spec .meta { width: 120px; flex-shrink: 0; }
+  .metric-xl { font-weight: 500; font-size: 44px; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+
+  /* Avatar */
+  .avatar { width: 36px; height: 36px; border-radius: 999px; background: var(--gss-bg-sunken); display: inline-flex; align-items: center; justify-content: center; font-family: var(--gss-font-mono); font-size: 12px; border: 1px solid var(--gss-line); }
+
+  /* Switch */
+  .switch { width: 40px; height: 24px; background: var(--gss-fg); border-radius: 999px; position: relative; }
+  .switch-knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 999px; transform: translateX(16px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+  .meaning { font-size: 12px; color: var(--gss-fg-3); margin-top: 10px; line-height: 1.5; }
+  .nav-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .nav-pill { font-family: var(--gss-font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gss-fg-2); text-decoration: none; padding: 6px 12px; border: 1px solid var(--gss-line); border-radius: 999px; }
+  .nav-pill:hover { background: var(--gss-bg-sunken); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="brand-mark">GS</div>
+      <div>
+        <div style="font-size:14px; font-weight:500;">GSS Innovations</div>
+        <div class="eyebrow" style="margin-top:2px;">Sports Monitoring · Design System</div>
+      </div>
+    </div>
+    <h1 class="title">Sistema de design<br/>de monitoramento esportivo.</h1>
+    <p class="lede">Minimalismo estruturado: fundo neutro, tipografia limpa e cor reservada exclusivamente para dados semânticos calculados pelo motor de bem-estar. Pronto para Tailwind&nbsp;CSS&nbsp;3.</p>
+    <div class="nav-pills">
+      <a class="nav-pill" href="#cores">Cores</a>
+      <a class="nav-pill" href="#tipo">Tipografia</a>
+      <a class="nav-pill" href="#semantica">Status semântico</a>
+      <a class="nav-pill" href="#componentes">Componentes</a>
+      <a class="nav-pill" href="#icones">Ícones</a>
+      <a class="nav-pill" href="#graficos">Gráficos</a>
+      <a class="nav-pill" href="#forms">Formulários</a>
+      <a class="nav-pill" href="#espaco">Espaço & forma</a>
+      <a class="nav-pill" href="#tailwind">Uso no Tailwind</a>
+    </div>
+  </div>
+</header>
+
+<!-- CORES -->
+<section id="cores">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">01 · Fundação</div>
+      <h2>Paleta neutra</h2>
+      <p>Neutros quentes formam 95% da interface. A cor é silenciosa por padrão — ela só "acende" quando carrega significado clínico.</p>
+    </div>
+
+    <div class="eyebrow" style="margin-bottom:14px;">Superfícies</div>
+    <div class="swatch-row" style="margin-bottom:32px;">
+      <div><div class="swatch" style="background:#FAFAF7;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">Background</span><span class="token-name">#FAFAF7</span></div></div>
+      <div><div class="swatch" style="background:#FFFFFF;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">Elevated</span><span class="token-name">#FFFFFF</span></div></div>
+      <div><div class="swatch" style="background:#F3F2EE;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">Sunken</span><span class="token-name">#F3F2EE</span></div></div>
+      <div><div class="swatch" style="background:#0B0B0D;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">Inverse</span><span class="token-name">#0B0B0D</span></div></div>
+    </div>
+
+    <div class="eyebrow" style="margin-bottom:14px;">Texto & linhas</div>
+    <div class="swatch-row">
+      <div><div class="swatch" style="background:#0B0B0D;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">fg</span><span class="token-name">#0B0B0D</span></div></div>
+      <div><div class="swatch" style="background:#3D3D42;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">fg-2</span><span class="token-name">#3D3D42</span></div></div>
+      <div><div class="swatch" style="background:#6E6E76;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">fg-3</span><span class="token-name">#6E6E76</span></div></div>
+      <div><div class="swatch" style="background:#E8E6DF;"></div><div class="label-row" style="margin-top:8px;"><span style="font-size:12px;">line</span><span class="token-name">#E8E6DF</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOGRAFIA -->
+<section id="tipo">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">02 · Fundação</div>
+      <h2>Tipografia</h2>
+      <p><span class="code">IBM Plex Sans</span> para interface, <span class="code">IBM Plex Mono</span> para dados, rótulos e qualquer número. A escolha mono nos números cria a estética técnica/clínica e garante alinhamento tabular.</p>
+    </div>
+
+    <div class="card">
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">Display</div><div class="token-name">42 / 500</div></div>
+        <div style="font-size:42px; line-height:1.05; letter-spacing:-0.025em; font-weight:500;">Prontidão do plantel</div>
+      </div>
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">H1</div><div class="token-name">28 / 500</div></div>
+        <div style="font-size:28px; line-height:1.15; letter-spacing:-0.02em; font-weight:500;">Triagem de prontidão</div>
+      </div>
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">H2</div><div class="token-name">20 / 500</div></div>
+        <div style="font-size:20px; letter-spacing:-0.015em; font-weight:500;">Distribuição de status</div>
+      </div>
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">Body</div><div class="token-name">14 / 400</div></div>
+        <div style="font-size:14px; line-height:1.5;">Decisões clínicas e técnicas baseadas em dados longitudinais de prontidão.</div>
+      </div>
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">Eyebrow</div><div class="token-name">Mono 10 / 0.12em</div></div>
+        <div class="eyebrow" style="font-size:11px;">COMISSÃO TÉCNICA · HOJE</div>
+      </div>
+      <div class="spec">
+        <div class="meta"><div class="eyebrow">Métrica XL</div><div class="token-name">Sans 44 · tabular</div></div>
+        <div class="metric-xl">4.2 <span style="font-family:var(--gss-font-mono); font-size:14px; color:var(--gss-fg-3);">/ 5</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEMÂNTICA -->
+<section id="semantica">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">03 · O motor de bem-estar</div>
+      <h2>Cores semânticas</h2>
+      <p>Estas são as únicas cores saturadas do sistema. Cada uma mapeia um enum de backend e um significado no contexto do futebol. <strong>Nunca</strong> use estas cores decorativamente.</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Wellness Status</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div>
+            <span class="pill pill-excellent"><span class="dot" style="background:var(--gss-excellent-fg)"></span>EXCELLENT</span>
+            <div class="meaning">Atleta em perfeitas condições de prontidão.</div>
+          </div>
+          <div>
+            <span class="pill pill-good"><span class="dot" style="background:var(--gss-good-fg)"></span>GOOD</span>
+            <div class="meaning">Níveis normais de fadiga adaptativa.</div>
+          </div>
+          <div>
+            <span class="pill pill-warning"><span class="dot" style="background:var(--gss-warning-fg)"></span>WARNING</span>
+            <div class="meaning">Sinal de atenção. Requer moderação de carga interna.</div>
+          </div>
+          <div>
+            <span class="pill pill-critical"><span class="dot" style="background:var(--gss-critical-fg)"></span>CRITICAL</span>
+            <div class="meaning">Risco iminente de lesão ou overtraining severo.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Hydration Status</div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div>
+            <span class="pill pill-hydrated"><span class="dot" style="background:var(--gss-hydrated-fg)"></span>HYDRATED</span>
+            <div class="meaning">Janela de hidratação segura para performance.</div>
+          </div>
+          <div>
+            <span class="pill pill-attention"><span class="dot" style="background:var(--gss-attention-fg)"></span>ATTENTION</span>
+            <div class="meaning">Alerta de perda hídrica. Estimular protocolo de ingestão.</div>
+          </div>
+          <div>
+            <span class="pill pill-dehydrated"><span class="dot" style="background:var(--gss-dehydrated-fg)"></span>DEHYDRATED</span>
+            <div class="meaning">Desidratação crítica. Risco de cãibras e queda de VO₂.</div>
+          </div>
+        </div>
+        <div class="eyebrow" style="margin:24px 0 12px;">Recovery (semáforo)</div>
+        <div style="display:flex; gap:10px;">
+          <span class="pill pill-excellent"><span class="dot" style="background:var(--gss-rec-green)"></span>GREEN</span>
+          <span class="pill pill-warning"><span class="dot" style="background:var(--gss-rec-yellow)"></span>YELLOW</span>
+          <span class="pill pill-critical"><span class="dot" style="background:var(--gss-rec-red)"></span>RED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTES -->
+<section id="componentes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">04 · Elementos</div>
+      <h2>Componentes</h2>
+      <p>Cada um existe como classe <span class="code">.gss-*</span> em <span class="code">gss-components.css</span> para usar direto nas templates Django.</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Botões · .gss-btn</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-secondary">Secondary</button>
+          <button class="btn btn-ghost">Ghost</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Input · .gss-input</div>
+        <input class="input" placeholder="coach@gss.com"/>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Avatar · Switch</div>
+        <div style="display:flex; gap:14px; align-items:center;">
+          <span class="avatar">08</span>
+          <span class="avatar">HC</span>
+          <div class="switch"><div class="switch-knob"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">KPI</div>
+        <div class="label-row"><span class="eyebrow">Wellness médio</span><span style="font-family:var(--gss-font-mono); font-size:11px; color:var(--gss-excellent-fg);">▲ +0.3</span></div>
+        <div class="metric-xl" style="margin-top:8px;">4.2</div>
+      </div>
+    </div>
+
+    <!-- Tabela exemplo -->
+    <div class="card" style="margin-top:16px; padding:0; overflow:hidden;">
+      <div style="padding:18px 22px; border-bottom:1px solid var(--gss-line);">
+        <div class="eyebrow">Tabela de triagem · .gss-table</div>
+      </div>
+      <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <thead>
+          <tr style="background:var(--gss-bg-sunken);">
+            <th style="text-align:left; font-family:var(--gss-font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gss-fg-3); padding:12px 22px; font-weight:500;">Atleta</th>
+            <th style="text-align:left; font-family:var(--gss-font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gss-fg-3); padding:12px; font-weight:500;">Wellness</th>
+            <th style="text-align:left; font-family:var(--gss-font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gss-fg-3); padding:12px; font-weight:500;">Hidratação</th>
+            <th style="text-align:left; font-family:var(--gss-font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--gss-fg-3); padding:12px; font-weight:500;">Alerta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:linear-gradient(90deg, var(--gss-critical-bg) 0%, transparent 60%);">
+            <td style="padding:14px 22px; border-bottom:1px solid var(--gss-line);"><div style="display:flex; align-items:center; gap:10px;"><span class="avatar" style="width:30px; height:30px;">08</span><span style="font-weight:500;">Henrique Silva</span></div></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-critical"><span class="dot" style="background:var(--gss-critical-fg)"></span>CRITICAL</span></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-dehydrated"><span class="dot" style="background:var(--gss-dehydrated-fg)"></span>DEHYDRATED</span></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-critical"><span class="dot" style="background:var(--gss-critical-fg)"></span>CRITICAL</span></td>
+          </tr>
+          <tr style="background:linear-gradient(90deg, var(--gss-warning-bg) 0%, transparent 60%);">
+            <td style="padding:14px 22px; border-bottom:1px solid var(--gss-line);"><div style="display:flex; align-items:center; gap:10px;"><span class="avatar" style="width:30px; height:30px;">14</span><span style="font-weight:500;">Lucas Pereira</span></div></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-warning"><span class="dot" style="background:var(--gss-warning-fg)"></span>WARNING</span></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-attention"><span class="dot" style="background:var(--gss-attention-fg)"></span>ATTENTION</span></td>
+            <td style="padding:14px; border-bottom:1px solid var(--gss-line);"><span class="pill pill-warning"><span class="dot" style="background:var(--gss-warning-fg)"></span>WARNING</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ÍCONES -->
+<section id="icones">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">05 · Elementos</div>
+      <h2>Iconografia</h2>
+      <p>Ícones em linha, traço de 1.6px, grid 24×24, monocromáticos (herdam <span class="code">currentColor</span>). Compatível com <strong>Lucide</strong> para produção. Biblioteca completa em <a href="icons.html" style="color:var(--gss-fg);">icons.html</a>.</p>
+    </div>
+    <div class="card">
+      <div id="icon-strip" style="display:grid;grid-template-columns:repeat(12,1fr);gap:10px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- GRÁFICOS -->
+<section id="graficos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">06 · Elementos</div>
+      <h2>Gráficos & visualização de dados</h2>
+      <p>SVG leve, sem dependências. Linhas finas, sem grids pesados, cor do dado segue o status semântico. Galeria completa (linha dupla, heatmap, progresso) em <a href="dataviz.html" style="color:var(--gss-fg);">dataviz.html</a>.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1.3fr 1.3fr 0.9fr;">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:14px;">Sparkline</div>
+        <svg width="100%" height="70" viewBox="0 0 280 70" preserveAspectRatio="none" id="sg-spark"></svg>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:14px;">Barras · PSE</div>
+        <svg width="100%" height="70" viewBox="0 0 280 70" id="sg-bars"></svg>
+      </div>
+      <div class="card" style="display:flex;justify-content:center;align-items:center;">
+        <div style="position:relative;width:96px;height:96px;">
+          <svg width="96" height="96" id="sg-ring"></svg>
+          <div style="position:absolute;inset:0;display:grid;place-items:center;"><span class="metric-xl" style="font-size:26px;">4.2</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULÁRIOS -->
+<section id="forms">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">07 · Elementos</div>
+      <h2>Controles de formulário</h2>
+      <p>Mobile-first, alvos de toque ≥ 44×44px. O conjunto completo do wizard de check-in (escalas, RPE, toggles, steppers, sliders, sintomas) está em <a href="forms.html" style="color:var(--gss-fg);">forms.html</a>.</p>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:14px;">Escala discreta 1–5</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;height:48px;display:grid;place-items:center;font-family:var(--gss-font-mono);border:1px solid var(--gss-line-2);border-radius:var(--gss-r-sm);color:var(--gss-fg-2);">1</div>
+          <div style="flex:1;height:48px;display:grid;place-items:center;font-family:var(--gss-font-mono);border:1px solid var(--gss-line-2);border-radius:var(--gss-r-sm);color:var(--gss-fg-2);">2</div>
+          <div style="flex:1;height:48px;display:grid;place-items:center;font-family:var(--gss-font-mono);border:1px solid var(--gss-fg);border-radius:var(--gss-r-sm);background:var(--gss-fg);color:var(--gss-fg-on-dark);">3</div>
+          <div style="flex:1;height:48px;display:grid;place-items:center;font-family:var(--gss-font-mono);border:1px solid var(--gss-line-2);border-radius:var(--gss-r-sm);color:var(--gss-fg-2);">4</div>
+          <div style="flex:1;height:48px;display:grid;place-items:center;font-family:var(--gss-font-mono);border:1px solid var(--gss-line-2);border-radius:var(--gss-r-sm);color:var(--gss-fg-2);">5</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:14px;">Toggle · Stepper</div>
+        <div style="display:flex;align-items:center;gap:20px;">
+          <div class="switch"><div class="switch-knob"></div></div>
+          <div style="display:inline-flex;align-items:center;border:1px solid var(--gss-line-2);border-radius:var(--gss-r-sm);overflow:hidden;">
+            <div style="width:40px;height:40px;display:grid;place-items:center;color:var(--gss-fg-2);">−</div>
+            <div style="width:48px;text-align:center;font-family:var(--gss-font-mono);">4</div>
+            <div style="width:40px;height:40px;display:grid;place-items:center;color:var(--gss-fg-2);">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESPAÇO & FORMA -->
+<section id="espaco">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">08 · Fundação</div>
+      <h2>Espaço, raio & elevação</h2>
+      <p>Escala de 4px. Raios discretos. Sombras quase imperceptíveis — a hierarquia vem de bordas e fundo, não de drop-shadows pesados.</p>
+    </div>
+
+    <div class="grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Raios</div>
+        <div style="display:flex; gap:14px; align-items:flex-end;">
+          <div style="text-align:center;"><div style="width:48px; height:48px; background:var(--gss-bg-sunken); border:1px solid var(--gss-line-2); border-radius:6px;"></div><div class="token-name" style="margin-top:6px;">6 · sm</div></div>
+          <div style="text-align:center;"><div style="width:48px; height:48px; background:var(--gss-bg-sunken); border:1px solid var(--gss-line-2); border-radius:10px;"></div><div class="token-name" style="margin-top:6px;">10 · md</div></div>
+          <div style="text-align:center;"><div style="width:48px; height:48px; background:var(--gss-bg-sunken); border:1px solid var(--gss-line-2); border-radius:14px;"></div><div class="token-name" style="margin-top:6px;">14 · lg</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Elevação</div>
+        <div style="display:flex; gap:16px;">
+          <div style="width:56px; height:56px; background:#fff; border-radius:8px; box-shadow:var(--gss-shadow-sm);"></div>
+          <div style="width:56px; height:56px; background:#fff; border-radius:8px; box-shadow:var(--gss-shadow-md);"></div>
+          <div style="width:56px; height:56px; background:#fff; border-radius:8px; box-shadow:var(--gss-shadow-lg);"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:16px;">Escala de espaço</div>
+        <div style="display:flex; align-items:flex-end; gap:6px;">
+          <div style="width:4px; height:4px; background:var(--gss-fg);"></div>
+          <div style="width:8px; height:8px; background:var(--gss-fg);"></div>
+          <div style="width:12px; height:12px; background:var(--gss-fg);"></div>
+          <div style="width:16px; height:16px; background:var(--gss-fg);"></div>
+          <div style="width:24px; height:24px; background:var(--gss-fg);"></div>
+          <div style="width:32px; height:32px; background:var(--gss-fg);"></div>
+        </div>
+        <div class="token-name" style="margin-top:10px;">4 · 8 · 12 · 16 · 24 · 32</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const C=getComputedStyle(document.documentElement),col=n=>C.getPropertyValue(n).trim();
+  // icon strip
+  const P=['<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>','<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>','<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h6M9 8h6"/>','<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>','<path d="M12 2.69 5.64 9.05a9 9 0 1 0 12.72 0z"/>','<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>','<path d="M4 14h7l-2 8 9-12h-7l2-8z"/>','<path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/>','<path d="M11 2v2M5 2v2M5 3a3 3 0 0 0-3 3v3a5 5 0 0 0 5 5h0a5 5 0 0 0 5-5V6a3 3 0 0 0-3-3M7 13a5 5 0 0 0 5 5v0a5 5 0 0 0 5-5"/><circle cx="20" cy="10" r="2"/>','<path d="M12 5v14M5 12h14"/>','<path d="M20 6 9 17l-5-5"/>','<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><path d="M12 9v4M12 17h.01"/>'];
+  const strip=document.getElementById('icon-strip');
+  if(strip) strip.innerHTML=P.map(p=>`<div style="display:grid;place-items:center;height:40px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${col('--gss-fg')}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg></div>`).join('');
+  // sparkline
+  const sv=[3.2,3.6,3.9,4.1,3.8,4.0,4.2,4.3,4.0,3.7,3.9,4.1,4.3,4.2],sw=280,sh=70,smn=Math.min(...sv),smx=Math.max(...sv),sr=smx-smn,ssx=sw/(sv.length-1);
+  const sp=sv.map((x,i)=>`${i?'L':'M'} ${i*ssx} ${sh-((x-smn)/sr)*(sh-8)-4}`).join(' ');
+  const se=document.getElementById('sg-spark');
+  if(se) se.innerHTML=`<path d="${sp} L ${sw} ${sh} L 0 ${sh} Z" fill="${col('--gss-excellent-fg')}" opacity=".08"/><path d="${sp}" fill="none" stroke="${col('--gss-excellent-fg')}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // bars
+  const bv=[6,7,5,8,4,6,7,9,6,5,7,8,6,7],bw=280,bh=70,bmx=10,bbw=bw/bv.length-4;let bs='';
+  bv.forEach((x,i)=>{const h=(x/bmx)*(bh-6),px=i*(bbw+4);bs+=`<rect x="${px}" y="${bh-h}" width="${bbw}" height="${h}" rx="1.5" fill="${col('--gss-fg')}"/>`;});
+  const be=document.getElementById('sg-bars'); if(be) be.innerHTML=bs;
+  // ring
+  const rz=96,rsw=9,rr=(rz-rsw)/2,rc=2*Math.PI*rr;
+  const re=document.getElementById('sg-ring');
+  if(re) re.innerHTML=`<circle cx="48" cy="48" r="${rr}" stroke="${col('--gss-line')}" stroke-width="${rsw}" fill="none"/><circle cx="48" cy="48" r="${rr}" stroke="${col('--gss-excellent-fg')}" stroke-width="${rsw}" fill="none" stroke-linecap="round" stroke-dasharray="${rc}" stroke-dashoffset="${rc*(1-4.2/5)}" transform="rotate(-90 48 48)"/>`;
+})();
+</script>
+
+<!-- TAILWIND -->
+<section id="tailwind" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">09 · Implementação</div>
+      <h2>Uso no Tailwind 3 + Django</h2>
+      <p>Os tokens viram classes Tailwind. Exemplo de uma pill de status numa template Django:</p>
+    </div>
+    <div class="codeblock"><span class="cm">&lt;!-- template Django --&gt;</span>
+<span class="tag">&lt;span</span> class=<span class="at">"gss-pill gss-pill-critical"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> class=<span class="at">"gss-dot bg-critical-fg"</span><span class="tag">&gt;&lt;/span&gt;</span>
+  {{ athlete.wellness_status }}
+<span class="tag">&lt;/span&gt;</span>
+
+<span class="cm">&lt;!-- ou com utilitários puros --&gt;</span>
+<span class="tag">&lt;div</span> class=<span class="at">"bg-elev border border-line rounded-md shadow-card p-5"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;p</span> class=<span class="at">"font-mono text-eyebrow uppercase tracking-widest text-fg3"</span><span class="tag">&gt;</span>Wellness médio<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;p</span> class=<span class="at">"gss-metric-xl mt-2"</span><span class="tag">&gt;</span>4.2<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span></div>
+    <p style="margin-top:24px; color:var(--gss-fg-3); font-size:14px;">Passo a passo completo de instalação em <span class="code">design-system/DJANGO.md</span>.</p>
+  </div>
+</section>
+
+<footer style="padding:40px 0; text-align:center;">
+  <div class="wrap">
+    <div class="eyebrow">© GSS Innovations · 2026 · Design System v1.0</div>
+  </div>
+</footer>
+
+</body>
+</html>

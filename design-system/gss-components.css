@@ -1,0 +1,172 @@
+/* ============================================================================
+   GSS MONITORING — CAMADA DE COMPONENTES (Tailwind 3 · @layer components)
+   ----------------------------------------------------------------------------
+   Importe DEPOIS das diretivas base do Tailwind. No seu CSS de entrada:
+
+       @tailwind base;
+       @tailwind components;
+       @tailwind utilities;
+       @import "gss-components.css";   // ou cole o conteúdo abaixo
+
+   Estas classes encapsulam padrões repetidos para usar direto nas templates:
+       <button class="gss-btn gss-btn-primary">Salvar</button>
+       <span class="gss-pill gss-pill-critical">CRITICAL</span>
+
+   Tudo usa @apply, então herda os tokens do tailwind.config.js.
+   ============================================================================ */
+
+@layer components {
+
+  /* ---------------- BOTÕES ---------------- */
+  .gss-btn {
+    @apply inline-flex items-center justify-center gap-2 px-3.5 py-2.5
+           rounded-sm text-sm font-medium cursor-pointer
+           border border-transparent transition-colors duration-150 ease-gss
+           whitespace-nowrap;
+  }
+  .gss-btn:active { transform: translateY(0.5px); }
+  .gss-btn-primary   { @apply bg-fg text-on-dark; }
+  .gss-btn-primary:hover   { background: #1a1a1d; }
+  .gss-btn-secondary { @apply bg-elev text-fg border-line-2; }
+  .gss-btn-secondary:hover { @apply bg-sunken; }
+  .gss-btn-ghost     { @apply bg-transparent text-fg; }
+  .gss-btn-ghost:hover     { @apply bg-sunken; }
+  .gss-btn-sm { @apply px-2.5 py-1.5 text-xs; }
+  .gss-btn-lg { @apply px-[18px] py-3 text-body; }
+
+  /* ---------------- STATUS PILLS ---------------- */
+  .gss-pill {
+    @apply inline-flex items-center gap-1.5 px-2 py-[3px] rounded-full
+           font-mono text-[11px] font-medium uppercase tracking-wide;
+  }
+  .gss-pill-excellent  { @apply bg-excellent-bg  text-excellent-fg; }
+  .gss-pill-good       { @apply bg-good-bg        text-good-fg; }
+  .gss-pill-warning    { @apply bg-warning-bg     text-warning-fg; }
+  .gss-pill-critical   { @apply bg-critical-bg    text-critical-fg; }
+  .gss-pill-hydrated   { @apply bg-hydrated-bg    text-hydrated-fg; }
+  .gss-pill-attention  { @apply bg-attention-bg   text-attention-fg; }
+  .gss-pill-dehydrated { @apply bg-dehydrated-bg  text-dehydrated-fg; }
+  .gss-pill-neutral    { @apply bg-sunken         text-fg2; }
+
+  /* bolinha de status dentro da pill */
+  .gss-dot { @apply inline-block w-1.5 h-1.5 rounded-full; }
+
+  /* ---------------- CARDS ---------------- */
+  .gss-card {
+    @apply bg-elev border border-line rounded-md;
+  }
+  .gss-card-pad { @apply p-5; }
+
+  /* KPI card */
+  .gss-kpi {
+    @apply flex flex-col gap-3.5 p-5 bg-elev border border-line rounded-md min-h-[132px];
+  }
+
+  /* ---------------- INPUTS ---------------- */
+  .gss-input {
+    @apply w-full px-3 py-2.5 border border-line-2 rounded-sm bg-elev text-fg
+           text-body font-sans transition-shadow duration-150;
+  }
+  .gss-input:focus {
+    @apply outline-none border-fg shadow-focus;
+  }
+  .gss-label {
+    @apply block text-sm font-medium text-fg mb-1;
+  }
+  .gss-hint {
+    @apply block text-xs text-fg3 mt-1;
+  }
+
+  /* ---------------- EYEBROW / RÓTULO MONO ---------------- */
+  .gss-eyebrow {
+    @apply font-mono text-eyebrow uppercase tracking-[0.12em] text-fg3 font-medium;
+  }
+
+  /* ---------------- TABELAS ---------------- */
+  .gss-table { @apply w-full border-collapse text-sm; }
+  .gss-table thead th {
+    @apply text-left font-medium font-mono text-eyebrow uppercase tracking-[0.10em]
+           text-fg3 px-3.5 py-3 border-b border-line bg-sunken;
+  }
+  .gss-table tbody td {
+    @apply px-3.5 py-3.5 border-b border-line align-middle;
+  }
+  .gss-table tbody tr:hover { @apply bg-sunken cursor-pointer; }
+
+  /* ---------------- AVATAR ---------------- */
+  .gss-avatar {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-full
+           bg-sunken text-fg2 text-[11px] font-medium font-mono border border-line shrink-0;
+  }
+  .gss-avatar-lg { @apply w-14 h-14 text-base; }
+  .gss-avatar-xl { @apply w-20 h-20 text-[22px]; }
+
+  /* ---------------- SWITCH (toggle) ---------------- */
+  .gss-switch {
+    @apply relative w-10 h-6 bg-line-2 rounded-full cursor-pointer transition-colors duration-200;
+  }
+  .gss-switch[data-on="true"] { @apply bg-fg; }
+  .gss-switch-knob {
+    @apply absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform duration-200;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .gss-switch[data-on="true"] .gss-switch-knob { transform: translateX(16px); }
+
+  /* ---------------- MÉTRICAS NUMÉRICAS ---------------- */
+  .gss-metric-xl { @apply font-sans font-medium text-metric-xl tabular-nums tracking-tighter2; }
+  .gss-metric-lg { @apply font-sans font-medium text-metric-lg tabular-nums tracking-tightish; }
+  .gss-metric-md { @apply font-sans font-medium text-metric-md tabular-nums; }
+
+  /* ---------------- ESCALA DISCRETA (1–5 / 0–10) ---------------- */
+  .gss-scale-row { @apply flex gap-1.5; }
+  .gss-scale-btn {
+    @apply flex-1 h-[52px] grid place-items-center font-mono text-[15px] cursor-pointer
+           border border-line-2 rounded-sm bg-elev text-fg2 transition-colors duration-150;
+  }
+  .gss-scale-btn:hover  { @apply bg-sunken; }
+  .gss-scale-btn[aria-checked="true"] { @apply bg-fg text-on-dark border-fg; }
+
+  /* ---------------- SWITCH ---------------- */
+  /* (definido acima — .gss-switch) */
+
+  /* ---------------- STEPPER (+/-) ---------------- */
+  .gss-stepper { @apply inline-flex items-center border border-line-2 rounded-sm overflow-hidden; }
+  .gss-stepper button { @apply w-11 h-11 bg-elev border-0 cursor-pointer text-[18px] text-fg2; }
+  .gss-stepper button:hover { @apply bg-sunken; }
+  .gss-stepper-val { @apply w-14 text-center font-mono text-base tabular-nums; }
+
+  /* ---------------- SLIDER ---------------- */
+  .gss-slider {
+    -webkit-appearance: none; appearance: none;
+    @apply w-full h-1 bg-line-2 rounded-full outline-none;
+  }
+  .gss-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    @apply w-[22px] h-[22px] bg-fg rounded-full cursor-pointer;
+    border: 3px solid var(--gss-bg-elev, #fff);
+    box-shadow: 0 0 0 1px #0B0B0D;
+  }
+
+  /* ---------------- CHECKBOX CLÍNICO (sintomas) ---------------- */
+  .gss-sympt {
+    @apply flex items-center gap-3.5 p-4 border border-line bg-elev rounded-sm cursor-pointer
+           transition-colors duration-150;
+  }
+  .gss-sympt[aria-checked="true"] { @apply border-critical-fg bg-critical-bg; }
+  .gss-sympt-box {
+    @apply w-5 h-5 rounded grid place-items-center text-white shrink-0;
+    border: 2px solid var(--gss-line-strong, #C5C2B7);
+  }
+  .gss-sympt[aria-checked="true"] .gss-sympt-box {
+    border-color: var(--gss-critical-fg);
+    background: var(--gss-critical-fg);
+  }
+
+  /* ---------------- BARRA DE PROGRESSO ---------------- */
+  .gss-progress { @apply h-2 bg-line rounded-full overflow-hidden; }
+  .gss-progress-fill { @apply h-full; }   /* pinte com bg-excellent-fg / bg-warning-fg / bg-critical-fg */
+}
+
+/* ---------------- HELPERS GLOBAIS (fora de @layer) ---------------- */
+.gss-mono   { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-feature-settings: "zero"; }
+.gss-tabular{ font-variant-numeric: tabular-nums; }

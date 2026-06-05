@@ -1,0 +1,27 @@
+<!-- @dsCard group="Components" -->
+<!doctype html><html><head><meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  body{margin:0;font-family:'IBM Plex Sans',sans-serif;background:#FAFAF7;padding:0;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:#FFF;}
+  th{text-align:left;font-family:'IBM Plex Mono';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#6E6E76;padding:11px 16px;background:#F3F2EE;font-weight:500;}
+  td{padding:12px 16px;border-bottom:1px solid #E8E6DF;}
+  .avatar{width:28px;height:28px;border-radius:999px;background:#F3F2EE;border:1px solid #E8E6DF;display:inline-flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:11px;}
+  .nm{display:flex;align-items:center;gap:10px;font-weight:500;}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-family:'IBM Plex Mono';font-size:11px;font-weight:500;text-transform:uppercase;}
+  .dot{width:6px;height:6px;border-radius:999px;}
+  .c-crit{background:oklch(0.95 0.04 25);color:oklch(0.45 0.16 25);}
+  .c-warn{background:oklch(0.96 0.05 85);color:oklch(0.45 0.12 75);}
+  .c-deh{background:oklch(0.94 0.06 25);color:oklch(0.45 0.18 25);}
+  .c-att{background:oklch(0.95 0.05 55);color:oklch(0.50 0.14 55);}
+  .row-crit{background:linear-gradient(90deg,oklch(0.95 0.04 25) 0%,transparent 55%);}
+  .row-warn{background:linear-gradient(90deg,oklch(0.96 0.05 85) 0%,transparent 55%);}
+</style></head><body>
+<table>
+  <thead><tr><th>Atleta</th><th>Wellness</th><th>Hidratação</th><th>Alerta</th></tr></thead>
+  <tbody>
+    <tr class="row-crit"><td><span class="nm"><span class="avatar">08</span>Henrique Silva</span></td><td><span class="pill c-crit"><span class="dot" style="background:oklch(0.45 0.16 25)"></span>CRITICAL</span></td><td><span class="pill c-deh"><span class="dot" style="background:oklch(0.45 0.18 25)"></span>DEHYDRATED</span></td><td><span class="pill c-crit"><span class="dot" style="background:oklch(0.45 0.16 25)"></span>CRITICAL</span></td></tr>
+    <tr class="row-warn"><td><span class="nm"><span class="avatar">14</span>Lucas Pereira</span></td><td><span class="pill c-warn"><span class="dot" style="background:oklch(0.45 0.12 75)"></span>WARNING</span></td><td><span class="pill c-att"><span class="dot" style="background:oklch(0.50 0.14 55)"></span>ATTENTION</span></td><td><span class="pill c-warn"><span class="dot" style="background:oklch(0.45 0.12 75)"></span>WARNING</span></td></tr>
+  </tbody>
+</table>
+</body></html>

@@ -28,9 +28,16 @@
         <a href="{% url 'tenant_dashboard' %}" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
             {% trans "Dashboard" %}
         </a>
+        {% if 'users.view' in tenant_perms %}
         <a href="{% url 'team_list' %}" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
             {% trans "Team" %}
         </a>
+        {% endif %}
+        {% if 'roles.view' in tenant_perms %}
+        <a href="{% url 'role_list' %}" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+            {% trans "Roles" %}
+        </a>
+        {% endif %}
     </div>
 
     <section class="rounded-xl border border-gray-200 bg-white">
