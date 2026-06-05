@@ -28,3 +28,14 @@ class WorkspaceInviteAdmin(admin.ModelAdmin):
     list_display = ('email', 'workspace', 'role', 'status', 'created_at')
     list_filter = ('status', 'workspace')
     search_fields = ('email',)
+
+    readonly_fields = ('token',)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        
+        if not change and not obj.workspace:
+            print("\n" + "="*60)
+            print("🚀 LINK DO CONVITE GÊNESIS GERADO:")
+            print(f"http://localhost:8000/convite/{obj.token}/")
+            print("="*60 + "\n")

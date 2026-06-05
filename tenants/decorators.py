@@ -1,44 +1,44 @@
-from django.http import HttpResponseForbidden
+from functools import wraps
 from django.shortcuts import redirect
+from django.contrib import messages
 from .models import WorkspaceMembership
 
-def tenant_permission_required(permission_name=None):
+def tenant_permission_required(required_permission=None):
     """
-    Guardião de rotas internas do Tenant.
-    Verifica se o usuário pertence ao tenant atual da URL e se tem a permissão necessária.
+    Protege as views do tenant.
+    Se 'required_permission' for passado, checa se o Cargo do usuário tem a permissão.
     """
     def decorator(view_func):
+        @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
-            # Garante que o usuário está logado
+            # 1. Garante que está logado
             if not request.user.is_authenticated:
                 return redirect('login')
-
-            # O django-tenants já resolveu o tenant atual automaticamente com base no subdomínio
-            tenant_atual = request.tenant
             
-            # Segurança: Impede que rotas internas sejam acessadas no domínio público (localhost)
-            if tenant_atual.schema_name == 'public':
-                return HttpResponseForbidden("Esta área é exclusiva para uso dentro de um Workspace válido.")
+            # 2. Garante que está acessando um tenant válido
+            if not hasattr(request, 'tenant') or request.tenant.schema_name == 'public':
+                return redirect('login')
             
-            # Busca o vínculo exato do usuário com a empresa atual
+            # 3. Busca o vínculo do usuário com a empresa (trazendo o Cargo junto para otimizar)
             try:
-                membership = WorkspaceMembership.objects.get(workspace=tenant_atual, user=request.user)
+                membership = WorkspaceMembership.objects.select_related('role').get(
+                    workspace=request.tenant,
+                    user=request.user
+                )
             except WorkspaceMembership.DoesNotExist:
-                return HttpResponseForbidden("Você não possui vínculo ou permissão para acessar este Workspace.")
+                messages.error(request, "Você não tem acesso a este ambiente.")
+                return redirect('login')
             
-            # REGRA DE OURO 1: Se for Dono/Admin do Tenant, tem passe livre absoluto (ignora checagens)
-            if membership.is_tenant_admin:
-                return view_func(request, *args, **kwargs)
+            # 4. Checagem de Permissão Específica (RBAC)
+            if required_permission:
+                # O Dono absoluto passa direto. Os outros precisam ter a string na lista JSON.
+                if not (membership.role.is_system_owner or required_permission in membership.role.permissions):
+                    messages.error(request, "Você não tem permissão para realizar esta ação.")
+                    return redirect('tenant_dashboard')
             
-            # REGRA DE OURO 2: Se foi exigida uma permissão específica (ex: 'tenant.delete')
-            if permission_name:
-                # Verifica se o usuário tem um cargo e se a permissão está na lista JSON
-                if membership.role and permission_name in membership.role.permissions:
-                    return view_func(request, *args, **kwargs)
-                
-                return HttpResponseForbidden(f"Acesso negado. Você precisa da permissão '{permission_name}' para executar esta ação.")
+            # 5. Se passou em tudo, anexa a membership no request para facilitar nas views
+            request.tenant_membership = membership
             
-            # Se nenhuma permissão específica foi exigida (apenas o acesso base ao painel), libera
             return view_func(request, *args, **kwargs)
         return _wrapped_view
     return decorator

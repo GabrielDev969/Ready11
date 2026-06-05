@@ -101,7 +101,7 @@ class WorkspaceInvite(models.Model):
     workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='invites', null=True, blank=True)
     
     # Quando o convite for aceito, a pessoa receberá este cargo.
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
     
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     status = models.CharField(max_length=20, choices=InviteStatus.choices, default=InviteStatus.PENDING)
