@@ -49,5 +49,22 @@
             {% trans "No updates at the moment." %}
         </div>
     </section>
+
+    {% if not is_workspace_owner %}
+    <section class="mt-8 rounded-xl border border-gray-200 p-5">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h2 class="text-sm font-medium text-gray-900">{% trans "Leave workspace" %}</h2>
+                <p class="text-xs text-gray-500">{% trans "You'll lose access to this workspace until you're invited again." %}</p>
+            </div>
+            <form action="{% url 'workspace_leave' %}" method="post" onsubmit="return confirm('{% trans "Leave this workspace?" %}');">
+                {% csrf_token %}
+                <button type="submit" class="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50">
+                    {% trans "Leave workspace" %}
+                </button>
+            </form>
+        </div>
+    </section>
+    {% endif %}
 </div>
 {% endblock %}

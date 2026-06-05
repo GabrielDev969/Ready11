@@ -218,6 +218,71 @@ def team_invite_view(request):
     return redirect('team_list')
 
 
+@tenant_permission_required('users.remove')
+def member_remove_view(request, membership_id):
+    """Remove a member from the workspace (their membership), with guardrails."""
+    if request.method != 'POST':
+        return redirect('team_list')
+
+    workspace = request.tenant
+    membership = get_object_or_404(
+        WorkspaceMembership.objects.select_related('user', 'role'),
+        id=membership_id,
+        workspace=workspace,
+    )
+
+    # Guardrails: never remove the workspace owner, and don't let someone remove
+    # themselves here (leaving a workspace would be a separate, explicit action).
+    if membership.role.is_system_owner or membership.user_id == workspace.owner_id:
+        messages.error(request, _("The workspace owner cannot be removed."))
+        return redirect('team_list')
+
+    if membership.user_id == request.user.id:
+        messages.error(request, _("You cannot remove yourself."))
+        return redirect('team_list')
+
+    removed_user = membership.user
+    email = removed_user.email
+
+    with transaction.atomic():
+        # Clear their default workspace if it pointed here (avoids a stale default).
+        if removed_user.default_workspace_id == workspace.id:
+            removed_user.default_workspace = None
+            removed_user.save(update_fields=['default_workspace'])
+        membership.delete()
+
+    messages.success(request, _("%(email)s was removed from the workspace.") % {'email': email})
+    return redirect('team_list')
+
+
+@tenant_permission_required()
+def workspace_leave_view(request):
+    """Let any member leave the current workspace on their own (owner can't)."""
+    if request.method != 'POST':
+        return redirect('tenant_home')
+
+    workspace = request.tenant
+    user = request.user
+
+    # The owner must transfer ownership before leaving (out of scope for now).
+    if user.id == workspace.owner_id:
+        messages.error(request, _("The owner can't leave the workspace. Transfer ownership first."))
+        return redirect('tenant_home')
+
+    with transaction.atomic():
+        if user.default_workspace_id == workspace.id:
+            user.default_workspace = None
+            user.save(update_fields=['default_workspace'])
+        WorkspaceMembership.objects.filter(workspace=workspace, user=user).delete()
+
+    messages.success(request, _("You left %(workspace)s.") % {'workspace': workspace.name})
+
+    # Send them back to the public landing (they no longer belong here).
+    host = request.get_host()
+    port = f":{host.split(':')[1]}" if ':' in host else ''
+    return redirect(f"{request.scheme}://{settings.TENANT_BASE_DOMAIN}{port}/")
+
+
 @tenant_permission_required('users.invite')
 def invite_cancel_view(request, invite_id):
     """Cancel a pending invite (revokes its link)."""

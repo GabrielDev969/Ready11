@@ -35,6 +35,7 @@ media/
 
 # CSS compilado pelo Tailwind (gerado no build, não versionado)
 static/css/output.css
+design-system
 
 # Traduções compiladas (geradas via compilemessages)
 *.mo

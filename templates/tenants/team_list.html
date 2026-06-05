@@ -15,14 +15,22 @@
             </div>
             <ul class="divide-y divide-gray-100">
                 {% for member in members %}
-                <li class="px-6 py-4 flex items-center justify-between">
-                    <div>
-                        <p class="text-sm font-medium text-gray-900">{{ member.user.first_name }} {{ member.user.last_name }}</p>
-                        <p class="text-sm text-gray-500">{{ member.user.email }}</p>
+                <li class="px-6 py-4 flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-gray-900 truncate">{{ member.user.first_name }} {{ member.user.last_name }}</p>
+                        <p class="text-sm text-gray-500 truncate">{{ member.user.email }}</p>
                     </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if member.role.is_system_owner %}bg-black text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
-                        {{ member.role.name }}
-                    </span>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if member.role.is_system_owner %}bg-black text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ member.role.name }}
+                        </span>
+                        {% if 'users.remove' in tenant_perms and not member.role.is_system_owner and member.user.id != user.id %}
+                        <form action="{% url 'member_remove' member.id %}" method="post" onsubmit="return confirm('{% trans "Remove this member from the workspace?" %}');">
+                            {% csrf_token %}
+                            <button type="submit" class="text-xs font-medium text-red-600 hover:text-red-800">{% trans "Remove" %}</button>
+                        </form>
+                        {% endif %}
+                    </div>
                 </li>
                 {% endfor %}
             </ul>

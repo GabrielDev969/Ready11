@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 13:50-0300\n"
+"POT-Creation-Date: 2026-06-05 14:13-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -375,6 +375,20 @@ msgstr "Novidades e comunicados do produto."
 msgid "No updates at the moment."
 msgstr "Nenhuma atualização no momento."
 
+#: templates/tenants/home.html:57 templates/tenants/home.html:63
+#| msgid "Default workspace"
+msgid "Leave workspace"
+msgstr "Sair do workspace"
+
+#: templates/tenants/home.html:58
+msgid "You'll lose access to this workspace until you're invited again."
+msgstr "Você perderá o acesso a este workspace até ser convidado novamente."
+
+#: templates/tenants/home.html:60
+#| msgid "Default workspace"
+msgid "Leave this workspace?"
+msgstr "Sair deste workspace?"
+
 #: templates/tenants/invite_unavailable.html:4
 msgid "Invitation unavailable"
 msgstr "Convite indisponível"
@@ -412,7 +426,7 @@ msgstr "Criar um novo cargo"
 msgid "Define the name and what members with this role can do."
 msgstr "Defina o nome e o que os membros com este cargo podem fazer."
 
-#: templates/tenants/role_form.html:43 templates/tenants/team_list.html:58
+#: templates/tenants/role_form.html:43 templates/tenants/team_list.html:66
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -487,41 +501,49 @@ msgstr "Em uso por membros"
 msgid "Active members"
 msgstr "Membros ativos"
 
-#: templates/tenants/team_list.html:34
+#: templates/tenants/team_list.html:28
+msgid "Remove this member from the workspace?"
+msgstr "Remover este membro do workspace?"
+
+#: templates/tenants/team_list.html:30
+msgid "Remove"
+msgstr "Remover"
+
+#: templates/tenants/team_list.html:42
 msgid "Pending invites"
 msgstr "Convites pendentes"
 
-#: templates/tenants/team_list.html:43 templates/tenants/team_list.html:48
+#: templates/tenants/team_list.html:51 templates/tenants/team_list.html:56
 #: tenants/models.py:122
 msgid "Expired"
 msgstr "Expirado"
 
-#: templates/tenants/team_list.html:43
+#: templates/tenants/team_list.html:51
 #, python-format
 msgid "Expires on %(date)s"
 msgstr "Expira em %(date)s"
 
-#: templates/tenants/team_list.html:50 tenants/models.py:120
+#: templates/tenants/team_list.html:58 tenants/models.py:120
 msgid "Pending"
 msgstr "Pendente"
 
-#: templates/tenants/team_list.html:54
+#: templates/tenants/team_list.html:62
 msgid "Resend"
 msgstr "Reenviar"
 
-#: templates/tenants/team_list.html:56
+#: templates/tenants/team_list.html:64
 msgid "Cancel this invitation?"
 msgstr "Cancelar este convite?"
 
-#: templates/tenants/team_list.html:71
+#: templates/tenants/team_list.html:79
 msgid "Invite people"
 msgstr "Convidar pessoas"
 
-#: templates/tenants/team_list.html:83
+#: templates/tenants/team_list.html:91
 msgid "You can't assign a role yet."
 msgstr "Você ainda não pode atribuir um cargo."
 
-#: templates/tenants/team_list.html:84
+#: templates/tenants/team_list.html:92
 msgid ""
 "Inviting requires choosing a role, but you don't have permission to view "
 "roles. Ask an administrator to grant it (or to send the invite)."
@@ -530,24 +552,24 @@ msgstr ""
 "cargos. Peça a um administrador para conceder essa permissão (ou para enviar"
 " o convite)."
 
-#: templates/tenants/team_list.html:100
+#: templates/tenants/team_list.html:108
 msgid "Send invitation"
 msgstr "Enviar convite"
 
-#: templates/tenants/team_list.html:105
+#: templates/tenants/team_list.html:113
 msgid "A role is required to invite people."
 msgstr "É necessário um cargo para convidar pessoas."
 
-#: templates/tenants/team_list.html:107
+#: templates/tenants/team_list.html:115
 msgid "Create a role first, then you can assign it to new members."
 msgstr ""
 "Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
 
-#: templates/tenants/team_list.html:108
+#: templates/tenants/team_list.html:116
 msgid "Create a role"
 msgstr "Criar um cargo"
 
-#: templates/tenants/team_list.html:110
+#: templates/tenants/team_list.html:118
 msgid "Ask someone with permission to create roles to add one first."
 msgstr ""
 "Peça a alguém com permissão para criar cargos que adicione um primeiro."
@@ -730,65 +752,88 @@ msgstr "Convite enviado para %(email)s."
 msgid "Could not send the invitation. Please check the data."
 msgstr "Não foi possível enviar o convite. Verifique os dados."
 
-#: tenants/views.py:230
+#: tenants/views.py:237
+msgid "The workspace owner cannot be removed."
+msgstr "O dono do workspace não pode ser removido."
+
+#: tenants/views.py:241
+msgid "You cannot remove yourself."
+msgstr "Você não pode remover a si mesmo."
+
+#: tenants/views.py:254
+#, python-format
+msgid "%(email)s was removed from the workspace."
+msgstr "%(email)s foi removido(a) do workspace."
+
+#: tenants/views.py:269
+msgid "The owner can't leave the workspace. Transfer ownership first."
+msgstr "O dono não pode sair do workspace. Transfira a posse primeiro."
+
+#: tenants/views.py:278
+#, python-format
+#| msgid "You have joined %(workspace)s."
+msgid "You left %(workspace)s."
+msgstr "Você saiu de %(workspace)s."
+
+#: tenants/views.py:295
 #, python-format
 msgid "Invitation to %(email)s cancelled."
 msgstr "Convite para %(email)s cancelado."
 
-#: tenants/views.py:232
+#: tenants/views.py:297
 msgid "This invitation cannot be cancelled."
 msgstr "Este convite não pode ser cancelado."
 
-#: tenants/views.py:245
+#: tenants/views.py:310
 msgid "This invitation cannot be resent."
 msgstr "Este convite não pode ser reenviado."
 
-#: tenants/views.py:255
+#: tenants/views.py:320
 #, python-format
 msgid "Invitation resent to %(email)s."
 msgstr "Convite reenviado para %(email)s."
 
-#: tenants/views.py:277
+#: tenants/views.py:342
 msgid "Please log in to accept this invitation."
 msgstr "Faça login para aceitar este convite."
 
-#: tenants/views.py:281
+#: tenants/views.py:346
 msgid "This invitation was sent to a different account."
 msgstr "Este convite foi enviado para outra conta."
 
-#: tenants/views.py:298
+#: tenants/views.py:363
 #, python-format
 msgid "You have joined %(workspace)s."
 msgstr "Você entrou em %(workspace)s."
 
-#: tenants/views.py:332
+#: tenants/views.py:397
 msgid ""
 "Something went wrong while processing your invitation. Please try again."
 msgstr "Algo deu errado ao processar seu convite. Tente novamente."
 
-#: tenants/views.py:374
+#: tenants/views.py:439
 #, python-format
 msgid "Role '%(name)s' created."
 msgstr "Cargo '%(name)s' criado."
 
-#: tenants/views.py:389
+#: tenants/views.py:454
 msgid "The owner role cannot be edited."
 msgstr "O cargo de dono não pode ser editado."
 
-#: tenants/views.py:403
+#: tenants/views.py:468
 #, python-format
 msgid "Role '%(name)s' updated."
 msgstr "Cargo '%(name)s' atualizado."
 
-#: tenants/views.py:421
+#: tenants/views.py:486
 msgid "The owner role cannot be deleted."
 msgstr "O cargo de dono não pode ser excluído."
 
-#: tenants/views.py:425
+#: tenants/views.py:490
 msgid "This role can't be deleted while members are using it."
 msgstr "Este cargo não pode ser excluído enquanto houver membros usando ele."
 
-#: tenants/views.py:430
+#: tenants/views.py:495
 #, python-format
 msgid "Role '%(name)s' deleted."
 msgstr "Cargo '%(name)s' excluído."
