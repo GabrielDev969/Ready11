@@ -185,6 +185,13 @@ def profile_view(request):
     })
 
 
+def settings_view(request):
+    """Account settings. Minimal for now (language is in the header switcher)."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'users/settings.html')
+
+
 def set_default_workspace(request, workspace_id):
     """Set the user's default workspace (only if they're a member of it)."""
     if not request.user.is_authenticated:

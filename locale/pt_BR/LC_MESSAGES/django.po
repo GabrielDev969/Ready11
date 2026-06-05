@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 14:24-0300\n"
+"POT-Creation-Date: 2026-06-05 14:44-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -24,18 +24,13 @@ msgstr "Inglês"
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
-#: templates/base.html:25
-msgid "Log out"
-msgstr "Sair"
-
-#: templates/base.html:27 templates/users/login.html:4
-#: templates/users/login.html:39 templates/users/register.html:58
-msgid "Sign in"
-msgstr "Entrar"
-
-#: templates/base.html:42
+#: templates/base.html:33
 msgid "Ready11 — base project for B2B SaaS systems."
 msgstr "Ready11 — projeto base para sistemas SaaS B2B."
+
+#: templates/base_app.html:31
+msgid "Toggle sidebar"
+msgstr "Abrir/fechar menu lateral"
 
 #: templates/core/landing.html:4
 msgid "Ready11 — B2B SaaS base project"
@@ -212,8 +207,48 @@ msgstr ""
 "gênesis pelo admin do Django."
 
 #: templates/partials/language_switcher.html:7
+#: templates/users/settings.html:13
 msgid "Language"
 msgstr "Idioma"
+
+#: templates/partials/profile_menu.html:19
+#| msgid "Your profile"
+msgid "Profile"
+msgstr "Perfil"
+
+#: templates/partials/profile_menu.html:23 templates/users/settings.html:4
+#: templates/users/settings.html:10
+msgid "Settings"
+msgstr "Configurações"
+
+#: templates/partials/profile_menu.html:27
+msgid "Log out"
+msgstr "Sair"
+
+#: templates/partials/sidebar.html:3 templates/partials/sidebar.html:6
+#: templates/tenants/home.html:4
+msgid "Home"
+msgstr "Início"
+
+#: templates/partials/sidebar.html:9 templates/partials/sidebar.html:12
+#: templates/tenants/dashboard.html:4 templates/tenants/home.html:27
+msgid "Dashboard"
+msgstr "Painel"
+
+#: templates/partials/sidebar.html:16 templates/partials/sidebar.html:19
+#: templates/tenants/home.html:31 templates/tenants/team_list.html:4
+msgid "Team"
+msgstr "Equipe"
+
+#: templates/partials/sidebar.html:24 templates/partials/sidebar.html:27
+#: templates/tenants/home.html:36
+msgid "Roles"
+msgstr "Cargos"
+
+#: templates/partials/topbar_nav.html:7 templates/users/login.html:4
+#: templates/users/login.html:39 templates/users/register.html:58
+msgid "Sign in"
+msgstr "Entrar"
 
 #: templates/partials/workspace_switcher.html:9
 msgid "Workspaces"
@@ -272,35 +307,31 @@ msgstr "Mín. 8 caracteres, com maiúscula, minúscula, número e símbolo."
 msgid "Create account and enter"
 msgstr "Criar conta e entrar"
 
-#: templates/tenants/dashboard.html:4 templates/tenants/home.html:29
-msgid "Dashboard"
-msgstr "Painel"
-
-#: templates/tenants/dashboard.html:14
+#: templates/tenants/dashboard.html:12
 msgid "Isolated and secure environment"
 msgstr "Ambiente isolado e seguro"
 
-#: templates/tenants/dashboard.html:23
+#: templates/tenants/dashboard.html:21
 msgid "Overview"
 msgstr "Visão geral"
 
-#: templates/tenants/dashboard.html:27
+#: templates/tenants/dashboard.html:25
 msgid "Team members"
 msgstr "Membros da equipe"
 
-#: templates/tenants/dashboard.html:32
+#: templates/tenants/dashboard.html:30
 msgid "Database status"
 msgstr "Status do banco"
 
-#: templates/tenants/dashboard.html:35
+#: templates/tenants/dashboard.html:33
 msgid "Isolated & active"
 msgstr "Isolado e ativo"
 
-#: templates/tenants/dashboard.html:40
+#: templates/tenants/dashboard.html:38
 msgid "Your role"
 msgstr "Seu cargo"
 
-#: templates/tenants/dashboard.html:41
+#: templates/tenants/dashboard.html:39
 msgid "Owner / Admin"
 msgstr "Dono / Admin"
 
@@ -342,48 +373,36 @@ msgstr "%(name)s está pronto!"
 msgid "Your isolated workspace has been provisioned."
 msgstr "Seu workspace isolado foi provisionado."
 
-#: templates/tenants/home.html:4
-msgid "Home"
-msgstr "Início"
-
-#: templates/tenants/home.html:12
+#: templates/tenants/home.html:10
 #, python-format
 msgid "Welcome to %(name)s"
 msgstr "Bem-vindo(a) à %(name)s"
 
-#: templates/tenants/home.html:15
+#: templates/tenants/home.html:13
 msgid "This is your home — available to everyone in the workspace."
 msgstr "Esta é a sua página inicial — disponível para todos no workspace."
 
-#: templates/tenants/home.html:33 templates/tenants/team_list.html:4
-msgid "Team"
-msgstr "Equipe"
-
-#: templates/tenants/home.html:38
-msgid "Roles"
-msgstr "Cargos"
-
-#: templates/tenants/home.html:45
+#: templates/tenants/home.html:43
 msgid "System updates"
 msgstr "Atualizações do sistema"
 
-#: templates/tenants/home.html:46
+#: templates/tenants/home.html:44
 msgid "Product news and announcements."
 msgstr "Novidades e comunicados do produto."
 
-#: templates/tenants/home.html:49
+#: templates/tenants/home.html:47
 msgid "No updates at the moment."
 msgstr "Nenhuma atualização no momento."
 
-#: templates/tenants/home.html:57 templates/tenants/home.html:63
+#: templates/tenants/home.html:55 templates/tenants/home.html:61
 msgid "Leave workspace"
 msgstr "Sair do workspace"
 
-#: templates/tenants/home.html:58
+#: templates/tenants/home.html:56
 msgid "You'll lose access to this workspace until you're invited again."
 msgstr "Você perderá o acesso a este workspace até ser convidado novamente."
 
-#: templates/tenants/home.html:60
+#: templates/tenants/home.html:58
 msgid "Leave this workspace?"
 msgstr "Sair deste workspace?"
 
@@ -412,7 +431,7 @@ msgstr "Voltar ao início"
 msgid "Edit role"
 msgstr "Editar cargo"
 
-#: templates/tenants/role_form.html:4 templates/tenants/role_list.html:14
+#: templates/tenants/role_form.html:4 templates/tenants/role_list.html:12
 msgid "New role"
 msgstr "Novo cargo"
 
@@ -424,7 +443,7 @@ msgstr "Criar um novo cargo"
 msgid "Define the name and what members with this role can do."
 msgstr "Defina o nome e o que os membros com este cargo podem fazer."
 
-#: templates/tenants/role_form.html:43 templates/tenants/team_list.html:66
+#: templates/tenants/role_form.html:43 templates/tenants/team_list.html:64
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -432,116 +451,116 @@ msgstr "Cancelar"
 msgid "Save role"
 msgstr "Salvar cargo"
 
-#: templates/tenants/role_list.html:4 templates/tenants/role_list.html:11
+#: templates/tenants/role_list.html:4 templates/tenants/role_list.html:9
 msgid "Roles & permissions"
 msgstr "Cargos e permissões"
 
-#: templates/tenants/role_list.html:29 tenants/forms.py:37
+#: templates/tenants/role_list.html:27 tenants/forms.py:37
 msgid "Role"
 msgstr "Cargo"
 
-#: templates/tenants/role_list.html:30
+#: templates/tenants/role_list.html:28
 msgid "Status"
 msgstr "Status"
 
-#: templates/tenants/role_list.html:31 tenants/models.py:90
+#: templates/tenants/role_list.html:29 tenants/models.py:90
 msgid "Permissions"
 msgstr "Permissões"
 
-#: templates/tenants/role_list.html:32
+#: templates/tenants/role_list.html:30
 msgid "Members"
 msgstr "Membros"
 
-#: templates/tenants/role_list.html:33
+#: templates/tenants/role_list.html:31
 msgid "Actions"
 msgstr "Ações"
 
-#: templates/tenants/role_list.html:44
+#: templates/tenants/role_list.html:42
 msgid "Absolute owner"
 msgstr "Dono absoluto"
 
-#: templates/tenants/role_list.html:46
+#: templates/tenants/role_list.html:44
 msgid "System default"
 msgstr "Padrão do sistema"
 
-#: templates/tenants/role_list.html:48
+#: templates/tenants/role_list.html:46
 msgid "Custom"
 msgstr "Customizado"
 
-#: templates/tenants/role_list.html:53
+#: templates/tenants/role_list.html:51
 msgid "All permissions granted"
 msgstr "Todas as permissões liberadas"
 
-#: templates/tenants/role_list.html:55
+#: templates/tenants/role_list.html:53
 #, python-format
 msgid "%(counter)s permission"
 msgid_plural "%(counter)s permissions"
 msgstr[0] "%(counter)s permissão"
 msgstr[1] "%(counter)s permissões"
 
-#: templates/tenants/role_list.html:66
+#: templates/tenants/role_list.html:64
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/tenants/role_list.html:70
+#: templates/tenants/role_list.html:68
 msgid "Delete this role?"
 msgstr "Excluir este cargo?"
 
-#: templates/tenants/role_list.html:72 templates/tenants/role_list.html:75
+#: templates/tenants/role_list.html:70 templates/tenants/role_list.html:73
 msgid "Delete"
 msgstr "Excluir"
 
-#: templates/tenants/role_list.html:75
+#: templates/tenants/role_list.html:73
 msgid "In use by members"
 msgstr "Em uso por membros"
 
-#: templates/tenants/team_list.html:14
+#: templates/tenants/team_list.html:12
 msgid "Active members"
 msgstr "Membros ativos"
 
-#: templates/tenants/team_list.html:28
+#: templates/tenants/team_list.html:26
 msgid "Remove this member from the workspace?"
 msgstr "Remover este membro do workspace?"
 
-#: templates/tenants/team_list.html:30
+#: templates/tenants/team_list.html:28
 msgid "Remove"
 msgstr "Remover"
 
-#: templates/tenants/team_list.html:42
+#: templates/tenants/team_list.html:40
 msgid "Pending invites"
 msgstr "Convites pendentes"
 
-#: templates/tenants/team_list.html:51 templates/tenants/team_list.html:56
+#: templates/tenants/team_list.html:49 templates/tenants/team_list.html:54
 #: tenants/models.py:122
 msgid "Expired"
 msgstr "Expirado"
 
-#: templates/tenants/team_list.html:51
+#: templates/tenants/team_list.html:49
 #, python-format
 msgid "Expires on %(date)s"
 msgstr "Expira em %(date)s"
 
-#: templates/tenants/team_list.html:58 tenants/models.py:120
+#: templates/tenants/team_list.html:56 tenants/models.py:120
 msgid "Pending"
 msgstr "Pendente"
 
-#: templates/tenants/team_list.html:62
+#: templates/tenants/team_list.html:60
 msgid "Resend"
 msgstr "Reenviar"
 
-#: templates/tenants/team_list.html:64
+#: templates/tenants/team_list.html:62
 msgid "Cancel this invitation?"
 msgstr "Cancelar este convite?"
 
-#: templates/tenants/team_list.html:79
+#: templates/tenants/team_list.html:77
 msgid "Invite people"
 msgstr "Convidar pessoas"
 
-#: templates/tenants/team_list.html:91
+#: templates/tenants/team_list.html:89
 msgid "You can't assign a role yet."
 msgstr "Você ainda não pode atribuir um cargo."
 
-#: templates/tenants/team_list.html:92
+#: templates/tenants/team_list.html:90
 msgid ""
 "Inviting requires choosing a role, but you don't have permission to view "
 "roles. Ask an administrator to grant it (or to send the invite)."
@@ -550,24 +569,24 @@ msgstr ""
 "cargos. Peça a um administrador para conceder essa permissão (ou para enviar"
 " o convite)."
 
-#: templates/tenants/team_list.html:108
+#: templates/tenants/team_list.html:106
 msgid "Send invitation"
 msgstr "Enviar convite"
 
-#: templates/tenants/team_list.html:113
+#: templates/tenants/team_list.html:111
 msgid "A role is required to invite people."
 msgstr "É necessário um cargo para convidar pessoas."
 
-#: templates/tenants/team_list.html:115
+#: templates/tenants/team_list.html:113
 msgid "Create a role first, then you can assign it to new members."
 msgstr ""
 "Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
 
-#: templates/tenants/team_list.html:116
+#: templates/tenants/team_list.html:114
 msgid "Create a role"
 msgstr "Criar um cargo"
 
-#: templates/tenants/team_list.html:118
+#: templates/tenants/team_list.html:116
 msgid "Ask someone with permission to create roles to add one first."
 msgstr ""
 "Peça a alguém com permissão para criar cargos que adicione um primeiro."
@@ -598,7 +617,6 @@ msgid "Sign up"
 msgstr "Cadastre-se"
 
 #: templates/users/profile.html:4 templates/users/profile.html:10
-#| msgid "Your role"
 msgid "Your profile"
 msgstr "Seu perfil"
 
@@ -623,7 +641,6 @@ msgid "Save changes"
 msgstr "Salvar alterações"
 
 #: templates/users/profile.html:56 templates/users/profile.html:80
-#| msgid "Confirm password"
 msgid "Change password"
 msgstr "Alterar senha"
 
@@ -685,6 +702,23 @@ msgid ""
 msgstr ""
 "Enviamos um link de confirmação. Clique nele para verificar sua conta e "
 "acessar o sistema."
+
+#: templates/users/settings.html:14
+msgid "Choose your preferred language."
+msgstr "Escolha seu idioma preferido."
+
+#: templates/users/settings.html:21
+msgid "Account"
+msgstr "Conta"
+
+#: templates/users/settings.html:22
+msgid "Manage your personal information and password."
+msgstr "Gerencie suas informações pessoais e senha."
+
+#: templates/users/settings.html:24
+#| msgid "Your profile"
+msgid "Go to profile"
+msgstr "Ir para o perfil"
 
 #: tenants/decorators.py:30
 msgid "You don't have access to this environment."
@@ -949,20 +983,18 @@ msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
 #: users/views.py:170
-#| msgid "Role '%(name)s' updated."
 msgid "Profile updated."
 msgstr "Perfil atualizado."
 
 #: users/views.py:179
-#| msgid "Password"
 msgid "Password changed."
 msgstr "Senha alterada."
 
-#: users/views.py:201
+#: users/views.py:208
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: users/views.py:203
+#: users/views.py:210
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
 

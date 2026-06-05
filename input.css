@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ==========================================
+   Collapsible app sidebar
+   ========================================== */
+#app-sidebar {
+    width: 16rem;
+    transition: width 0.15s ease;
+}
+
+/* Collapsed: show icons only. State lives on <html> (set before paint). */
+html.sidebar-collapsed #app-sidebar {
+    width: 4rem;
+}
+html.sidebar-collapsed #app-sidebar .nav-label,
+html.sidebar-collapsed #app-sidebar .sidebar-brand-text {
+    display: none;
+}
+html.sidebar-collapsed #app-sidebar .nav-link {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Remove the default disclosure triangle from dropdown summaries. */
+details.ui-dropdown > summary::-webkit-details-marker { display: none; }
+details.ui-dropdown > summary { list-style: none; }
