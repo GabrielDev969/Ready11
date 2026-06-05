@@ -1,81 +1,84 @@
 # Ready11
 
-Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenancy isolado por schema** (`django-tenants`), contas globais, controle de acesso por cargos (RBAC), onboarding por convite, proteção contra força bruta (`django-axes`) e **internacionalização** (inglês + português do Brasil, com auto-detecção). Roda localmente (PostgreSQL via Docker) ou totalmente em containers.
+📖 Também disponível em [Português](README.pt-br.md)
 
-Este guia foi escrito para quem **acabou de clonar o repositório** e nunca rodou o projeto antes. Há instruções separadas para **Windows** e **macOS**.
+A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-isolated multi-tenancy** (`django-tenants`), global accounts, role-based access control (RBAC), invite-only onboarding, brute-force protection (`django-axes`) and **internationalization** (English + Brazilian Portuguese, auto-detected). Runs locally (PostgreSQL via Docker) or fully in containers.
 
-> A página inicial (`/`) é uma landing de apresentação que também resume a instalação.
+This guide is written for someone who **just cloned the repository** and has never run the project before. There are separate instructions for **Windows** and **macOS**.
+
+> The home page (`/`) is a presentation landing page that also summarizes installation.
 
 ---
 
-## Sumário
+## Table of contents
 
-- [Stack do projeto](#stack-do-projeto)
-- [Pré-requisitos](#pré-requisitos)
-- [Variáveis de ambiente](#variáveis-de-ambiente)
-- [Opção A — Rodar localmente (recomendada para desenvolvimento)](#opção-a--rodar-localmente-recomendada-para-desenvolvimento)
+- [Stack](#stack)
+- [Prerequisites](#prerequisites)
+- [Environment variables](#environment-variables)
+- [Option A — Run locally (recommended for development)](#option-a--run-locally-recommended-for-development)
   - [macOS](#macos)
   - [Windows](#windows)
-- [Opção B — Rodar tudo em Docker](#opção-b--rodar-tudo-em-docker)
-- [Comandos úteis do Django](#comandos-úteis-do-django)
-- [Estrutura do projeto](#estrutura-do-projeto)
-- [Solução de problemas (FAQ)](#solução-de-problemas-faq)
+- [Option B — Run everything in Docker](#option-b--run-everything-in-docker)
+- [Multi-tenancy: creating the first workspace](#multi-tenancy-creating-the-first-workspace)
+- [Useful Django commands](#useful-django-commands)
+- [Project structure](#project-structure)
+- [Troubleshooting (FAQ)](#troubleshooting-faq)
 
 ---
 
-## Stack do projeto
+## Stack
 
-| Componente         | Versão / Tecnologia        |
-|--------------------|----------------------------|
-| Linguagem          | Python 3.12                |
-| Framework          | Django 6.0                 |
-| Multi-tenancy      | django-tenants (por schema)|
-| Banco de dados     | PostgreSQL 17              |
-| Segurança          | django-axes (anti força bruta) |
-| Front-end          | Django Templates + Tailwind CSS v3 |
-| i18n               | en + pt-BR (auto-detecção) |
-| Servidor (prod)    | Gunicorn                   |
-| Arquivos estáticos | WhiteNoise (manifest)      |
-| Container          | Docker / Docker Compose    |
+| Component          | Version / Technology                |
+|--------------------|-------------------------------------|
+| Language           | Python 3.12                         |
+| Framework          | Django 6.0                          |
+| Multi-tenancy      | django-tenants (schema per tenant)  |
+| Database           | PostgreSQL 17                       |
+| Security           | django-axes (brute-force protection)|
+| Front-end          | Django Templates + Tailwind CSS v3  |
+| i18n               | en + pt-BR (auto-detected)          |
+| Server (prod)      | Gunicorn                            |
+| Static files       | WhiteNoise (manifest)               |
+| Container          | Docker / Docker Compose             |
 
-Dependências Python completas em [`requirements.txt`](requirements.txt) e de front-end em [`package.json`](package.json).
+Full Python dependencies in [`requirements.txt`](requirements.txt); front-end dependencies in [`package.json`](package.json).
 
 ---
 
-## Pré-requisitos
+## Prerequisites
 
-Antes de começar, instale:
+Before you start, install:
 
-### Para todos
+### For everyone
 - **Git** — https://git-scm.com/downloads
-- **Docker Desktop** (necessário para subir o banco PostgreSQL) — https://www.docker.com/products/docker-desktop/
+- **Docker Desktop** (needed to run the PostgreSQL database) — https://www.docker.com/products/docker-desktop/
 
-### Para rodar localmente (Opção A)
+### To run locally (Option A)
 - **Python 3.12** — https://www.python.org/downloads/
-  - **Windows:** durante a instalação, marque a opção **"Add Python to PATH"**.
-  - **macOS:** recomendado instalar via [Homebrew](https://brew.sh): `brew install python@3.12`
-- **Node.js 18+** (para compilar o CSS com Tailwind) — https://nodejs.org/
-- **GNU gettext** (para compilar as traduções i18n)
+  - **Windows:** during installation, check **"Add Python to PATH"**.
+  - **macOS:** recommended via [Homebrew](https://brew.sh): `brew install python@3.12`
+- **Node.js 18+** (to compile the CSS with Tailwind) — https://nodejs.org/
+- **GNU gettext** (to compile the i18n translations)
   - **macOS:** `brew install gettext`
-  - **Windows:** já incluso no Git for Windows, ou instale o pacote gettext.
+  - **Windows:** bundled with Git for Windows, or install the gettext package.
 
-> Para verificar o que já está instalado:
+> To check what's already installed:
 > ```bash
 > git --version
 > docker --version
-> python --version   # no Windows costuma ser: python
-> python3 --version  # no macOS/Linux costuma ser: python3
+> python --version   # on Windows usually: python
+> python3 --version  # on macOS/Linux usually: python3
 > ```
 
 ---
 
-## Variáveis de ambiente
+## Environment variables
 
-O projeto lê a configuração a partir de **variáveis de ambiente**. Existe um arquivo de exemplo: [`.env.example`](.env.example).
+The project reads its configuration from **environment variables**. There's an example file: [`.env.example`](.env.example).
 
-> ⚠️ **Importante:** este projeto **não** carrega o arquivo `.env` automaticamente (não usa `python-dotenv`). O `.env` serve como referência e é usado pela infraestrutura de deploy. No desenvolvimento local, você vai **definir as variáveis diretamente no terminal** (mostrado nos passos abaixo).
+> The project loads the `.env` file automatically (via `python-dotenv`), so for local development you only need to copy the example — no need to export variables by hand.
 
-Crie seu próprio `.env` a partir do exemplo (opcional, para guardar seus valores):
+Create your own `.env` from the example:
 
 **macOS / Linux:**
 ```bash
@@ -87,247 +90,251 @@ cp .env.example .env
 Copy-Item .env.example .env
 ```
 
-Variáveis disponíveis:
+Most relevant variables (see `.env.example` for the full list):
 
-| Variável        | Descrição                                                        | Exemplo                                                |
-|-----------------|------------------------------------------------------------------|--------------------------------------------------------|
-| `DATABASE_URL`  | URL de conexão com o PostgreSQL. Se vazia, usa o fallback local. | `postgres://postgres:postgres@127.0.0.1:5432/ready_db` |
-| `DEBUG`         | Modo debug do Django (`True`/`False`).                           | `True`                                                 |
-| `SECRET_KEY`    | Chave secreta do Django.                                         | `troque-esta-chave`                                    |
-| `ALLOWED_HOSTS` | Hosts permitidos, separados por vírgula.                         | `127.0.0.1,localhost`                                  |
+| Variable        | Description                                                       | Example                                                |
+|-----------------|-------------------------------------------------------------------|--------------------------------------------------------|
+| `DATABASE_URL`  | PostgreSQL connection URL. If empty in dev, uses the local fallback. Required in production. | `postgres://postgres:postgres@127.0.0.1:5432/ready_db` |
+| `DEBUG`         | Django debug mode. Defaults to `False` (production-safe).         | `True`                                                 |
+| `SECRET_KEY`    | Django secret key. Required when `DEBUG=False`.                   | `change-me`                                            |
+| `ALLOWED_HOSTS` | Allowed hosts, comma-separated.                                   | `127.0.0.1,localhost,.localhost`                       |
+| `PUBLIC_DOMAIN` | Base domain used to build tenant subdomains.                      | `localhost`                                            |
 
-> 💡 O `docker-compose.yml` cria o banco com nome **`ready_db`**, usuário **`postgres`** e senha **`postgres`**. Por isso, ao rodar localmente, use:
-> `DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/ready_db`
+> ⚠️ In production (`DEBUG=False`), `SECRET_KEY` and `DATABASE_URL` are **mandatory** — the app refuses to boot without them.
+>
+> 💡 `docker-compose.yml` creates the database named **`ready_db`** with user/password **`postgres`/`postgres`**. The default `.env.example` already matches this.
 
 ---
 
-## Opção A — Rodar localmente (recomendada para desenvolvimento)
+## Option A — Run locally (recommended for development)
 
-Nesta opção, o **PostgreSQL roda em Docker** e a **aplicação Django roda na sua máquina** (mais rápido para desenvolver, com recarregamento automático).
+Here **PostgreSQL runs in Docker** and the **Django app runs on your machine** (faster to develop, with auto-reload).
 
 ### macOS
 
 ```bash
-# 1. Entre na pasta do projeto (após clonar)
+# 1. Enter the project folder (after cloning)
 cd Ready11
 
-# 2. Suba o banco de dados PostgreSQL em segundo plano
+# 2. Start the PostgreSQL database in the background
 docker compose up -d
 
-# 3. Crie e ative um ambiente virtual Python
+# 3. Create and activate a Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# 4. Instale as dependências Python
+# 4. Install the Python dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Crie seu .env (carregado automaticamente pelo Django)
+# 5. Create your .env (loaded automatically by Django)
 cp .env.example .env
-# Para dev local, os valores padrão já funcionam (DEBUG=True usa o Postgres do docker-compose).
+# For local dev the defaults work out of the box (DEBUG=True uses the docker-compose Postgres).
 
-# 6. Compile o CSS do Tailwind
+# 6. Build the Tailwind CSS
 npm install
 npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. Compile as traduções (en + pt-BR)
+# 7. Compile the translations (en + pt-BR)
 python manage.py compilemessages
 
-# 8. Aplique as migrações do schema público e crie o tenant público
+# 8. Apply the shared-schema migrations and create the public tenant
 python manage.py migrate_schemas --shared
 python manage.py setup_public_tenant
 
-# 9. (Opcional) Crie um superusuário para o /admin
+# 9. (Optional) Create a superuser for /admin
 python manage.py createsuperuser
 
-# 10. Suba o servidor de desenvolvimento
+# 10. Start the development server
 python manage.py runserver
 ```
 
-Acesse: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
+Open: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
 
-> Para reativar o ambiente virtual numa nova sessão: `source venv/bin/activate`
-> O arquivo `.env` é carregado automaticamente — não é preciso exportar variáveis manualmente.
+> To re-activate the virtualenv in a new session: `source venv/bin/activate`
+> The `.env` file is loaded automatically — no need to export variables manually.
 
 ---
 
 ### Windows
 
-Use o **PowerShell** (recomendado).
+Use **PowerShell** (recommended).
 
 ```powershell
-# 1. Entre na pasta do projeto (após clonar)
+# 1. Enter the project folder (after cloning)
 cd Ready11
 
-# 2. Suba o banco de dados PostgreSQL em segundo plano
+# 2. Start the PostgreSQL database in the background
 docker compose up -d
 
-# 3. Crie e ative um ambiente virtual Python
+# 3. Create and activate a Python virtual environment
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 
-# 4. Instale as dependências Python
+# 4. Install the Python dependencies
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Crie seu .env (carregado automaticamente pelo Django)
+# 5. Create your .env (loaded automatically by Django)
 Copy-Item .env.example .env
-# Para dev local, os valores padrão já funcionam (DEBUG=True usa o Postgres do docker-compose).
+# For local dev the defaults work out of the box (DEBUG=True uses the docker-compose Postgres).
 
-# 6. Compile o CSS do Tailwind
+# 6. Build the Tailwind CSS
 npm install
 npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. Compile as traduções (en + pt-BR)
+# 7. Compile the translations (en + pt-BR)
 python manage.py compilemessages
 
-# 8. Aplique as migrações do schema público e crie o tenant público
+# 8. Apply the shared-schema migrations and create the public tenant
 python manage.py migrate_schemas --shared
 python manage.py setup_public_tenant
 
-# 9. (Opcional) Crie um superusuário para o /admin
+# 9. (Optional) Create a superuser for /admin
 python manage.py createsuperuser
 
-# 10. Suba o servidor de desenvolvimento
+# 10. Start the development server
 python manage.py runserver
 ```
 
-Acesse: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
+Open: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
 
-> **Se o PowerShell bloquear a ativação do venv** com erro *"execution of scripts is disabled"*, rode uma vez:
+> **If PowerShell blocks the venv activation** with *"execution of scripts is disabled"*, run once:
 > ```powershell
 > Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 > ```
-> Depois tente ativar novamente.
+> Then activate again.
 
-> **Usando o Prompt de Comando (CMD) em vez do PowerShell?** Os comandos mudam:
-> - Ativar venv: `venv\Scripts\activate.bat`
-> - Definir variável: `set DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/ready_db`
+> **Using Command Prompt (CMD) instead of PowerShell?** The commands differ:
+> - Activate venv: `venv\Scripts\activate.bat`
 
 ---
 
-## Opção B — Rodar tudo em Docker
+## Option B — Run everything in Docker
 
-Nesta opção você sobe o banco com Docker Compose e roda a aplicação a partir da imagem Docker (usando Gunicorn, como em produção).
+Here you start the database with Docker Compose and run the app from the Docker image (using Gunicorn, like production).
 
-> O `docker-compose.yml` deste projeto sobe **apenas o banco de dados**. Para a aplicação, construímos a imagem a partir do [`Dockerfile`](Dockerfile) e a conectamos à mesma rede do banco.
+> This project's `docker-compose.yml` only brings up the **database**. For the app we build the image from the [`Dockerfile`](Dockerfile) and connect it to the same network as the database.
 
 ```bash
-# 1. Suba o banco de dados
+# 1. Start the database
 docker compose up -d
 
-# 2. Construa a imagem da aplicação
+# 2. Build the application image
 docker build -t ready11-app .
 
-# 3. Rode o container da aplicação conectado à rede do compose
-#    (descubra o nome da rede com: docker network ls | grep ready)
+# 3. Run the app container connected to the compose network
+#    (find the network name with: docker network ls | grep ready)
 docker run --rm -p 8000:8000 \
   --network ready11_default \
   -e DATABASE_URL="postgres://postgres:postgres@django_postgres_db:5432/ready_db" \
-  -e SECRET_KEY="chave-de-producao-troque-aqui" \
+  -e SECRET_KEY="change-this-production-key" \
   -e DEBUG="False" \
   -e ALLOWED_HOSTS="127.0.0.1,localhost" \
   ready11-app
 ```
 
-> **Por que `django_postgres_db` no host?** Dentro da rede do Docker, os containers se enxergam pelo nome. O container do banco se chama `django_postgres_db` (definido no `docker-compose.yml`).
+> **Why `django_postgres_db` as the host?** Inside the Docker network, containers reach each other by name. The database container is named `django_postgres_db` (defined in `docker-compose.yml`).
 >
-> O [`entrypoint.sh`](entrypoint.sh) roda automaticamente as migrações (`migrate_schemas --shared`), garante o tenant público, coleta os estáticos e inicia o **Gunicorn** ao subir o container. O `Dockerfile` compila o CSS (Tailwind) e as traduções (`compilemessages`) durante o build.
+> [`entrypoint.sh`](entrypoint.sh) automatically runs the migrations (`migrate_schemas --shared`), ensures the public tenant, collects static files and starts **Gunicorn**. The `Dockerfile` compiles the CSS (Tailwind) and the translations (`compilemessages`) at build time.
 
-Acesse: **http://127.0.0.1:8000**
+Open: **http://127.0.0.1:8000**
 
 ---
 
-## Multi-tenancy: criando o primeiro workspace
+## Multi-tenancy: creating the first workspace
 
-A entrada é **apenas por convite**. Para criar a primeira empresa (workspace):
+Entry is **invite-only**. To create the first company (workspace):
 
-1. Crie um superusuário e acesse o `/admin`.
-2. Em **Workspace invites**, crie um convite **sem workspace** (convite "gênesis"). O link aparece no console do servidor.
-3. Abra o link, preencha nome e **Nome da Empresa** — o backend cria um **schema isolado** no PostgreSQL e um subdomínio (`empresa.localhost`).
-4. O dono acessa o painel no subdomínio e convida a equipe em **/equipe/**.
+1. Create a superuser and open `/admin`.
+2. Under **Workspace invites**, create an invite **with no workspace** (a "genesis" invite). The link is printed to the server console.
+3. Open the link, fill in your name and **Company name** — the backend creates an **isolated schema** in PostgreSQL and a subdomain (`company.localhost`).
+4. The owner accesses the workspace on the subdomain and invites the team under **/team/**.
 
-> **Subdomínios em dev:** navegadores resolvem `*.localhost` para `127.0.0.1` automaticamente (ex.: `http://minhaempresa.localhost:8000/dashboard/`). O `ALLOWED_HOSTS` já inclui `.localhost`.
+> **Subdomains in dev:** browsers resolve `*.localhost` to `127.0.0.1` automatically (e.g. `http://mycompany.localhost:8000/home/`). `ALLOWED_HOSTS` already includes `.localhost`.
 
-> **Idioma:** o site detecta o idioma do navegador (inglês ou português) e tem um seletor no topo. A fonte das mensagens é em inglês; o pt-BR vem das traduções em `locale/`.
+> **Language:** the site detects the browser language (English or Portuguese) and has a switcher in the header. Source strings are in English; pt-BR comes from the translations in `locale/`.
 
-Para criar um superusuário com a aplicação em Docker:
+Create a superuser with the app running in Docker:
 ```bash
 docker run --rm -it \
   --network ready11_default \
   -e DATABASE_URL="postgres://postgres:postgres@django_postgres_db:5432/ready_db" \
-  -e SECRET_KEY="qualquer-coisa" \
+  -e SECRET_KEY="anything" \
   ready11-app python manage.py createsuperuser
 ```
 
 ---
 
-## Comandos úteis do Django
+## Useful Django commands
 
-> Rode com o `venv` ativado (o `.env` é carregado automaticamente).
+> Run with the `venv` active (the `.env` is loaded automatically).
 
-| Comando                                      | O que faz                                              |
-|----------------------------------------------|--------------------------------------------------------|
-| `python manage.py runserver`                 | Sobe o servidor de desenvolvimento.                    |
-| `python manage.py migrate_schemas --shared`  | Aplica as migrações no schema público (compartilhado). |
-| `python manage.py migrate_schemas --tenant`  | Aplica as migrações nos schemas de tenants.            |
-| `python manage.py setup_public_tenant`       | Cria o tenant/domínio público (idempotente).           |
-| `python manage.py makemigrations`            | Cria novas migrações a partir de mudanças nos models.  |
-| `python manage.py createsuperuser`           | Cria um usuário administrador.                          |
-| `python manage.py makemessages -l pt_BR`     | Extrai/atualiza as strings para tradução.              |
-| `python manage.py compilemessages`           | Compila as traduções (`.po` → `.mo`).                  |
-| `npx tailwindcss -i input.css -o static/css/output.css` | Recompila o CSS do Tailwind.                |
-| `python manage.py shell`           | Abre um shell Python com o contexto do Django.         |
+| Command                                      | What it does                                          |
+|----------------------------------------------|-------------------------------------------------------|
+| `python manage.py runserver`                 | Starts the development server.                        |
+| `python manage.py migrate_schemas --shared`  | Applies migrations to the public (shared) schema.     |
+| `python manage.py migrate_schemas --tenant`  | Applies migrations to the tenant schemas.             |
+| `python manage.py setup_public_tenant`       | Creates the public tenant/domain (idempotent).        |
+| `python manage.py makemigrations`            | Creates new migrations from model changes.            |
+| `python manage.py createsuperuser`           | Creates an admin user.                                |
+| `python manage.py makemessages -l pt_BR`     | Extracts/updates strings for translation.             |
+| `python manage.py compilemessages`           | Compiles the translations (`.po` → `.mo`).            |
+| `npx tailwindcss -i input.css -o static/css/output.css` | Rebuilds the Tailwind CSS.                 |
+| `python manage.py shell`                     | Opens a Python shell with the Django context.         |
 
-Comandos úteis do Docker:
+Useful Docker commands:
 
-| Comando                     | O que faz                                          |
+| Command                     | What it does                                       |
 |-----------------------------|----------------------------------------------------|
-| `docker compose up -d`      | Sobe o banco em segundo plano.                     |
-| `docker compose down`       | Para os containers (mantém os dados).              |
-| `docker compose down -v`    | Para os containers **e apaga os dados** do banco.  |
-| `docker compose logs -f db` | Acompanha os logs do banco em tempo real.          |
-| `docker ps`                 | Lista os containers em execução.                   |
+| `docker compose up -d`      | Starts the database in the background.             |
+| `docker compose down`       | Stops the containers (keeps the data).             |
+| `docker compose down -v`    | Stops the containers **and deletes** the DB data.  |
+| `docker compose logs -f db` | Follows the database logs in real time.            |
+| `docker ps`                 | Lists running containers.                          |
 
 ---
 
-## Estrutura do projeto
+## Project structure
 
 ```
 Ready11/
-├── Ready11/                 # Pacote de configuração do Django
-│   ├── settings.py          # Configurações (lê variáveis de ambiente)
-│   ├── urls.py              # Rotas (atualmente: /admin)
-│   ├── wsgi.py              # Entrada WSGI (Gunicorn)
-│   └── asgi.py              # Entrada ASGI
-├── manage.py                # CLI administrativa do Django
-├── requirements.txt         # Dependências Python
-├── Dockerfile               # Imagem da aplicação (Python + Gunicorn)
-├── docker-compose.yml       # Serviço do PostgreSQL
-├── entrypoint.sh            # migrate + Gunicorn ao subir o container
-├── .env.example             # Modelo de variáveis de ambiente
+├── Ready11/                 # Django configuration package (settings, urls, wsgi, asgi)
+├── core/                    # Public landing page + health check
+├── users/                   # Global custom user, auth, registration, login
+├── tenants/                 # Multi-tenancy: workspaces, domains, roles, memberships, invites
+├── templates/               # Django templates (Tailwind), organized by app
+├── locale/pt_BR/            # Brazilian Portuguese translations
+├── static/ , input.css , tailwind.config.js   # Front-end (Tailwind)
+├── manage.py                # Django admin CLI
+├── requirements.txt         # Python dependencies
+├── package.json             # Front-end dependencies
+├── Dockerfile               # App image (Node CSS build + Python/Gunicorn)
+├── docker-compose.yml       # PostgreSQL service
+├── entrypoint.sh            # migrations + Gunicorn on container start
+├── .env.example             # Environment variables template
 ├── .dockerignore
 └── .gitignore
 ```
 
 ---
 
-## Solução de problemas (FAQ)
+## Troubleshooting (FAQ)
 
 **`django.db.utils.OperationalError: could not connect to server`**
-O banco não está no ar ou a `DATABASE_URL` está incorreta. Verifique se o `docker compose up -d` rodou e se o container `django_postgres_db` está ativo (`docker ps`).
+The database isn't up or `DATABASE_URL` is wrong. Make sure `docker compose up -d` ran and the `django_postgres_db` container is active (`docker ps`).
 
-**`port 5432 is already allocated` / porta em uso**
-Já existe um PostgreSQL na porta 5432 (outro container ou instalação local). Pare o serviço conflitante ou altere o mapeamento de porta no `docker-compose.yml` (ex.: `"5433:5432"`) e ajuste a `DATABASE_URL`.
+**`port 5432 is already allocated`**
+There's already a PostgreSQL on port 5432 (another container or local install). Stop the conflicting service or change the port mapping in `docker-compose.yml` (e.g. `"5433:5432"`) and adjust `DATABASE_URL`.
 
-**`docker: command not found` ou erro de conexão com o Docker**
-Abra o **Docker Desktop** e aguarde ele iniciar completamente antes de rodar os comandos.
+**`docker: command not found` or Docker connection error**
+Open **Docker Desktop** and wait for it to fully start before running the commands.
 
-**`'python' não é reconhecido` (Windows)**
-Reinstale o Python marcando **"Add Python to PATH"**, ou use o launcher `py` (ex.: `py -m venv venv`).
+**`'python' is not recognized` (Windows)**
+Reinstall Python with **"Add Python to PATH"** checked, or use the `py` launcher (e.g. `py -m venv venv`).
 
-**O comando `docker compose` não funciona, mas `docker-compose` sim**
-Versões antigas usam o hífen. Substitua `docker compose` por `docker-compose` nos comandos.
+**`docker compose` doesn't work, but `docker-compose` does**
+Older versions use the hyphen. Replace `docker compose` with `docker-compose`.
 
-**As variáveis de ambiente "somem" ao abrir um novo terminal**
-É esperado: `export` (macOS) e `$env:` (Windows) valem apenas para a sessão atual. Redefina-as ao abrir um novo terminal, ou crie um script para carregá-las.
+**`ImproperlyConfigured: SECRET_KEY ... required when DEBUG=False`**
+You're running in production mode without the required env vars. Set `SECRET_KEY` and `DATABASE_URL`, or set `DEBUG=True` for local development.
