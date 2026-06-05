@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, authenticate, login, logout
+from django.contrib.auth import get_user_model, authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, url_has_allowed_host_and_scheme
@@ -8,7 +9,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.http import HttpResponse
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ProfileForm
 from django.contrib import messages
 from tenants.models import WorkspaceMembership
 from tenants.utils import effective_workspace, workspace_home_url
@@ -146,6 +147,42 @@ def logout_view(request):
     """Log the user out and return to the public landing page."""
     logout(request)
     return redirect('landing')
+
+
+def profile_view(request):
+    """
+    The user's own profile: edit basic info and change password. Works on any
+    host (the user is global). Two forms on one page, distinguished by 'action'.
+    """
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    profile_form = ProfileForm(instance=request.user)
+    password_form = PasswordChangeForm(request.user)
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'profile':
+            profile_form = ProfileForm(request.POST, instance=request.user)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, _("Profile updated."))
+                return redirect('profile')
+
+        elif action == 'password':
+            password_form = PasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                # Keep the user logged in after the password change.
+                update_session_auth_hash(request, user)
+                messages.success(request, _("Password changed."))
+                return redirect('profile')
+
+    return render(request, 'users/profile.html', {
+        'profile_form': profile_form,
+        'password_form': password_form,
+    })
 
 
 def set_default_workspace(request, workspace_id):

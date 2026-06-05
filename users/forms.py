@@ -39,3 +39,15 @@ class LoginForm(forms.Form):
         strip=False,
         widget=forms.PasswordInput,
     )
+
+
+class ProfileForm(forms.ModelForm):
+    """Edit the user's own basic info. Email is intentionally not editable here
+    (changing it requires a re-verification flow)."""
+    class Meta:
+        model = CustomUser
+        fields = ['first_name', 'last_name']
+        labels = {
+            'first_name': _('First name'),
+            'last_name': _('Last name'),
+        }

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 14:13-0300\n"
+"POT-Creation-Date: 2026-06-05 14:24-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -376,7 +376,6 @@ msgid "No updates at the moment."
 msgstr "Nenhuma atualização no momento."
 
 #: templates/tenants/home.html:57 templates/tenants/home.html:63
-#| msgid "Default workspace"
 msgid "Leave workspace"
 msgstr "Sair do workspace"
 
@@ -385,7 +384,6 @@ msgid "You'll lose access to this workspace until you're invited again."
 msgstr "Você perderá o acesso a este workspace até ser convidado novamente."
 
 #: templates/tenants/home.html:60
-#| msgid "Default workspace"
 msgid "Leave this workspace?"
 msgstr "Sair deste workspace?"
 
@@ -599,6 +597,40 @@ msgstr "Ainda não tem uma conta?"
 msgid "Sign up"
 msgstr "Cadastre-se"
 
+#: templates/users/profile.html:4 templates/users/profile.html:10
+#| msgid "Your role"
+msgid "Your profile"
+msgstr "Seu perfil"
+
+#: templates/users/profile.html:22
+msgid "Personal information"
+msgstr "Informações pessoais"
+
+#: templates/users/profile.html:23
+msgid "Update your name."
+msgstr "Atualize seu nome."
+
+#: templates/users/profile.html:43 users/forms.py:34 users/models.py:8
+msgid "Email"
+msgstr "E-mail"
+
+#: templates/users/profile.html:45
+msgid "Email can't be changed here."
+msgstr "O e-mail não pode ser alterado aqui."
+
+#: templates/users/profile.html:49
+msgid "Save changes"
+msgstr "Salvar alterações"
+
+#: templates/users/profile.html:56 templates/users/profile.html:80
+#| msgid "Confirm password"
+msgid "Change password"
+msgstr "Alterar senha"
+
+#: templates/users/profile.html:57
+msgid "Use a strong password you don't use elsewhere."
+msgstr "Use uma senha forte que você não usa em outros lugares."
+
 #: templates/users/register.html:4
 msgid "Create account"
 msgstr "Criar conta"
@@ -612,12 +644,12 @@ msgid "Create your account to set up your environment."
 msgstr "Crie sua conta para configurar seu ambiente."
 
 #: templates/users/register.html:18 tenants/forms.py:8 tenants/forms.py:59
-#: users/models.py:9
+#: users/forms.py:51 users/models.py:9
 msgid "First name"
 msgstr "Nome"
 
 #: templates/users/register.html:23 tenants/forms.py:9 tenants/forms.py:60
-#: users/models.py:10
+#: users/forms.py:52 users/models.py:10
 msgid "Last name"
 msgstr "Sobrenome"
 
@@ -771,7 +803,6 @@ msgstr "O dono não pode sair do workspace. Transfira a posse primeiro."
 
 #: tenants/views.py:278
 #, python-format
-#| msgid "You have joined %(workspace)s."
 msgid "You left %(workspace)s."
 msgstr "Você saiu de %(workspace)s."
 
@@ -838,10 +869,6 @@ msgstr "Este cargo não pode ser excluído enquanto houver membros usando ele."
 msgid "Role '%(name)s' deleted."
 msgstr "Cargo '%(name)s' excluído."
 
-#: users/forms.py:34 users/models.py:8
-msgid "Email"
-msgstr "E-mail"
-
 #: users/models.py:16
 msgid "Active"
 msgstr "Ativo"
@@ -878,11 +905,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: users/views.py:56
+#: users/views.py:57
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: users/views.py:57
+#: users/views.py:58
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -897,35 +924,45 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: users/views.py:90
+#: users/views.py:91
 msgid "Email verified successfully!"
 msgstr "E-mail verificado com sucesso!"
 
-#: users/views.py:91
+#: users/views.py:92
 msgid "You can now log in."
 msgstr "Você já pode fazer login."
 
-#: users/views.py:94
+#: users/views.py:95
 msgid "Invalid or expired link."
 msgstr "Link inválido ou expirado."
 
-#: users/views.py:113
+#: users/views.py:114
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: users/views.py:118
+#: users/views.py:119
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: users/views.py:138
+#: users/views.py:139
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
-#: users/views.py:164
+#: users/views.py:170
+#| msgid "Role '%(name)s' updated."
+msgid "Profile updated."
+msgstr "Perfil atualizado."
+
+#: users/views.py:179
+#| msgid "Password"
+msgid "Password changed."
+msgstr "Senha alterada."
+
+#: users/views.py:201
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: users/views.py:166
+#: users/views.py:203
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
 
