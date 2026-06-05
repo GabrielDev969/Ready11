@@ -319,6 +319,46 @@ Ready11/
 
 ---
 
+## Production checklist (multi-tenant SaaS)
+
+The architecture is **schema-per-tenant** (each company gets its own PostgreSQL
+schema), suitable for dozens to thousands of companies. Before going live with real
+companies, make sure of the following:
+
+- [ ] **`DEBUG=False`** and a strong **`SECRET_KEY`** set (the app refuses to boot
+      otherwise). Run `python manage.py check --deploy` — it should report no issues.
+- [ ] **`DATABASE_URL`** points to your production PostgreSQL.
+- [ ] **`PUBLIC_DOMAIN`** set to your real domain; DNS has a **wildcard** record
+      (`*.yourdomain.com`) so each tenant subdomain resolves. `CSRF_TRUSTED_ORIGINS`
+      is auto-derived from it (or set it explicitly).
+- [ ] **`REDIS_URL` is mandatory when running more than one server replica.**
+      Real-time notifications use Channels; with the in-memory layer a toast only
+      reaches users connected to the *same* process. With multiple replicas, set
+      `REDIS_URL` so the WebSocket channel layer is shared. (Single process / dev:
+      in-memory is fine.)
+- [ ] **Email**: configure SMTP (`EMAIL_BACKEND` + `EMAIL_*`) so verification and
+      invite emails actually send (dev uses the console backend).
+- [ ] **Migrations on deploy**: `entrypoint.sh` runs both `migrate_schemas --shared`
+      and `--tenant`, so every company's schema is migrated. Note this scales linearly
+      with the number of tenants — large tenant counts mean longer deploys.
+- [ ] **Notification cleanup**: runs automatically via the in-process scheduler
+      (`NOTIFICATION_CLEANUP_ENABLED`, default on), coordinated across replicas by a
+      Redis lock. To use an external scheduler instead, set
+      `NOTIFICATION_CLEANUP_ENABLED=False` and cron `manage.py cleanup_notifications`.
+- [ ] **HTTPS** terminated by your reverse proxy (Easypanel/Nginx). The app already
+      sets HSTS, secure cookies and trusts `X-Forwarded-Proto`.
+
+### Scaling notes (when volume grows)
+- **Tenant provisioning is synchronous** today: creating a company runs the schema
+  creation + tenant migrations inside the request. Fine at low signup volume; move it
+  to a background task when needed.
+- **Schema-per-tenant** is great into the low thousands of tenants. Far beyond that,
+  per-deploy migrations and `pg_dump` get heavy — revisit the tenancy strategy then.
+- For heavy HTTP load you may split HTTP (WSGI/uvicorn workers) from the WebSocket
+  process; the base ships a single `daphne` serving both.
+
+---
+
 ## Troubleshooting (FAQ)
 
 **`django.db.utils.OperationalError: could not connect to server`**

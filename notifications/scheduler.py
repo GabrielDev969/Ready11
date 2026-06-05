@@ -21,6 +21,7 @@ _started = False
 
 def _run_loop(interval_seconds):
     from django.db import close_old_connections
+    from .locks import distributed_lock
     from .services import purge_old_notifications
 
     # Small initial delay so startup (and any boot-time work) settles first.
@@ -28,9 +29,13 @@ def _run_loop(interval_seconds):
     while True:
         try:
             close_old_connections()
-            n_invites, n_others = purge_old_notifications()
-            if n_invites or n_others:
-                logger.info("Notification cleanup: deleted %s invite + %s other.", n_invites, n_others)
+            # Across replicas, only one runs the purge per interval. The lock is held
+            # (not released) for ~the interval via TTL, so others skip this window.
+            with distributed_lock('notif-cleanup', timeout=max(60, interval_seconds - 60), release=False) as acquired:
+                if acquired:
+                    n_invites, n_others = purge_old_notifications()
+                    if n_invites or n_others:
+                        logger.info("Notification cleanup: deleted %s invite + %s other.", n_invites, n_others)
         except Exception:
             logger.exception("Notification cleanup run failed.")
         finally:

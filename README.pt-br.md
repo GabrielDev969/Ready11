@@ -318,6 +318,47 @@ Ready11/
 
 ---
 
+## Checklist de produção (SaaS multi-tenant)
+
+A arquitetura é **um schema por tenant** (cada empresa tem seu próprio schema no
+PostgreSQL), adequada para dezenas a milhares de empresas. Antes de colocar empresas
+reais em produção, garanta o seguinte:
+
+- [ ] **`DEBUG=False`** e um **`SECRET_KEY`** forte definido (a aplicação se recusa a
+      subir sem isso). Rode `python manage.py check --deploy` — não deve apontar problemas.
+- [ ] **`DATABASE_URL`** apontando para o PostgreSQL de produção.
+- [ ] **`PUBLIC_DOMAIN`** com seu domínio real; DNS com registro **curinga**
+      (`*.seudominio.com`) para cada subdomínio de tenant resolver. O
+      `CSRF_TRUSTED_ORIGINS` é derivado dele (ou defina explicitamente).
+- [ ] **`REDIS_URL` é obrigatório quando houver mais de uma réplica do servidor.**
+      As notificações em tempo real usam Channels; com o layer in-memory, um toast só
+      chega a quem está no *mesmo* processo. Com várias réplicas, defina `REDIS_URL`
+      para compartilhar o channel layer do WebSocket. (Processo único / dev: in-memory
+      basta.)
+- [ ] **E-mail**: configure SMTP (`EMAIL_BACKEND` + `EMAIL_*`) para os e-mails de
+      verificação e convite saírem de verdade (em dev usa o backend de console).
+- [ ] **Migrações no deploy**: o `entrypoint.sh` roda `migrate_schemas --shared` e
+      `--tenant`, então o schema de toda empresa é migrado. Isso escala linearmente com
+      o número de tenants — muitos tenants = deploys mais longos.
+- [ ] **Limpeza de notificações**: roda automaticamente pelo agendador embutido
+      (`NOTIFICATION_CLEANUP_ENABLED`, ligado por padrão), coordenado entre réplicas por
+      um lock no Redis. Para usar agendador externo, defina
+      `NOTIFICATION_CLEANUP_ENABLED=False` e agende `manage.py cleanup_notifications` no cron.
+- [ ] **HTTPS** terminado pelo seu proxy reverso (Easypanel/Nginx). A aplicação já
+      define HSTS, cookies seguros e confia no `X-Forwarded-Proto`.
+
+### Notas de escala (quando o volume crescer)
+- **O provisionamento do tenant é síncrono** hoje: criar uma empresa roda a criação do
+  schema + migrações de tenant dentro do request. Tranquilo em baixo volume de
+  cadastros; mover para uma task em background quando necessário.
+- **Um schema por tenant** funciona muito bem até a casa dos milhares. Muito além disso,
+  migrações por deploy e `pg_dump` ficam pesados — revisite a estratégia de tenancy nessa
+  hora.
+- Para carga alta de HTTP, dá para separar o HTTP (workers WSGI/uvicorn) do processo de
+  WebSocket; a base entrega um único `daphne` servindo os dois.
+
+---
+
 ## Solução de problemas (FAQ)
 
 **`django.db.utils.OperationalError: could not connect to server`**
