@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 09:47-0300\n"
+"POT-Creation-Date: 2026-06-05 10:02-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -58,23 +58,27 @@ msgstr ""
 "contas globais, controle de acesso por cargos e onboarding apenas por "
 "convite — para você começar a construir seu produto em vez da infraestrutura."
 
-#: templates/core/landing.html:23
+#: templates/core/landing.html:24
+msgid "Go to my workspace"
+msgstr "Ir para meu workspace"
+
+#: templates/core/landing.html:28
 msgid "Get started"
 msgstr "Começar"
 
-#: templates/core/landing.html:26
+#: templates/core/landing.html:32
 msgid "View on GitHub"
 msgstr "Ver no GitHub"
 
-#: templates/core/landing.html:35
+#: templates/core/landing.html:41
 msgid "What's included"
 msgstr "O que está incluído"
 
-#: templates/core/landing.html:38
+#: templates/core/landing.html:44
 msgid "Schema isolation"
 msgstr "Isolamento por schema"
 
-#: templates/core/landing.html:39
+#: templates/core/landing.html:45
 msgid ""
 "Each customer (Workspace) lives in its own PostgreSQL schema via django-"
 "tenants. No data leaks between clients."
@@ -82,11 +86,11 @@ msgstr ""
 "Cada cliente (Workspace) vive em seu próprio schema PostgreSQL via django-"
 "tenants. Sem vazamento de dados entre clientes."
 
-#: templates/core/landing.html:42
+#: templates/core/landing.html:48
 msgid "Global identity"
 msgstr "Identidade global"
 
-#: templates/core/landing.html:43
+#: templates/core/landing.html:49
 msgid ""
 "A single account works across workspaces, with email verification and a "
 "strict password policy out of the box."
@@ -94,11 +98,11 @@ msgstr ""
 "Uma única conta funciona em vários workspaces, com verificação de e-mail e "
 "política de senha rígida já incluídas."
 
-#: templates/core/landing.html:46
+#: templates/core/landing.html:52
 msgid "Role-based access"
 msgstr "Acesso por cargos"
 
-#: templates/core/landing.html:47
+#: templates/core/landing.html:53
 msgid ""
 "Per-workspace roles and permissions. The same person can be Owner in one "
 "workspace and Viewer in another."
@@ -106,11 +110,11 @@ msgstr ""
 "Cargos e permissões por workspace. A mesma pessoa pode ser Dono em um "
 "workspace e Visualizador em outro."
 
-#: templates/core/landing.html:50
+#: templates/core/landing.html:56
 msgid "Invite-only onboarding"
 msgstr "Onboarding apenas por convite"
 
-#: templates/core/landing.html:51
+#: templates/core/landing.html:57
 msgid ""
 "Controlled signup through expiring invitations, for both new company owners "
 "and internal team members."
@@ -118,11 +122,11 @@ msgstr ""
 "Cadastro controlado por convites com expiração, tanto para novos donos de "
 "empresa quanto para membros internos da equipe."
 
-#: templates/core/landing.html:54
+#: templates/core/landing.html:60
 msgid "Hardened & i18n-ready"
 msgstr "Seguro e pronto para i18n"
 
-#: templates/core/landing.html:55
+#: templates/core/landing.html:61
 msgid ""
 "Security headers, brute-force protection and full internationalization — "
 "English and Brazilian Portuguese included."
@@ -130,11 +134,11 @@ msgstr ""
 "Cabeçalhos de segurança, proteção contra força bruta e internacionalização "
 "completa — inglês e português do Brasil incluídos."
 
-#: templates/core/landing.html:58
+#: templates/core/landing.html:64
 msgid "Docker-first"
 msgstr "Docker em primeiro lugar"
 
-#: templates/core/landing.html:59
+#: templates/core/landing.html:65
 msgid ""
 "Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, ready "
 "to deploy behind a reverse proxy."
@@ -142,17 +146,17 @@ msgstr ""
 "Já vem com Docker, Gunicorn, WhiteNoise e um endpoint de health check, "
 "pronto para implantar atrás de um proxy reverso."
 
-#: templates/core/landing.html:68
+#: templates/core/landing.html:74
 msgid "How it works"
 msgstr "Como funciona"
 
-#: templates/core/landing.html:72
+#: templates/core/landing.html:78
 msgid ""
 "A super admin sends a \"genesis\" invitation to a future workspace owner."
 msgstr ""
 "Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
 
-#: templates/core/landing.html:76
+#: templates/core/landing.html:82
 msgid ""
 "The owner sets their name and company. The backend creates an isolated "
 "database schema on demand."
@@ -160,7 +164,7 @@ msgstr ""
 "O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
 "sob demanda."
 
-#: templates/core/landing.html:80
+#: templates/core/landing.html:86
 msgid ""
 "The owner invites their team and assigns roles. Members access the workspace "
 "on its own subdomain."
@@ -168,36 +172,36 @@ msgstr ""
 "O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
 "em seu próprio subdomínio."
 
-#: templates/core/landing.html:89
+#: templates/core/landing.html:95
 msgid "Install & run"
 msgstr "Instalar e rodar"
 
-#: templates/core/landing.html:90
+#: templates/core/landing.html:96
 msgid ""
 "Requires Python 3.12, Docker and Node. The full guide lives in the README."
 msgstr "Requer Python 3.12, Docker e Node. O guia completo está no README."
 
-#: templates/core/landing.html:91
+#: templates/core/landing.html:97
 msgid "Start the PostgreSQL database"
 msgstr "Suba o banco de dados PostgreSQL"
 
-#: templates/core/landing.html:94
+#: templates/core/landing.html:100
 msgid "Create the virtualenv and install dependencies"
 msgstr "Crie o ambiente virtual e instale as dependências"
 
-#: templates/core/landing.html:98
+#: templates/core/landing.html:104
 msgid "Build the CSS (Tailwind)"
 msgstr "Compile o CSS (Tailwind)"
 
-#: templates/core/landing.html:102
+#: templates/core/landing.html:108
 msgid "Apply migrations and create the public tenant"
 msgstr "Aplique as migrações e crie o tenant público"
 
-#: templates/core/landing.html:106
+#: templates/core/landing.html:112
 msgid "Run the development server"
 msgstr "Rode o servidor de desenvolvimento"
 
-#: templates/core/landing.html:109
+#: templates/core/landing.html:115
 msgid ""
 "Then open the app, create a super admin and send your first genesis "
 "invitation from the Django admin."
@@ -208,6 +212,39 @@ msgstr ""
 #: templates/partials/language_switcher.html:7
 msgid "Language"
 msgstr "Idioma"
+
+#: templates/tenants/home.html:4
+msgid "Home"
+msgstr "Início"
+
+#: templates/tenants/home.html:12
+#, python-format
+msgid "Welcome to %(name)s"
+msgstr "Bem-vindo(a) à %(name)s"
+
+#: templates/tenants/home.html:15
+msgid "This is your home — available to everyone in the workspace."
+msgstr "Esta é a sua página inicial — disponível para todos no workspace."
+
+#: templates/tenants/home.html:29
+msgid "Dashboard"
+msgstr "Painel"
+
+#: templates/tenants/home.html:32
+msgid "Team"
+msgstr "Equipe"
+
+#: templates/tenants/home.html:38
+msgid "System updates"
+msgstr "Atualizações do sistema"
+
+#: templates/tenants/home.html:39
+msgid "Product news and announcements."
+msgstr "Novidades e comunicados do produto."
+
+#: templates/tenants/home.html:42
+msgid "No updates at the moment."
+msgstr "Nenhuma atualização no momento."
 
 #: templates/tenants/invite_unavailable.html:4
 msgid "Invitation unavailable"

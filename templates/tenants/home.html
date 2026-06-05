@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Home" %} | {{ workspace.name }}{% endblock %}
+
+{% block main_class %}flex-grow{% endblock %}
+
+{% block content %}
+<div class="mx-auto w-full max-w-5xl px-6 py-10">
+    <header class="mb-8">
+        <h1 class="text-2xl font-semibold tracking-tight text-gray-900">
+            {% blocktrans with name=workspace.name %}Welcome to {{ name }}{% endblocktrans %}
+        </h1>
+        <p class="mt-1 text-sm text-gray-500">
+            {% trans "This is your home — available to everyone in the workspace." %}
+        </p>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mb-4 rounded-md p-3 text-sm {% if message.tags == 'error' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-700{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="mb-8 flex flex-wrap gap-3">
+        <a href="{% url 'tenant_dashboard' %}" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+            {% trans "Dashboard" %}
+        </a>
+        <a href="{% url 'team_list' %}" class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
+            {% trans "Team" %}
+        </a>
+    </div>
+
+    <section class="rounded-xl border border-gray-200 bg-white">
+        <div class="border-b border-gray-100 px-6 py-4">
+            <h2 class="font-medium text-gray-900">{% trans "System updates" %}</h2>
+            <p class="text-xs text-gray-500">{% trans "Product news and announcements." %}</p>
+        </div>
+        <div class="px-6 py-12 text-center text-sm text-gray-500">
+            {% trans "No updates at the moment." %}
+        </div>
+    </section>
+</div>
+{% endblock %}

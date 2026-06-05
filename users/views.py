@@ -9,10 +9,28 @@ from django.conf import settings
 from django.http import HttpResponse
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
+from tenants.utils import effective_workspace, workspace_home_url
 
 User = get_user_model()
 
+
+def _redirect_authenticated_home(request):
+    """
+    Send an authenticated user to their workspace home (Início), or to the public
+    landing if they don't belong to any workspace yet.
+    """
+    workspace = effective_workspace(request.user)
+    if workspace:
+        url = workspace_home_url(request, workspace)
+        if url:
+            return redirect(url)
+    return redirect('landing')
+
 def register_view(request):
+    # Já está logado? Não faz sentido ver o cadastro.
+    if request.user.is_authenticated:
+        return _redirect_authenticated_home(request)
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -73,6 +91,10 @@ def verify_email_view(request, uidb64, token):
         return HttpResponse("<h1>Link inválido ou expirado.</h1>", status=400)
 
 def login_view(request):
+    # Já está logado? Manda direto para o workspace em vez de mostrar o login.
+    if request.user.is_authenticated:
+        return _redirect_authenticated_home(request)
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -106,20 +128,9 @@ def login_view(request):
                 ):
                     return redirect(next_url)
 
-                # Roteamento Inteligente: Busca o Workspace Padrão do usuário
-                if user.default_workspace:
-                    # Busca o domínio registrado para esse workspace
-                    dominio_principal = user.default_workspace.domains.filter(is_primary=True).first()
-                    if dominio_principal:
-                        # Captura a porta atual para não quebrar o desenvolvimento local (:8000)
-                        host_completo = request.get_host()
-                        porta = f":{host_completo.split(':')[1]}" if ":" in host_completo else ""
-
-                        # Redireciona para o subdomínio correto preservando o esquema (http/https)
-                        return redirect(f"{request.scheme}://{dominio_principal.domain}{porta}/dashboard/")
-                
-                # Se por algum motivo ele não tiver workspace padrão (ex: funcionário recém-convidado)
-                return redirect('dashboard_placeholder')
+                # Roteamento inteligente: leva ao Início do workspace do usuário
+                # (com fallback seguro se o workspace padrão não existir mais).
+                return _redirect_authenticated_home(request)
             else:
                 messages.error(request, "E-mail ou senha incorretos.")
     else:

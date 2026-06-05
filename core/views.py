@@ -2,21 +2,30 @@ from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
+from tenants.utils import effective_workspace, workspace_home_url
+
 
 def landing(request):
     """
     Public marketing/presentation page served at the project root.
 
     On a tenant subdomain the root is not the marketing page: send authenticated
-    users to their dashboard and anonymous users to the login screen.
+    users to their workspace home (Início) and anonymous users to the login screen.
+    On the public domain, logged-in users get a button back to their workspace.
     """
     schema_name = getattr(getattr(request, 'tenant', None), 'schema_name', 'public')
     if schema_name != 'public':
         if request.user.is_authenticated:
-            return redirect('tenant_dashboard')
+            return redirect('tenant_home')
         return redirect('login')
 
-    return render(request, 'core/landing.html')
+    workspace_url = None
+    if request.user.is_authenticated:
+        workspace = effective_workspace(request.user)
+        if workspace:
+            workspace_url = workspace_home_url(request, workspace)
+
+    return render(request, 'core/landing.html', {'workspace_url': workspace_url})
 
 
 def healthz(request):

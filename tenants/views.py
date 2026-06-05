@@ -152,6 +152,17 @@ def genesis_setup_view(request, token):
     return render(request, 'tenants/genesis_setup.html', {'form': form, 'invite': invite})
 
 @tenant_permission_required()
+def tenant_home_view(request):
+    """
+    Workspace home ("Início"). Accessible to ANY member, regardless of role —
+    this is the safe landing so a user with no permissions still has somewhere
+    to go. Shows system-wide update notifications.
+    """
+    workspace = request.tenant
+    return render(request, 'tenants/home.html', {'workspace': workspace})
+
+
+@tenant_permission_required()
 def tenant_dashboard_view(request):
     workspace = request.tenant
     context = {

@@ -19,9 +19,15 @@
             {% blocktrans %}Ready11 is a starter codebase with schema-isolated multi-tenancy, global accounts, role-based access control and an invite-only onboarding flow — so you can start building your product instead of the plumbing.{% endblocktrans %}
         </p>
         <div class="mt-8 flex items-center justify-center gap-3">
+            {% if user.is_authenticated and workspace_url %}
+            <a href="{{ workspace_url }}" class="rounded-lg bg-gray-900 px-5 py-3 text-sm font-medium text-white hover:bg-gray-700">
+                {% trans "Go to my workspace" %}
+            </a>
+            {% else %}
             <a href="#install" class="rounded-lg bg-gray-900 px-5 py-3 text-sm font-medium text-white hover:bg-gray-700">
                 {% trans "Get started" %}
             </a>
+            {% endif %}
             <a href="https://github.com/GabrielDev969/Ready11" class="rounded-lg px-5 py-3 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-100">
                 {% trans "View on GitHub" %}
             </a>
