@@ -1,7 +1,15 @@
 from django.conf import settings
+from django.core.validators import MaxLengthValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+
+# Retention policy (days) used by the cleanup_notifications command.
+NOTIFICATION_RETENTION_DAYS = {
+    'invite': 7,
+    'default': 30,  # global / tenant / personal
+}
+BODY_MAX_LENGTH = 1000
 
 
 class NotificationType(models.TextChoices):
@@ -63,7 +71,7 @@ class Notification(models.Model):
     )
 
     title = models.CharField(max_length=150)
-    body = models.TextField(blank=True)
+    body = models.TextField(blank=True, validators=[MaxLengthValidator(BODY_MAX_LENGTH)])
     created_at = models.DateTimeField(auto_now_add=True)
 
     objects = NotificationQuerySet.as_manager()

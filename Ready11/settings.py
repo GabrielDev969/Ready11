@@ -174,6 +174,12 @@ ASGI_APPLICATION = 'Ready11.asgi.application'
 # Channels channel layer: Redis in production, in-memory for local dev.
 # In-memory works for a single process only (fine for `runserver`); production
 # behind multiple workers needs REDIS_URL.
+# In-process notification cleanup scheduler (runs the retention purge periodically).
+# Disable it (NOTIFICATION_CLEANUP_ENABLED=False) if you schedule
+# `manage.py cleanup_notifications` externally (cron / Celery beat).
+NOTIFICATION_CLEANUP_ENABLED = env_bool('NOTIFICATION_CLEANUP_ENABLED', True)
+NOTIFICATION_CLEANUP_INTERVAL_HOURS = int(os.environ.get('NOTIFICATION_CLEANUP_INTERVAL_HOURS', '24'))
+
 REDIS_URL = os.environ.get('REDIS_URL')
 if REDIS_URL:
     CHANNEL_LAYERS = {

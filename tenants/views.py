@@ -17,7 +17,7 @@ from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, Inv
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 from .services import provision_workspace_defaults
 from .utils import workspace_home_url, tenant_permission_set
-from notifications.services import create_invite_notification
+from notifications.services import create_invite_notification, delete_invite_notifications
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -297,6 +297,8 @@ def invite_cancel_view(request, invite_id):
     invite = get_object_or_404(WorkspaceInvite, id=invite_id, workspace=request.tenant)
     if invite.status == InviteStatus.PENDING:
         invite.cancel()
+        # Remove the invite notification from the invited person right away.
+        delete_invite_notifications(invite)
         messages.success(request, _("Invitation to %(email)s cancelled.") % {'email': invite.email})
     else:
         messages.error(request, _("This invitation cannot be cancelled."))
