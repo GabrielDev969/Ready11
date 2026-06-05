@@ -32,7 +32,10 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(','
 # Domínio base para a criação dos tenants
 # Em produção, você mudará isso para 'suaempresa.com.br' ou usará variáveis de ambiente (.env)
 TENANT_BASE_DOMAIN = os.environ.get('PUBLIC_DOMAIN', 'localhost')
-SESSION_COOKIE_DOMAIN = f".{TENANT_BASE_DOMAIN}"
+
+if TENANT_BASE_DOMAIN != 'localhost':
+    SESSION_COOKIE_DOMAIN = f".{TENANT_BASE_DOMAIN}"
+    
 
 DATABASE_ROUTERS = (
     'django_tenants.routers.TenantSyncRouter',
