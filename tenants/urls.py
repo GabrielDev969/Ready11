@@ -8,4 +8,7 @@ urlpatterns = [
     path('equipe/', views.team_list_view, name='team_list'),
     path('equipe/convidar/', views.team_invite_view, name='team_invite'),
     path('aceitar-convite/<uuid:token>/', views.accept_invite_view, name='accept_invite'),
+
+    path('cargos/', views.role_list_view, name='role_list'),
+    path('cargos/novo/', views.role_create_view, name='role_create'),
 ]

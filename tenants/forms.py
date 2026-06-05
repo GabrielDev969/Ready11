@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.password_validation import validate_password
-from .models import WorkspaceInvite, Role
+from .models import WorkspaceInvite, Role, AVAILABLE_PERMISSIONS
 
 class GenesisSetupForm(forms.Form):
     first_name = forms.CharField(label='Nome', max_length=50)
@@ -45,3 +45,26 @@ class EmployeeSetupForm(forms.Form):
         widget=forms.PasswordInput,
         validators=[validate_password]
     )
+
+class RoleForm(forms.ModelForm):
+    # Transforma a lista do models em opções para os checkboxes
+    PERMISSION_CHOICES = [(perm, perm.replace('.', ' ').title()) for perm in AVAILABLE_PERMISSIONS]
+    
+    permissions = forms.MultipleChoiceField(
+        choices=PERMISSION_CHOICES,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Permissões do Cargo"
+    )
+
+    class Meta:
+        model = Role
+        fields = ['name', 'is_default']
+        labels = {
+            'name': 'Nome do Cargo',
+            'is_default': 'Tornar este o cargo padrão para novos convites?'
+        }
+
+    def clean_permissions(self):
+        # O formulário retorna uma lista de strings, que é exatamente o que o nosso JSONField espera!
+        return self.cleaned_data.get('permissions', [])

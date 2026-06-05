@@ -11,7 +11,7 @@ from django.http import HttpResponse
 
 # Adicionei o Role aqui nos imports
 from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role 
-from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm
+from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 
 User = get_user_model()
 
@@ -241,3 +241,36 @@ def accept_invite_view(request, token):
         'workspace': workspace
     }
     return render(request, 'tenants/accept_invite.html', context)
+
+@tenant_permission_required('roles.manage')
+def role_list_view(request):
+    workspace = request.tenant
+    # Traz todos os cargos da empresa atual
+    roles = Role.objects.filter(workspace=workspace).order_by('-is_system_owner', 'name')
+    
+    return render(request, 'tenants/role_list.html', {'roles': roles})
+
+@tenant_permission_required('roles.manage')
+def role_create_view(request):
+    workspace = request.tenant
+
+    if request.method == 'POST':
+        form = RoleForm(request.POST)
+        if form.is_valid():
+            role = form.save(commit=False)
+            role.workspace = workspace
+            
+            # Se esse cargo foi marcado como padrão, desmarca o anterior
+            if role.is_default:
+                Role.objects.filter(workspace=workspace, is_default=True).update(is_default=False)
+                
+            # Salva a lista de permissões no JSON
+            role.permissions = form.cleaned_data['permissions']
+            role.save()
+            
+            messages.success(request, f"Cargo '{role.name}' criado com sucesso!")
+            return redirect('role_list')
+    else:
+        form = RoleForm()
+
+    return render(request, 'tenants/role_form.html', {'form': form})
