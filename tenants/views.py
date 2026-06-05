@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from .decorators import tenant_permission_required
 from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
+from .services import provision_workspace_defaults
 from .utils import workspace_home_url
 
 User = get_user_model()
@@ -109,35 +110,16 @@ def genesis_setup_view(request, token):
                     workspace.owner = user
                     workspace.save()
 
-                    # The absolute owner role bypasses every permission check.
-                    owner_role = Role.objects.create(
-                        workspace=workspace,
-                        name="Owner",
-                        is_system_owner=True,
-                        permissions=["all_access"],
-                    )
-
-                    # Default role assigned to new invites (no special permissions).
-                    Role.objects.create(
-                        workspace=workspace,
-                        name="Team Member",
-                        is_default=True,
-                        permissions=[],
-                    )
-
                     domain_name = f"{domain_slug}.{settings.TENANT_BASE_DOMAIN}"
-
                     Domain.objects.create(
                         domain=domain_name,
                         tenant=workspace,
                         is_primary=True,
                     )
 
-                    WorkspaceMembership.objects.create(
-                        workspace=workspace,
-                        user=user,
-                        role=owner_role,
-                    )
+                    # Create the default roles ("Owner" + "Team Member") and the
+                    # owner's membership (domain already created above).
+                    provision_workspace_defaults(workspace, owner=user)
 
                     user.default_workspace = workspace
                     user.save()
