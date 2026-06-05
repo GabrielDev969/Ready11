@@ -5,15 +5,36 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 
-class Workspace(TenantMixin):
-    # Campos exigidos pela sua regra de negócio
-    name = models.CharField(max_length=100, verbose_name="Nome da Companhia")
-    status = models.BooleanField(default=True, verbose_name="Ativo")
-    created_on = models.DateField(auto_now_add=True)
-    
-    # Aqui entrariam campos como 'plano', 'limite_usuarios', etc.
+# ==========================================
+# CONSTANTES DE PERMISSÕES
+# ==========================================
+# Esta lista servirá para criarmos os "checkboxes" na tela de criar cargos depois.
+AVAILABLE_PERMISSIONS = [
+    'tenant.update',          # Pode editar dados da empresa
+    'tenant.delete',          # Pode deletar a empresa (Geralmente só o Dono tem)
+    'users.view',             # Pode ver a equipe
+    'users.invite',           # Pode convidar novas pessoas
+    'users.remove',           # Pode remover membros
+    'roles.manage',           # Pode criar/editar cargos
+]
 
-    # OBRIGATÓRIO: Diz ao django-tenants para rodar CREATE SCHEMA ao salvar
+# ==========================================
+# MODELOS CORE (TENANT)
+# ==========================================
+
+class Workspace(TenantMixin):
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # O ÚNICO Dono absoluto do workspace. Só ele não pode ser deletado.
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.PROTECT, 
+        related_name='owned_workspaces', 
+        null=True, 
+        blank=True
+    )
+
     auto_create_schema = True
 
     def __str__(self):
@@ -23,27 +44,49 @@ class Domain(DomainMixin):
     # DomainMixin já traz os campos 'domain' e 'tenant' (ForeignKey)
     pass
     
-# Lista de Permissões Base
-AVAILABLE_PERMISSIONS = [
-    'tenant.update',
-    'tenant.delete',
-    'users.invite',
-    'users.remove',
-]
 
-class WorkspaceRole(models.Model):
-    """
-    Cargos customizados que o Dono do workspace pode criar.
-    Ex: Nome: "Financeiro", Permissões: ["billing.view", "billing.update"]
-    """
-    workspace = models.ForeignKey('Workspace', on_delete=models.CASCADE, related_name='roles')
+# ==========================================
+# SISTEMA DE CARGOS (RBAC)
+# ==========================================
+
+class Role(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='roles')
     name = models.CharField(max_length=50, verbose_name="Nome do Cargo")
     
-    # O JSONField vai guardar uma lista simples de strings: ["tenant.update", "users.invite"]
-    permissions = models.JSONField(default=list, verbose_name="Permissões")
+    # Travas do Sistema
+    is_system_owner = models.BooleanField(default=False) # Trava para o cargo "Dono" não ser editado
+    is_default = models.BooleanField(default=False) # Cargo padrão para novos convites
+    
+    # Permissões salvas como uma lista: ["users.invite", "roles.manage"]
+    permissions = models.JSONField(default=list, verbose_name="Permissões") 
+
+    class Meta:
+        unique_together = ('workspace', 'name') # Impede dois cargos com mesmo nome na empresa
 
     def __str__(self):
         return f"{self.name} ({self.workspace.name})"
+
+
+# ==========================================
+# MEMBROS E CONVITES
+# ==========================================
+
+class WorkspaceMembership(models.Model):
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='memberships')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='memberships')
+    
+    # Adeus is_tenant_admin! Todo membro obrigatoriamente tem um Cargo (Role).
+    # Usamos PROTECT para impedir que deletem um cargo se houver gente usando ele.
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name='members')
+    
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('workspace', 'user')
+
+    def __str__(self):
+        return f"{self.user.email} - {self.role.name} em {self.workspace.name}"
+
 
 class InviteStatus(models.TextChoices):
     PENDING = 'pending', 'Pendente'
@@ -55,36 +98,17 @@ def default_expiration():
 
 class WorkspaceInvite(models.Model):
     email = models.EmailField(verbose_name="E-mail Convidado")
-    workspace = models.ForeignKey('Workspace', on_delete=models.CASCADE, related_name='invites', null=True, blank=True)
+    workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE, related_name='invites', null=True, blank=True)
     
-    # Em vez de um cargo fixo, passamos se ele será o dono ou qual cargo customizado ele terá
-    is_tenant_admin = models.BooleanField(default=False, verbose_name="Será Dono/Admin?")
-    role = models.ForeignKey(WorkspaceRole, on_delete=models.SET_NULL, null=True, blank=True)
+    # Quando o convite for aceito, a pessoa receberá este cargo.
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
     
     token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     status = models.CharField(max_length=20, choices=InviteStatus.choices, default=InviteStatus.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField(default=default_expiration)
+    
     invited_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Convite para {self.email} ({self.status})"
-
-class WorkspaceMembership(models.Model):
-    workspace = models.ForeignKey('Workspace', on_delete=models.CASCADE, related_name='memberships')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='memberships')
-    
-    # A única regra fixa do sistema: O Dono tem passe livre
-    is_tenant_admin = models.BooleanField(default=False, verbose_name="É Dono/Admin?")
-    
-    # Se não for dono, precisa ter um cargo customizado com as permissões atreladas
-    role = models.ForeignKey(WorkspaceRole, on_delete=models.SET_NULL, null=True, blank=True)
-    
-    joined_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        unique_together = ('workspace', 'user')
-
-    def __str__(self):
-        tipo = "ADMIN" if self.is_tenant_admin else getattr(self.role, 'name', 'Sem Cargo')
-        return f"{self.user.email} - {tipo} em {self.workspace.name}"

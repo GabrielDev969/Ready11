@@ -18,8 +18,8 @@
                         <p class="text-sm font-medium text-gray-900">{{ member.user.first_name }} {{ member.user.last_name }}</p>
                         <p class="text-sm text-gray-500">{{ member.user.email }}</p>
                     </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if member.is_tenant_admin %}bg-black text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
-                        {% if member.is_tenant_admin %}Admin{% else %}Membro{% endif %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if member.role.is_system_owner %}bg-black text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
+                        {{ member.role.name }}
                     </span>
                 </li>
                 {% endfor %}
@@ -67,11 +67,9 @@
                     {% render_field form.email class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="funcionario@empresa.com" %}
                 </div>
                 
-                <div class="flex items-center mt-2">
-                    {% render_field form.is_tenant_admin class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded" %}
-                    <label class="ml-2 block text-sm text-gray-900">
-                        {{ form.is_tenant_admin.label }}
-                    </label>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.role.label }}</label>
+                    {% render_field form.role class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border bg-white" %}
                 </div>
 
                 <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none transition-colors mt-4">
