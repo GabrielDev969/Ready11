@@ -143,6 +143,7 @@ class InviteStatus(models.TextChoices):
     ACCEPTED = 'accepted', _('Accepted')
     EXPIRED = 'expired', _('Expired')
     CANCELLED = 'cancelled', _('Cancelled')
+    DECLINED = 'declined', _('Declined')
 
 def default_expiration():
     # Invites are valid for 24 hours from creation/resend.

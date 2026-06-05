@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 15:21-0300\n"
+"POT-Creation-Date: 2026-06-05 15:49-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,13 +16,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:231
+#: Ready11/settings.py:233
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:232
+#: Ready11/settings.py:234
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
+
+#: notifications/models.py:8
+#| msgid "Send invitation"
+msgid "Invitation"
+msgstr "Convite"
+
+#: notifications/models.py:9
+msgid "Global"
+msgstr "Global"
+
+#: notifications/models.py:10 tenants/models.py:37
+msgid "Workspace"
+msgstr "Workspace"
+
+#: notifications/models.py:11
+msgid "Personal"
+msgstr "Pessoal"
+
+#: notifications/views.py:66
+#| msgid "This invitation is no longer available"
+msgid "This invitation is no longer available."
+msgstr "Este convite não está mais disponível."
+
+#: notifications/views.py:83 tenants/views.py:368
+#, python-format
+msgid "You have joined %(workspace)s."
+msgstr "Você entrou em %(workspace)s."
+
+#: notifications/views.py:105
+#| msgid "Invitation to %(email)s cancelled."
+msgid "Invitation declined."
+msgstr "Convite recusado."
 
 #: templates/base.html:33
 msgid "Ready11 — base project for B2B SaaS systems."
@@ -50,9 +82,10 @@ msgid ""
 "accounts, role-based access control and an invite-only onboarding flow — so "
 "you can start building your product instead of the plumbing."
 msgstr ""
-"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema, "
-"contas globais, controle de acesso por cargos e onboarding apenas por "
-"convite — para você começar a construir seu produto em vez da infraestrutura."
+"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema,"
+" contas globais, controle de acesso por cargos e onboarding apenas por "
+"convite — para você começar a construir seu produto em vez da "
+"infraestrutura."
 
 #: templates/core/landing.html:24 templates/tenants/genesis_success.html:21
 msgid "Go to my workspace"
@@ -147,23 +180,23 @@ msgid "How it works"
 msgstr "Como funciona"
 
 #: templates/core/landing.html:78
-msgid ""
-"A super admin sends a \"genesis\" invitation to a future workspace owner."
+msgid "A super admin sends a \"genesis\" invitation to a future workspace owner."
 msgstr ""
-"Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
+"Um super admin envia um convite \"gênesis\" para um futuro dono de "
+"workspace."
 
 #: templates/core/landing.html:82
 msgid ""
 "The owner sets their name and company. The backend creates an isolated "
 "database schema on demand."
 msgstr ""
-"O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
-"sob demanda."
+"O dono informa seu nome e empresa. O backend cria um schema de banco isolado"
+" sob demanda."
 
 #: templates/core/landing.html:86
 msgid ""
-"The owner invites their team and assigns roles. Members access the workspace "
-"on its own subdomain."
+"The owner invites their team and assigns roles. Members access the workspace"
+" on its own subdomain."
 msgstr ""
 "O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
 "em seu próprio subdomínio."
@@ -205,9 +238,55 @@ msgstr ""
 "Depois abra a aplicação, crie um super admin e envie seu primeiro convite "
 "gênesis pelo admin do Django."
 
+#: templates/notifications/list.html:4 templates/notifications/list.html:11
+#: templates/partials/notification_bell.html:3
+#: templates/partials/notification_bell.html:13
+#| msgid "Actions"
+msgid "Notifications"
+msgstr "Notificações"
+
+#: templates/notifications/list.html:16
+#: templates/partials/notification_bell.html:18
+msgid "Mark all read"
+msgstr "Marcar todas como lidas"
+
+#: templates/notifications/list.html:31
+msgid ""
+"You're not part of any workspace yet. Accept an invitation below, or wait to"
+" be invited."
+msgstr ""
+"Você ainda não faz parte de nenhum workspace. Aceite um convite abaixo, ou "
+"aguarde ser convidado."
+
+#: templates/notifications/list.html:39
+#: templates/partials/notification_bell.html:26
+msgid "No notifications."
+msgstr "Nenhuma notificação."
+
 #: templates/partials/language_switcher.html:6
 msgid "Change language"
 msgstr "Mudar idioma"
+
+#: templates/partials/notification_bell.html:30
+#| msgid "View team"
+msgid "View all"
+msgstr "Ver todas"
+
+#: templates/partials/notification_item.html:7
+#, python-format
+#| msgid "You were invited by <strong>%(inviter)s</strong>."
+msgid "You were invited to <strong>%(workspace)s</strong> as %(role)s."
+msgstr ""
+"Você foi convidado(a) para <strong>%(workspace)s</strong> como %(role)s."
+
+#: templates/partials/notification_item.html:13
+#| msgid "Accepted"
+msgid "Accept"
+msgstr "Aceitar"
+
+#: templates/partials/notification_item.html:17
+msgid "Decline"
+msgstr "Recusar"
 
 #: templates/partials/profile_menu.html:19
 msgid "Profile"
@@ -243,7 +322,7 @@ msgstr "Equipe"
 msgid "Roles"
 msgstr "Cargos"
 
-#: templates/partials/topbar_nav.html:7 templates/users/login.html:4
+#: templates/partials/topbar_nav.html:8 templates/users/login.html:4
 #: templates/users/login.html:39 templates/users/register.html:58
 msgid "Sign in"
 msgstr "Entrar"
@@ -417,8 +496,8 @@ msgid ""
 "The link may have expired, been cancelled or already been used. Please ask "
 "the person who invited you to send a new invitation."
 msgstr ""
-"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa "
-"que convidou você para enviar um novo convite."
+"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa"
+" que convidou você para enviar um novo convite."
 
 #: templates/tenants/invite_unavailable.html:18
 #: templates/users/register_success.html:20
@@ -577,8 +656,8 @@ msgid ""
 "roles. Ask an administrator to grant it (or to send the invite)."
 msgstr ""
 "Convidar exige escolher um cargo, mas você não tem permissão para ver os "
-"cargos. Peça a um administrador para conceder essa permissão (ou para enviar "
-"o convite)."
+"cargos. Peça a um administrador para conceder essa permissão (ou para enviar"
+" o convite)."
 
 #: templates/tenants/team_list.html:106
 msgid "Send invitation"
@@ -590,7 +669,8 @@ msgstr "É necessário um cargo para convidar pessoas."
 
 #: templates/tenants/team_list.html:113
 msgid "Create a role first, then you can assign it to new members."
-msgstr "Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
+msgstr ""
+"Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
 
 #: templates/tenants/team_list.html:114
 msgid "Create a role"
@@ -829,10 +909,6 @@ msgstr "Excluir cargos"
 msgid "Remove roles."
 msgstr "Remover cargos."
 
-#: tenants/models.py:37
-msgid "Workspace"
-msgstr "Workspace"
-
 #: tenants/models.py:39
 msgid "Edit workspace"
 msgstr "Editar workspace"
@@ -849,22 +925,25 @@ msgstr "Aceito"
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#: tenants/models.py:152
+#: tenants/models.py:146
+msgid "Declined"
+msgstr "Recusado"
+
+#: tenants/models.py:153
 msgid "Invited email"
 msgstr "E-mail convidado"
 
-#: tenants/views.py:45
+#: tenants/views.py:46
 #, python-format
 msgid "Invitation to join %(workspace)s"
 msgstr "Convite para entrar em %(workspace)s"
 
-#: tenants/views.py:47
+#: tenants/views.py:48
 #, python-format
 msgid ""
 "Hi!\n"
 "\n"
-"You were invited by %(inviter)s to join the %(workspace)s workspace as "
-"%(role)s.\n"
+"You were invited by %(inviter)s to join the %(workspace)s workspace as %(role)s.\n"
 "\n"
 "Click the link to accept (valid for 24 hours):\n"
 "\n"
@@ -872,116 +951,110 @@ msgid ""
 msgstr ""
 "Olá!\n"
 "\n"
-"Você foi convidado(a) por %(inviter)s para participar do workspace "
-"%(workspace)s como %(role)s.\n"
+"Você foi convidado(a) por %(inviter)s para participar do workspace %(workspace)s como %(role)s.\n"
 "\n"
 "Clique no link para aceitar (válido por 24 horas):\n"
 "\n"
 "%(link)s"
 
-#: tenants/views.py:139
+#: tenants/views.py:144
 msgid ""
 "Something went wrong while provisioning your workspace. Please try again."
 msgstr "Algo deu errado ao provisionar seu workspace. Tente novamente."
 
-#: tenants/views.py:202
+#: tenants/views.py:207
 msgid ""
 "You need permission to view roles before you can assign one. Ask an "
 "administrator."
 msgstr ""
-"Você precisa de permissão para ver os cargos antes de atribuir um. Peça a um "
-"administrador."
+"Você precisa de permissão para ver os cargos antes de atribuir um. Peça a um"
+" administrador."
 
-#: tenants/views.py:214
+#: tenants/views.py:219
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr "Convite enviado para %(email)s."
 
-#: tenants/views.py:216
+#: tenants/views.py:221
 msgid "Could not send the invitation. Please check the data."
 msgstr "Não foi possível enviar o convite. Verifique os dados."
 
-#: tenants/views.py:237
+#: tenants/views.py:242
 msgid "The workspace owner cannot be removed."
 msgstr "O dono do workspace não pode ser removido."
 
-#: tenants/views.py:241
+#: tenants/views.py:246
 msgid "You cannot remove yourself."
 msgstr "Você não pode remover a si mesmo."
 
-#: tenants/views.py:254
+#: tenants/views.py:259
 #, python-format
 msgid "%(email)s was removed from the workspace."
 msgstr "%(email)s foi removido(a) do workspace."
 
-#: tenants/views.py:269
+#: tenants/views.py:274
 msgid "The owner can't leave the workspace. Transfer ownership first."
 msgstr "O dono não pode sair do workspace. Transfira a posse primeiro."
 
-#: tenants/views.py:278
+#: tenants/views.py:283
 #, python-format
 msgid "You left %(workspace)s."
 msgstr "Você saiu de %(workspace)s."
 
-#: tenants/views.py:295
+#: tenants/views.py:300
 #, python-format
 msgid "Invitation to %(email)s cancelled."
 msgstr "Convite para %(email)s cancelado."
 
-#: tenants/views.py:297
+#: tenants/views.py:302
 msgid "This invitation cannot be cancelled."
 msgstr "Este convite não pode ser cancelado."
 
-#: tenants/views.py:310
+#: tenants/views.py:315
 msgid "This invitation cannot be resent."
 msgstr "Este convite não pode ser reenviado."
 
-#: tenants/views.py:320
+#: tenants/views.py:325
 #, python-format
 msgid "Invitation resent to %(email)s."
 msgstr "Convite reenviado para %(email)s."
 
-#: tenants/views.py:342
+#: tenants/views.py:347
 msgid "Please log in to accept this invitation."
 msgstr "Faça login para aceitar este convite."
 
-#: tenants/views.py:346
+#: tenants/views.py:351
 msgid "This invitation was sent to a different account."
 msgstr "Este convite foi enviado para outra conta."
 
-#: tenants/views.py:363
-#, python-format
-msgid "You have joined %(workspace)s."
-msgstr "Você entrou em %(workspace)s."
-
-#: tenants/views.py:397
+#: tenants/views.py:402
 msgid ""
 "Something went wrong while processing your invitation. Please try again."
 msgstr "Algo deu errado ao processar seu convite. Tente novamente."
 
-#: tenants/views.py:439
+#: tenants/views.py:444
 #, python-format
 msgid "Role '%(name)s' created."
 msgstr "Cargo '%(name)s' criado."
 
-#: tenants/views.py:458
+#: tenants/views.py:463
 msgid "The owner role cannot be edited."
 msgstr "O cargo de dono não pode ser editado."
 
-#: tenants/views.py:472
+#: tenants/views.py:477
 #, python-format
 msgid "Role '%(name)s' updated."
 msgstr "Cargo '%(name)s' atualizado."
 
-#: tenants/views.py:495
+#: tenants/views.py:500
 msgid "The owner role cannot be deleted."
 msgstr "O cargo de dono não pode ser excluído."
 
-#: tenants/views.py:499
+#: tenants/views.py:504
 msgid "This role can't be deleted while members are using it."
 msgstr "Este cargo não pode ser excluído enquanto houver membros usando ele."
 
-#: tenants/views.py:504
+#: tenants/views.py:509
 #, python-format
 msgid "Role '%(name)s' deleted."
 msgstr "Cargo '%(name)s' excluído."
@@ -1081,7 +1154,6 @@ msgstr "Workspace padrão atualizado."
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
 
-#~| msgid "Default workspace"
 #~ msgid "Delete workspace"
 #~ msgstr "Excluir workspace"
 

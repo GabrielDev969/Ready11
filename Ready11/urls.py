@@ -9,5 +9,6 @@ urlpatterns = [
     path('healthz/', core_views.healthz, name='healthz'),
     path('', core_views.landing, name='landing'),
     path('', include('users.urls')),
+    path('', include('notifications.urls')),
     path('', include('tenants.urls')),
 ]

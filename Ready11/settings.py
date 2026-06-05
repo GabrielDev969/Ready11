@@ -76,6 +76,7 @@ SHARED_APPS = (
     'widget_tweaks',
     'axes',            # brute-force protection (global access-attempt log)
     'core',            # landing page + healthcheck (public)
+    'notifications',   # in-app notifications (global)
     'tenants',
     'users',
 
@@ -160,6 +161,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.workspaces',
                 'core.context_processors.tenant_permissions',
+                'notifications.context_processors.notifications',
             ],
         },
     },

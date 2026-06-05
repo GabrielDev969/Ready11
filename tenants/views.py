@@ -17,6 +17,7 @@ from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, Inv
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 from .services import provision_workspace_defaults
 from .utils import workspace_home_url, tenant_permission_set
+from notifications.services import create_invite_notification
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -53,6 +54,10 @@ def _send_invite_email(request, invite):
         'link': link,
     }
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [invite.email], fail_silently=False)
+
+    # If the invited email already has an account, also surface an in-app invite
+    # notification (Accept/Decline) so they don't need the email link.
+    create_invite_notification(invite)
 
 
 def genesis_setup_view(request, token):

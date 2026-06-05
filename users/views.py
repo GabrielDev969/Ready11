@@ -19,15 +19,15 @@ User = get_user_model()
 
 def _redirect_authenticated_home(request):
     """
-    Send an authenticated user to their workspace home, or to the public landing
-    page if they don't belong to any workspace yet.
+    Send an authenticated user to their workspace home, or to the notifications
+    hub if they don't belong to any workspace yet (where pending invites live).
     """
     workspace = effective_workspace(request.user)
     if workspace:
         url = workspace_home_url(request, workspace)
         if url:
             return redirect(url)
-    return redirect('landing')
+    return redirect('notifications')
 
 
 def register_view(request):
