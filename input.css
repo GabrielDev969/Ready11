@@ -3,25 +3,57 @@
 @tailwind utilities;
 
 /* ==========================================
-   Collapsible app sidebar
+   App sidebar — responsive
    ========================================== */
 #app-sidebar {
     width: 16rem;
-    transition: width 0.15s ease;
+    transition: width 0.15s ease, transform 0.2s ease;
 }
 
-/* Collapsed: show icons only. State lives on <html> (set before paint). */
-html.sidebar-collapsed #app-sidebar {
-    width: 4rem;
-}
-html.sidebar-collapsed #app-sidebar .nav-label,
-html.sidebar-collapsed #app-sidebar .sidebar-brand-text {
+#sidebar-backdrop {
     display: none;
 }
-html.sidebar-collapsed #app-sidebar .nav-link {
-    justify-content: center;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+
+/* ---------- Desktop (md+): in-flow, collapsible ---------- */
+@media (min-width: 768px) {
+    html.sidebar-collapsed #app-sidebar {
+        width: 4rem;
+    }
+    html.sidebar-collapsed #app-sidebar .nav-label,
+    html.sidebar-collapsed #app-sidebar .sidebar-brand-text {
+        display: none;
+    }
+    html.sidebar-collapsed #app-sidebar .nav-link {
+        justify-content: center;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+}
+
+/* ---------- Mobile (<md): off-canvas drawer ---------- */
+@media (max-width: 767.98px) {
+    #app-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    html.sidebar-open #app-sidebar {
+        transform: translateX(0);
+    }
+    html.sidebar-open #sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(0, 0, 0, 0.4);
+    }
+    html.sidebar-open {
+        overflow: hidden;
+    }
 }
 
 /* Remove the default disclosure triangle from dropdown summaries. */

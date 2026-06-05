@@ -20,7 +20,7 @@
         {% endfor %}
     {% endif %}
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -39,11 +39,12 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {% if role.is_system_owner %}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black text-white">{% trans "Absolute owner" %}</span>
-                        {% elif role.is_default %}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">{% trans "System default" %}</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black text-white">{% trans "System role" %}</span>
                         {% else %}
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{% trans "Custom" %}</span>
+                            {% if role.is_default %}
+                                <span class="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700" title="{% trans 'Assigned to new invites by default' %}">{% trans "Default" %}</span>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-500">

@@ -1,0 +1,22 @@
+{% comment %}Renders a small country flag SVG for a language code. Usage: {% include 'partials/flag.html' with code='pt-br' %}{% endcomment %}
+{% if code == 'pt-br' %}
+<svg viewBox="0 0 24 16" class="h-4 w-6 shrink-0 rounded-[2px] ring-1 ring-black/10" aria-hidden="true">
+    <rect width="24" height="16" fill="#009b3a"/>
+    <polygon points="12,2 22,8 12,14 2,8" fill="#fedf00"/>
+    <circle cx="12" cy="8" r="3.2" fill="#002776"/>
+</svg>
+{% else %}
+<svg viewBox="0 0 24 16" class="h-4 w-6 shrink-0 rounded-[2px] ring-1 ring-black/10" aria-hidden="true">
+    <rect width="24" height="16" fill="#fff"/>
+    <g fill="#b22234">
+        <rect y="0" width="24" height="1.23"/>
+        <rect y="2.46" width="24" height="1.23"/>
+        <rect y="4.92" width="24" height="1.23"/>
+        <rect y="7.38" width="24" height="1.23"/>
+        <rect y="9.84" width="24" height="1.23"/>
+        <rect y="12.3" width="24" height="1.23"/>
+        <rect y="14.76" width="24" height="1.23"/>
+    </g>
+    <rect width="10" height="8.61" fill="#3c3b6e"/>
+</svg>
+{% endif %}

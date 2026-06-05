@@ -9,21 +9,43 @@ from datetime import timedelta
 # ==========================================
 # PERMISSION CONSTANTS
 # ==========================================
-# Granular permissions, one per action. These power the checkboxes on the
-# "create/edit role" screen — assign exactly what each role needs.
+# Granular permissions grouped by area. This single source drives both the
+# permission list and the grouped UI on the "create/edit role" screen.
+# Each item: (code, label, description).
+PERMISSION_GROUPS = [
+    {
+        'key': 'users',
+        'label': _('Team'),
+        'permissions': [
+            ('users.view', _('View team'), _('See the members list.')),
+            ('users.invite', _('Invite members'), _('Send invitations and assign a role.')),
+            ('users.remove', _('Remove members'), _('Remove people from the workspace.')),
+        ],
+    },
+    {
+        'key': 'roles',
+        'label': _('Roles'),
+        'permissions': [
+            ('roles.view', _('View roles'), _('See roles and pick one when inviting.')),
+            ('roles.create', _('Create roles'), _('Add new roles.')),
+            ('roles.edit', _('Edit roles'), _('Change roles and their permissions.')),
+            ('roles.delete', _('Delete roles'), _('Remove roles.')),
+        ],
+    },
+    {
+        'key': 'tenant',
+        'label': _('Workspace'),
+        'permissions': [
+            ('tenant.update', _('Edit workspace'), _('Change the company data.')),
+            # Note: deleting a workspace is intentionally NOT a grantable permission.
+            # It's restricted to the workspace owner and platform super admins.
+        ],
+    },
+]
+
+# Flat list of permission codes (derived from the groups above).
 AVAILABLE_PERMISSIONS = [
-    # Team / members
-    'users.view',             # Can view the team
-    'users.invite',           # Can invite new people (includes picking a role to assign)
-    'users.remove',           # Can remove members
-    # Roles
-    'roles.view',             # Can view the roles list
-    'roles.create',           # Can create new roles
-    'roles.edit',             # Can edit existing roles
-    'roles.delete',           # Can delete roles
-    # Workspace
-    'tenant.update',          # Can edit company data
-    'tenant.delete',          # Can delete the company (usually owner-only)
+    code for group in PERMISSION_GROUPS for (code, _label, _desc) in group['permissions']
 ]
 
 # Umbrella permissions that imply a set of granular ones. Not offered as new
@@ -32,7 +54,7 @@ AVAILABLE_PERMISSIONS = [
 PERMISSION_IMPLIES = {
     'roles.manage': ['roles.view', 'roles.create', 'roles.edit', 'roles.delete'],
     'users.manage': ['users.view', 'users.invite', 'users.remove'],
-    'tenant.manage': ['tenant.update', 'tenant.delete'],
+    'tenant.manage': ['tenant.update'],
 }
 
 

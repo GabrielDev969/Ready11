@@ -13,7 +13,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 from .decorators import tenant_permission_required
-from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration
+from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration, PERMISSION_GROUPS
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 from .services import provision_workspace_defaults
 from .utils import workspace_home_url, tenant_permission_set
@@ -441,7 +441,11 @@ def role_create_view(request):
     else:
         form = RoleForm()
 
-    return render(request, 'tenants/role_form.html', {'form': form})
+    return render(request, 'tenants/role_form.html', {
+        'form': form,
+        'permission_groups': PERMISSION_GROUPS,
+        'selected_permissions': form['permissions'].value() or [],
+    })
 
 
 @tenant_permission_required('roles.edit')
@@ -470,7 +474,12 @@ def role_update_view(request, role_id):
     else:
         form = RoleForm(instance=role, initial={'permissions': role.permissions})
 
-    return render(request, 'tenants/role_form.html', {'form': form, 'role': role})
+    return render(request, 'tenants/role_form.html', {
+        'form': form,
+        'role': role,
+        'permission_groups': PERMISSION_GROUPS,
+        'selected_permissions': form['permissions'].value() or [],
+    })
 
 
 @tenant_permission_required('roles.delete')
