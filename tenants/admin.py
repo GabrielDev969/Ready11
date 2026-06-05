@@ -1,3 +1,5 @@
+import logging
+
 from django import forms
 from django.conf import settings
 from django.contrib import admin
@@ -5,6 +7,8 @@ from django_tenants.admin import TenantAdminMixin
 
 from .models import Workspace, Domain, Role, WorkspaceMembership, WorkspaceInvite, AVAILABLE_PERMISSIONS
 from .services import provision_workspace_defaults
+
+logger = logging.getLogger(__name__)
 
 
 class TenantScopedAdmin(admin.ModelAdmin):
@@ -112,7 +116,4 @@ class WorkspaceInviteAdmin(TenantScopedAdmin):
 
         if not change and not obj.workspace:
             link = f"http://{settings.TENANT_BASE_DOMAIN}:8000/invite/{obj.token}/"
-            print("\n" + "=" * 60)
-            print("🚀 GENESIS INVITE LINK GENERATED:")
-            print(link)
-            print("=" * 60 + "\n")
+            logger.info("Genesis invite link generated: %s", link)

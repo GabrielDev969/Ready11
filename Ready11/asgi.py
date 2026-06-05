@@ -16,10 +16,16 @@ django_asgi_app = get_asgi_application()
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
 
 from notifications.routing import websocket_urlpatterns
 
+# AllowedHostsOriginValidator rejects WebSocket handshakes whose Origin isn't in
+# ALLOWED_HOSTS — prevents Cross-Site WebSocket Hijacking (a malicious page opening
+# a socket with the victim's session cookie).
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
-    'websocket': AuthMiddlewareStack(URLRouter(websocket_urlpatterns)),
+    'websocket': AllowedHostsOriginValidator(
+        AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
+    ),
 })

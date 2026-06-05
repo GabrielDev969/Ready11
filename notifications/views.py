@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 
 from tenants.models import InviteStatus, WorkspaceMembership
@@ -9,10 +10,6 @@ from tenants.utils import workspace_home_url
 
 from .models import Notification, NotificationType
 from .services import mark_read, mark_all_read, recent_notifications
-
-
-def _require_login(request):
-    return None if request.user.is_authenticated else redirect('login')
 
 
 def notification_list(request):
@@ -76,7 +73,12 @@ def mark_all_read_view(request):
         return redirect('login')
     if request.method == 'POST':
         mark_all_read(request.user)
-    return redirect(request.POST.get('next') or 'notifications')
+    next_url = request.POST.get('next')
+    if next_url and url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        return redirect(next_url)
+    return redirect('notifications')
 
 
 def invite_accept_view(request, notification_id):
