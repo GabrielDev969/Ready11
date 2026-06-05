@@ -1,21 +1,21 @@
 {% extends "base.html" %}
-{% load widget_tweaks %}
+{% load widget_tweaks i18n %}
 
-{% block title %}Novo Cargo | {{ request.tenant.name }}{% endblock %}
+{% block title %}{% trans "New role" %} | {{ request.tenant.name }}{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 p-8">
     <div class="mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Criar Novo Cargo</h2>
-        <p class="text-sm text-gray-500 mt-1">Defina o nome e o que os funcionários com este cargo poderão fazer.</p>
+        <h2 class="text-xl font-semibold text-gray-900">{% trans "Create a new role" %}</h2>
+        <p class="text-sm text-gray-500 mt-1">{% trans "Define the name and what members with this role can do." %}</p>
     </div>
 
     <form method="post" class="space-y-6">
         {% csrf_token %}
-        
+
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.name.label }}</label>
-            {% render_field form.name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="Ex: Financeiro" %}
+            {% render_field form.name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="e.g. Finance" %}
         </div>
 
         <div class="flex items-center">
@@ -40,9 +40,9 @@
         </div>
 
         <div class="flex justify-end pt-4">
-            <a href="{% url 'role_list' %}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 mr-3">Cancelar</a>
+            <a href="{% url 'role_list' %}" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 mr-3">{% trans "Cancel" %}</a>
             <button type="submit" class="bg-black py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-gray-800">
-                Salvar Cargo
+                {% trans "Save role" %}
             </button>
         </div>
     </form>

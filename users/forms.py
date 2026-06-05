@@ -1,16 +1,17 @@
 from django import forms
 from django.contrib.auth.password_validation import validate_password
+from django.utils.translation import gettext_lazy as _
 from .models import CustomUser
-from django.contrib.auth.forms import AuthenticationForm
+
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(
-        label='Senha',
+        label=_('Password'),
         widget=forms.PasswordInput,
-        validators=[validate_password] # Aplica a regra de 8 dígitos, símbolos, etc.
+        validators=[validate_password]
     )
     confirm_password = forms.CharField(
-        label='Confirmar Senha',
+        label=_('Confirm password'),
         widget=forms.PasswordInput
     )
 
@@ -24,16 +25,17 @@ class RegisterForm(forms.ModelForm):
         confirm_password = cleaned_data.get("confirm_password")
 
         if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', "As senhas não coincidem.")
+            self.add_error('confirm_password', _("The passwords don't match."))
         return cleaned_data
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
-        label='E-mail',
+        label=_('Email'),
         widget=forms.EmailInput(attrs={'autofocus': True})
     )
     password = forms.CharField(
-        label='Senha',
+        label=_('Password'),
         strip=False,
         widget=forms.PasswordInput,
     )

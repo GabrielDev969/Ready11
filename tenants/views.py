@@ -5,17 +5,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, login
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.translation import gettext as _
 from django.db import transaction
 from django.contrib import messages
-from .decorators import tenant_permission_required
 from django.conf import settings
 from django.core.mail import send_mail
 
-from django.http import HttpResponse
-
-# Adicionei o Role aqui nos imports
+from .decorators import tenant_permission_required
 from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration
 from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
+from .utils import workspace_home_url
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -40,14 +39,19 @@ def build_schema_name(company_name):
 
 def _send_invite_email(request, invite):
     """Send (or resend) the team invitation email with an absolute, scheme-aware link."""
-    link = request.build_absolute_uri(f"/aceitar-convite/{invite.token}/")
-    assunto = f'Convite para juntar-se à {invite.workspace.name}'
-    mensagem = (
-        f'Olá!\n\nVocê foi convidado por {request.user.first_name} para participar '
-        f'do workspace {invite.workspace.name} como {invite.role.name}.\n\n'
-        f'Clique no link para acessar (válido por 24 horas):\n\n{link}'
-    )
-    send_mail(assunto, mensagem, settings.DEFAULT_FROM_EMAIL, [invite.email], fail_silently=False)
+    link = request.build_absolute_uri(f"/accept-invite/{invite.token}/")
+    subject = _("Invitation to join %(workspace)s") % {'workspace': invite.workspace.name}
+    message = _(
+        "Hi!\n\nYou were invited by %(inviter)s to join the %(workspace)s "
+        "workspace as %(role)s.\n\nClick the link to accept (valid for 24 hours):\n\n%(link)s"
+    ) % {
+        'inviter': request.user.first_name,
+        'workspace': invite.workspace.name,
+        'role': invite.role.name,
+        'link': link,
+    }
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [invite.email], fail_silently=False)
+
 
 def genesis_setup_view(request, token):
     invite = get_object_or_404(WorkspaceInvite, token=token)
@@ -75,10 +79,10 @@ def genesis_setup_view(request, token):
                             'first_name': first_name,
                             'last_name': last_name,
                             'is_active': True,
-                            'email_verified': True
+                            'email_verified': True,
                         }
                     )
-                    
+
                     if created:
                         user.set_password(password)
                         user.save()
@@ -88,7 +92,7 @@ def genesis_setup_view(request, token):
                     base_schema_name = schema_name
                     base_domain_slug = schema_name.replace('_', '-')
                     counter = 1
-                    # Ajuste fino: Se o schema tiver contador, o domínio também deve ter
+                    # If the schema gets a counter suffix, the domain must match it.
                     domain_slug = base_domain_slug
 
                     while Workspace.objects.filter(schema_name=schema_name).exists():
@@ -99,64 +103,69 @@ def genesis_setup_view(request, token):
 
                     workspace = Workspace.objects.create(
                         name=company_name,
-                        schema_name=schema_name
+                        schema_name=schema_name,
                     )
 
                     workspace.owner = user
                     workspace.save()
 
-                    # JSON alterado para Lista (Array de strings)
+                    # The absolute owner role bypasses every permission check.
                     owner_role = Role.objects.create(
                         workspace=workspace,
-                        name="Dono",
+                        name="Owner",
                         is_system_owner=True,
-                        permissions=["all_access"] 
+                        permissions=["all_access"],
                     )
 
-                    default_role = Role.objects.create(
+                    # Default role assigned to new invites (no special permissions).
+                    Role.objects.create(
                         workspace=workspace,
-                        name="Membro da Equipe",
+                        name="Team Member",
                         is_default=True,
-                        permissions=[] # Começa sem permissões especiais
+                        permissions=[],
                     )
 
                     domain_name = f"{domain_slug}.{settings.TENANT_BASE_DOMAIN}"
-                    
+
                     Domain.objects.create(
                         domain=domain_name,
                         tenant=workspace,
-                        is_primary=True
+                        is_primary=True,
                     )
 
                     WorkspaceMembership.objects.create(
                         workspace=workspace,
                         user=user,
-                        role=owner_role 
+                        role=owner_role,
                     )
 
                     user.default_workspace = workspace
                     user.save()
-                    
+
                     invite.status = InviteStatus.ACCEPTED
                     invite.save()
 
                     login(request, user)
-                    return HttpResponse(f"<h1>Workspace {workspace.name} criado com sucesso!</h1><p>Seu banco isolado está pronto.</p>")
+                    return render(request, 'tenants/genesis_success.html', {
+                        'workspace': workspace,
+                        'workspace_url': workspace_home_url(request, workspace),
+                    })
 
             except Exception:
                 logger.exception("Failed to provision workspace from genesis invite %s", invite.pk)
-                messages.error(request, "Something went wrong while provisioning your workspace. Please try again.")
+                messages.error(request, _("Something went wrong while provisioning your workspace. Please try again."))
     else:
         form = GenesisSetupForm()
 
     return render(request, 'tenants/genesis_setup.html', {'form': form, 'invite': invite})
 
+
 @tenant_permission_required()
 def tenant_home_view(request):
     """
-    Workspace home ("Início"). Accessible to ANY member, regardless of role —
-    this is the safe landing so a user with no permissions still has somewhere
-    to go. Shows system-wide update notifications.
+    Workspace home. Accessible to ANY member, regardless of role — this is the
+    safe landing so a user with no permissions still has somewhere to go. Shows
+    system-wide update notifications.
     """
     workspace = request.tenant
     return render(request, 'tenants/home.html', {'workspace': workspace})
@@ -170,42 +179,42 @@ def tenant_dashboard_view(request):
     }
     return render(request, 'tenants/dashboard.html', context)
 
+
 @tenant_permission_required()
 def team_list_view(request):
     workspace = request.tenant
-    
-    # O select_related('role') otimiza a query no banco de dados
+
+    # select_related('role') avoids N+1 queries on the listing.
     members = WorkspaceMembership.objects.filter(workspace=workspace).select_related('user', 'role')
-    
+
     pending_invites = WorkspaceInvite.objects.filter(
-        workspace=workspace, 
-        status=InviteStatus.PENDING
+        workspace=workspace,
+        status=InviteStatus.PENDING,
     ).select_related('role').order_by('-created_at')
 
-    # Passamos o workspace para o form saber quais cargos listar
+    # Pass the workspace so the form lists only this workspace's roles.
     form = TeamInviteForm(workspace=workspace)
 
     context = {
         'members': members,
         'pending_invites': pending_invites,
-        'form': form
+        'form': form,
     }
     return render(request, 'tenants/team_list.html', context)
+
 
 @tenant_permission_required()
 def team_invite_view(request):
     workspace = request.tenant
-    
-    # 1. Nova checagem de permissão baseada no Role
+
+    # Role-based permission check.
     membership = WorkspaceMembership.objects.select_related('role').get(workspace=workspace, user=request.user)
-    
-    # Se não for dono E não tiver a permissão 'users.invite' na lista, bloqueia!
+
     if not (membership.role.is_system_owner or 'users.invite' in membership.role.permissions):
-        messages.error(request, "Você não tem permissão para convidar novos membros.")
+        messages.error(request, _("You don't have permission to invite new members."))
         return redirect('team_list')
 
     if request.method == 'POST':
-        # Passamos o workspace para o form
         form = TeamInviteForm(request.POST, workspace=workspace)
         if form.is_valid():
             invite = form.save(commit=False)
@@ -214,9 +223,9 @@ def team_invite_view(request):
             invite.save()
 
             _send_invite_email(request, invite)
-            messages.success(request, f"Convite enviado com sucesso para {invite.email}!")
+            messages.success(request, _("Invitation sent to %(email)s.") % {'email': invite.email})
         else:
-            messages.error(request, "Erro ao enviar o convite. Verifique os dados.")
+            messages.error(request, _("Could not send the invitation. Please check the data."))
 
     return redirect('team_list')
 
@@ -230,9 +239,9 @@ def invite_cancel_view(request, invite_id):
     invite = get_object_or_404(WorkspaceInvite, id=invite_id, workspace=request.tenant)
     if invite.status == InviteStatus.PENDING:
         invite.cancel()
-        messages.success(request, f"Convite para {invite.email} cancelado.")
+        messages.success(request, _("Invitation to %(email)s cancelled.") % {'email': invite.email})
     else:
-        messages.error(request, "Este convite não pode ser cancelado.")
+        messages.error(request, _("This invitation cannot be cancelled."))
 
     return redirect('team_list')
 
@@ -245,7 +254,7 @@ def invite_resend_view(request, invite_id):
 
     invite = get_object_or_404(WorkspaceInvite, id=invite_id, workspace=request.tenant)
     if invite.status in (InviteStatus.ACCEPTED, InviteStatus.CANCELLED):
-        messages.error(request, "Este convite não pode ser reenviado.")
+        messages.error(request, _("This invitation cannot be resent."))
         return redirect('team_list')
 
     # New token invalidates the previous link; reset status and expiration window.
@@ -255,8 +264,9 @@ def invite_resend_view(request, invite_id):
     invite.save(update_fields=['token', 'status', 'expires_at'])
 
     _send_invite_email(request, invite)
-    messages.success(request, f"Convite reenviado para {invite.email}.")
+    messages.success(request, _("Invitation resent to %(email)s.") % {'email': invite.email})
     return redirect('team_list')
+
 
 def accept_invite_view(request, token):
     workspace = request.tenant
@@ -273,22 +283,21 @@ def accept_invite_view(request, token):
 
     if request.method == 'POST':
         if user_exists:
-            # Existing accounts must be authenticated as the invited e-mail before
+            # Existing accounts must be authenticated as the invited email before
             # being added to the workspace. Possession of the link is not enough.
             if not request.user.is_authenticated:
-                messages.info(request, "Please log in to accept this invitation.")
+                messages.info(request, _("Please log in to accept this invitation."))
                 return redirect(f"{reverse('login')}?next={request.get_full_path()}")
 
             if request.user.email.lower() != invite.email.lower():
-                messages.error(request, "This invitation was sent to a different account.")
+                messages.error(request, _("This invitation was sent to a different account."))
                 return redirect('login')
 
             user = request.user
             WorkspaceMembership.objects.get_or_create(
                 workspace=workspace,
                 user=user,
-                # Usa o cargo que foi definido no convite
-                defaults={'role': invite.role}
+                defaults={'role': invite.role},
             )
             # First workspace a user joins becomes their default.
             if user.default_workspace is None:
@@ -298,8 +307,8 @@ def accept_invite_view(request, token):
             invite.status = InviteStatus.ACCEPTED
             invite.save()
 
-            messages.success(request, f"Você entrou no workspace {workspace.name} com sucesso!")
-            return redirect('tenant_dashboard')
+            messages.success(request, _("You have joined %(workspace)s.") % {'workspace': workspace.name})
+            return redirect('tenant_home')
 
         else:
             form = EmployeeSetupForm(request.POST)
@@ -311,29 +320,28 @@ def accept_invite_view(request, token):
                             first_name=form.cleaned_data['first_name'],
                             last_name=form.cleaned_data['last_name'],
                             is_active=True,
-                            email_verified=True 
+                            email_verified=True,
                         )
                         user.set_password(form.cleaned_data['password'])
-                        
+
                         user.default_workspace = workspace
                         user.save()
 
                         WorkspaceMembership.objects.create(
                             workspace=workspace,
                             user=user,
-                            # Usa o cargo que foi definido no convite
-                            role=invite.role 
+                            role=invite.role,
                         )
-                        
+
                         invite.status = InviteStatus.ACCEPTED
                         invite.save()
 
                         login(request, user)
-                        return redirect('tenant_dashboard')
+                        return redirect('tenant_home')
 
                 except Exception:
                     logger.exception("Failed to accept invite %s for new user", invite.pk)
-                    messages.error(request, "Something went wrong while processing your invitation. Please try again.")
+                    messages.error(request, _("Something went wrong while processing your invitation. Please try again."))
     else:
         form = EmployeeSetupForm() if not user_exists else None
 
@@ -341,17 +349,17 @@ def accept_invite_view(request, token):
         'invite': invite,
         'form': form,
         'user_exists': user_exists,
-        'workspace': workspace
+        'workspace': workspace,
     }
     return render(request, 'tenants/accept_invite.html', context)
+
 
 @tenant_permission_required('roles.manage')
 def role_list_view(request):
     workspace = request.tenant
-    # Traz todos os cargos da empresa atual
     roles = Role.objects.filter(workspace=workspace).order_by('-is_system_owner', 'name')
-    
     return render(request, 'tenants/role_list.html', {'roles': roles})
+
 
 @tenant_permission_required('roles.manage')
 def role_create_view(request):
@@ -362,16 +370,15 @@ def role_create_view(request):
         if form.is_valid():
             role = form.save(commit=False)
             role.workspace = workspace
-            
-            # Se esse cargo foi marcado como padrão, desmarca o anterior
+
+            # If this role is marked as default, unset the previous default.
             if role.is_default:
                 Role.objects.filter(workspace=workspace, is_default=True).update(is_default=False)
-                
-            # Salva a lista de permissões no JSON
+
             role.permissions = form.cleaned_data['permissions']
             role.save()
-            
-            messages.success(request, f"Cargo '{role.name}' criado com sucesso!")
+
+            messages.success(request, _("Role '%(name)s' created.") % {'name': role.name})
             return redirect('role_list')
     else:
         form = RoleForm()

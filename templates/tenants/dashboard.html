@@ -1,40 +1,45 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Dashboard | {{ workspace_name }}{% endblock %}
+{% block title %}{% trans "Dashboard" %} | {{ workspace_name }}{% endblock %}
+
+{% block main_class %}flex-grow{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-5xl bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-    <header class="bg-gray-50 border-b border-gray-100 px-8 py-6 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-semibold tracking-tight text-gray-900">{{ workspace_name }}</h1>
-            <p class="text-sm text-gray-500 mt-1">Ambiente Isolado e Seguro</p>
-        </div>
-        <div class="text-right">
-            <p class="text-sm font-medium text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
-            <p class="text-xs text-gray-500">{{ user.email }}</p>
-        </div>
-    </header>
-    
-    <div class="p-8">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Visão Geral</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <h3 class="text-sm font-medium text-gray-500">Membros da Equipe</h3>
-                <p class="text-3xl font-semibold text-gray-900 mt-2">1</p>
+<div class="mx-auto w-full max-w-5xl px-6 py-10">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <header class="bg-gray-50 border-b border-gray-100 px-8 py-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-semibold tracking-tight text-gray-900">{{ workspace_name }}</h1>
+                <p class="text-sm text-gray-500 mt-1">{% trans "Isolated and secure environment" %}</p>
             </div>
-            
-            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <h3 class="text-sm font-medium text-gray-500">Status do Banco</h3>
-                <div class="flex items-center mt-2">
-                    <span class="h-3 w-3 bg-green-500 rounded-full mr-2"></span>
-                    <p class="text-xl font-semibold text-gray-900">Isolado e Ativo</p>
+            <div class="text-right">
+                <p class="text-sm font-medium text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
+                <p class="text-xs text-gray-500">{{ user.email }}</p>
+            </div>
+        </header>
+
+        <div class="p-8">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">{% trans "Overview" %}</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="text-sm font-medium text-gray-500">{% trans "Team members" %}</h3>
+                    <p class="text-3xl font-semibold text-gray-900 mt-2">1</p>
                 </div>
-            </div>
-            
-            <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
-                <h3 class="text-sm font-medium text-gray-500">Permissão Atual</h3>
-                <p class="text-xl font-semibold text-gray-900 mt-2">Dono / Admin</p>
+
+                <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="text-sm font-medium text-gray-500">{% trans "Database status" %}</h3>
+                    <div class="flex items-center mt-2">
+                        <span class="h-3 w-3 bg-green-500 rounded-full mr-2"></span>
+                        <p class="text-xl font-semibold text-gray-900">{% trans "Isolated & active" %}</p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <h3 class="text-sm font-medium text-gray-500">{% trans "Your role" %}</h3>
+                    <p class="text-xl font-semibold text-gray-900 mt-2">{% trans "Owner / Admin" %}</p>
+                </div>
             </div>
         </div>
     </div>

@@ -36,6 +36,6 @@ class WorkspaceInviteAdmin(admin.ModelAdmin):
         
         if not change and not obj.workspace:
             print("\n" + "="*60)
-            print("🚀 LINK DO CONVITE GÊNESIS GERADO:")
-            print(f"http://localhost:8000/convite/{obj.token}/")
+            print("🚀 GENESIS INVITE LINK GENERATED:")
+            print(f"http://localhost:8000/invite/{obj.token}/")
             print("="*60 + "\n")

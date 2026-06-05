@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, url_has_allowed_host_and_scheme
 from django.utils.encoding import force_bytes, force_str
+from django.utils.translation import gettext as _
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from django.http import HttpResponse
@@ -16,8 +17,8 @@ User = get_user_model()
 
 def _redirect_authenticated_home(request):
     """
-    Send an authenticated user to their workspace home (Início), or to the public
-    landing if they don't belong to any workspace yet.
+    Send an authenticated user to their workspace home, or to the public landing
+    page if they don't belong to any workspace yet.
     """
     workspace = effective_workspace(request.user)
     if workspace:
@@ -26,45 +27,45 @@ def _redirect_authenticated_home(request):
             return redirect(url)
     return redirect('landing')
 
+
 def register_view(request):
-    # Já está logado? Não faz sentido ver o cadastro.
+    # Already logged in? No reason to show the signup screen.
     if request.user.is_authenticated:
         return _redirect_authenticated_home(request)
 
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            # Salva o usuário no banco, mas ainda não loga
+            # Persist the user, but don't log them in yet.
             user = form.save(commit=False)
-
             user.set_password(form.cleaned_data['password'])
-
             user.is_active = True
-            user.email_verified = False # Nasce não verificado, conforme combinamos
+            user.email_verified = False  # Starts unverified until they confirm by email.
             user.save()
 
-            # Gera um Token seguro e o ID codificado na URL
+            # Encode the user id and a signed token into the verification URL.
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
 
-            # Constrói o link absoluto (respeita http/https automaticamente)
+            # Build the absolute link (honors http/https automatically).
             link = request.build_absolute_uri(
                 reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
             )
 
-            # Monta e envia o e-mail (aparecerá no seu terminal)
-            assunto = 'Verifique seu E-mail para acessar o Workspace'
-            mensagem = f'Olá {user.first_name},\n\nClique no link abaixo para verificar sua conta:\n\n{link}'
-            
+            subject = _("Verify your email to access your workspace")
+            message = _("Hi %(name)s,\n\nClick the link below to verify your account:\n\n%(link)s") % {
+                'name': user.first_name,
+                'link': link,
+            }
             send_mail(
-                assunto,
-                mensagem,
+                subject,
+                message,
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
             )
 
-            # Redireciona para uma tela de aviso "Vá checar seu e-mail"
+            # Show the "check your email" screen.
             return render(request, 'users/register_success.html')
     else:
         form = RegisterForm()
@@ -73,25 +74,27 @@ def register_view(request):
 
 
 def verify_email_view(request, uidb64, token):
-    """ Rota que o usuário acessa ao clicar no link do e-mail """
+    """Endpoint the user reaches by clicking the verification link in the email."""
     try:
-        # Decodifica o ID e busca o usuário
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
-    # Checa se o usuário existe e se o token é válido e não expirou
     if user is not None and default_token_generator.check_token(user, token):
         user.email_verified = True
         user.save()
-        # Aqui no futuro enviaremos para a tela de Login com um alerta de sucesso
-        return HttpResponse("<h1>E-mail verificado com sucesso!</h1><p>Você já pode fazer login.</p>")
-    else:
-        return HttpResponse("<h1>Link inválido ou expirado.</h1>", status=400)
+        return HttpResponse(
+            "<h1>{}</h1><p>{}</p>".format(
+                _("Email verified successfully!"),
+                _("You can now log in."),
+            )
+        )
+    return HttpResponse("<h1>{}</h1>".format(_("Invalid or expired link.")), status=400)
+
 
 def login_view(request):
-    # Já está logado? Manda direto para o workspace em vez de mostrar o login.
+    # Already logged in? Send them straight to their workspace instead of the login form.
     if request.user.is_authenticated:
         return _redirect_authenticated_home(request)
 
@@ -100,26 +103,25 @@ def login_view(request):
         if form.is_valid():
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            
-            # O Django tenta achar o usuário e validar a senha
+
             user = authenticate(request, username=email, password=password)
 
             if user is not None:
-                # A nossa regra de ouro: O e-mail foi verificado?
+                # Golden rule: was the email verified?
                 if not getattr(user, 'email_verified', False):
-                    messages.error(request, "Por favor, verifique seu e-mail antes de acessar o sistema.")
-                    return render(request, 'users/login.html', {'form': form})
-                
-                # Regra nativa: O super admin desativou essa conta?
-                if not user.is_active:
-                    messages.error(request, "Sua conta foi desativada pelo administrador.")
+                    messages.error(request, _("Please verify your email before accessing the system."))
                     return render(request, 'users/login.html', {'form': form})
 
-                # Tudo certo! Cria a sessão do usuário
+                # Was the account disabled by an administrator?
+                if not user.is_active:
+                    messages.error(request, _("Your account has been disabled by an administrator."))
+                    return render(request, 'users/login.html', {'form': form})
+
+                # All good: start the session.
                 login(request, user)
 
-                # Respeita o ?next= (ex.: voltar para aceitar um convite), validado
-                # para impedir open redirect para hosts/esquemas não confiáveis.
+                # Honor a validated ?next= (e.g. returning to accept an invite),
+                # guarded against open redirects to untrusted hosts/schemes.
                 next_url = request.POST.get('next') or request.GET.get('next')
                 if next_url and url_has_allowed_host_and_scheme(
                     next_url,
@@ -128,22 +130,18 @@ def login_view(request):
                 ):
                     return redirect(next_url)
 
-                # Roteamento inteligente: leva ao Início do workspace do usuário
-                # (com fallback seguro se o workspace padrão não existir mais).
+                # Smart routing: take the user to their workspace home (with a safe
+                # fallback if the default workspace no longer exists).
                 return _redirect_authenticated_home(request)
             else:
-                messages.error(request, "E-mail ou senha incorretos.")
+                messages.error(request, _("Invalid email or password."))
     else:
         form = LoginForm()
 
     return render(request, 'users/login.html', {'form': form})
 
+
 def logout_view(request):
     """Log the user out and return to the public landing page."""
     logout(request)
     return redirect('landing')
-
-
-# Uma view provisória apenas para termos onde cair após o login
-def dashboard_placeholder(request):
-    return HttpResponse("<h1>Bem-vindo ao Workspace!</h1><p>Você está logado com sucesso.</p>")

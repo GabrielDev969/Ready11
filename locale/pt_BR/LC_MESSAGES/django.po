@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 10:02-0300\n"
+"POT-Creation-Date: 2026-06-05 10:32-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -28,7 +28,8 @@ msgstr "Português (Brasil)"
 msgid "Log out"
 msgstr "Sair"
 
-#: templates/base.html:26
+#: templates/base.html:26 templates/users/login.html:4
+#: templates/users/login.html:39 templates/users/register.html:58
 msgid "Sign in"
 msgstr "Entrar"
 
@@ -54,11 +55,12 @@ msgid ""
 "accounts, role-based access control and an invite-only onboarding flow — so "
 "you can start building your product instead of the plumbing."
 msgstr ""
-"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema, "
-"contas globais, controle de acesso por cargos e onboarding apenas por "
-"convite — para você começar a construir seu produto em vez da infraestrutura."
+"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema,"
+" contas globais, controle de acesso por cargos e onboarding apenas por "
+"convite — para você começar a construir seu produto em vez da "
+"infraestrutura."
 
-#: templates/core/landing.html:24
+#: templates/core/landing.html:24 templates/tenants/genesis_success.html:21
 msgid "Go to my workspace"
 msgstr "Ir para meu workspace"
 
@@ -151,23 +153,23 @@ msgid "How it works"
 msgstr "Como funciona"
 
 #: templates/core/landing.html:78
-msgid ""
-"A super admin sends a \"genesis\" invitation to a future workspace owner."
+msgid "A super admin sends a \"genesis\" invitation to a future workspace owner."
 msgstr ""
-"Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
+"Um super admin envia um convite \"gênesis\" para um futuro dono de "
+"workspace."
 
 #: templates/core/landing.html:82
 msgid ""
 "The owner sets their name and company. The backend creates an isolated "
 "database schema on demand."
 msgstr ""
-"O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
-"sob demanda."
+"O dono informa seu nome e empresa. O backend cria um schema de banco isolado"
+" sob demanda."
 
 #: templates/core/landing.html:86
 msgid ""
-"The owner invites their team and assigns roles. Members access the workspace "
-"on its own subdomain."
+"The owner invites their team and assigns roles. Members access the workspace"
+" on its own subdomain."
 msgstr ""
 "O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
 "em seu próprio subdomínio."
@@ -213,6 +215,113 @@ msgstr ""
 msgid "Language"
 msgstr "Idioma"
 
+#: templates/tenants/accept_invite.html:4
+msgid "Accept invitation"
+msgstr "Aceitar convite"
+
+#: templates/tenants/accept_invite.html:10
+#, python-format
+msgid "Join %(name)s"
+msgstr "Entrar em %(name)s"
+
+#: templates/tenants/accept_invite.html:13
+#, python-format
+msgid "You were invited by <strong>%(inviter)s</strong>."
+msgstr "Você foi convidado(a) por <strong>%(inviter)s</strong>."
+
+#: templates/tenants/accept_invite.html:27
+#, python-format
+msgid "We found an existing account for <strong>%(email)s</strong>."
+msgstr "Encontramos uma conta existente para <strong>%(email)s</strong>."
+
+#: templates/tenants/accept_invite.html:32
+msgid "Accept invitation and enter"
+msgstr "Aceitar convite e entrar"
+
+#: templates/tenants/accept_invite.html:51 templates/users/login.html:26
+#: templates/users/register.html:30
+msgid "Work email"
+msgstr "E-mail corporativo"
+
+#: templates/tenants/accept_invite.html:61
+#: templates/tenants/genesis_setup.html:49
+msgid "At least 8 characters, with uppercase, lowercase, number and symbol."
+msgstr "Mín. 8 caracteres, com maiúscula, minúscula, número e símbolo."
+
+#: templates/tenants/accept_invite.html:74
+msgid "Create account and enter"
+msgstr "Criar conta e entrar"
+
+#: templates/tenants/dashboard.html:4 templates/tenants/home.html:29
+msgid "Dashboard"
+msgstr "Painel"
+
+#: templates/tenants/dashboard.html:14
+msgid "Isolated and secure environment"
+msgstr "Ambiente isolado e seguro"
+
+#: templates/tenants/dashboard.html:23
+msgid "Overview"
+msgstr "Visão geral"
+
+#: templates/tenants/dashboard.html:27
+msgid "Team members"
+msgstr "Membros da equipe"
+
+#: templates/tenants/dashboard.html:32
+msgid "Database status"
+msgstr "Status do banco"
+
+#: templates/tenants/dashboard.html:35
+msgid "Isolated & active"
+msgstr "Isolado e ativo"
+
+#: templates/tenants/dashboard.html:40
+msgid "Your role"
+msgstr "Seu cargo"
+
+#: templates/tenants/dashboard.html:41
+msgid "Owner / Admin"
+msgstr "Dono / Admin"
+
+#: templates/tenants/genesis_setup.html:4
+msgid "Set up workspace"
+msgstr "Configurar workspace"
+
+#: templates/tenants/genesis_setup.html:9
+msgid "Welcome!"
+msgstr "Bem-vindo(a)!"
+
+#: templates/tenants/genesis_setup.html:11
+#, python-format
+msgid ""
+"You were invited via <strong>%(email)s</strong>. Set up your account and "
+"your company name to get started."
+msgstr ""
+"Você foi convidado(a) pelo e-mail <strong>%(email)s</strong>. Configure sua "
+"conta e o nome da sua empresa para começar."
+
+#: templates/tenants/genesis_setup.html:40
+msgid "This name will be used to create your isolated environment."
+msgstr "Este nome será usado para criar o seu ambiente isolado."
+
+#: templates/tenants/genesis_setup.html:62
+msgid "Provision workspace"
+msgstr "Provisionar workspace"
+
+#: templates/tenants/genesis_success.html:4
+msgid "Workspace created"
+msgstr "Workspace criado"
+
+#: templates/tenants/genesis_success.html:14
+#, python-format
+msgid "%(name)s is ready!"
+msgstr "%(name)s está pronto!"
+
+#: templates/tenants/genesis_success.html:17
+msgid "Your isolated workspace has been provisioned."
+msgstr "Seu workspace isolado foi provisionado."
+
 #: templates/tenants/home.html:4
 msgid "Home"
 msgstr "Início"
@@ -226,11 +335,7 @@ msgstr "Bem-vindo(a) à %(name)s"
 msgid "This is your home — available to everyone in the workspace."
 msgstr "Esta é a sua página inicial — disponível para todos no workspace."
 
-#: templates/tenants/home.html:29
-msgid "Dashboard"
-msgstr "Painel"
-
-#: templates/tenants/home.html:32
+#: templates/tenants/home.html:32 templates/tenants/team_list.html:4
 msgid "Team"
 msgstr "Equipe"
 
@@ -259,12 +364,343 @@ msgid ""
 "The link may have expired, been cancelled or already been used. Please ask "
 "the person who invited you to send a new invitation."
 msgstr ""
-"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa "
-"que convidou você para enviar um novo convite."
+"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa"
+" que convidou você para enviar um novo convite."
 
 #: templates/tenants/invite_unavailable.html:18
+#: templates/users/register_success.html:20
 msgid "Back to home"
 msgstr "Voltar ao início"
+
+#: templates/tenants/role_form.html:4 templates/tenants/role_list.html:13
+msgid "New role"
+msgstr "Novo cargo"
+
+#: templates/tenants/role_form.html:9
+msgid "Create a new role"
+msgstr "Criar um novo cargo"
+
+#: templates/tenants/role_form.html:10
+msgid "Define the name and what members with this role can do."
+msgstr "Defina o nome e o que os membros com este cargo podem fazer."
+
+#: templates/tenants/role_form.html:43 templates/tenants/team_list.html:58
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/tenants/role_form.html:45
+msgid "Save role"
+msgstr "Salvar cargo"
+
+#: templates/tenants/role_list.html:4 templates/tenants/role_list.html:11
+msgid "Roles & permissions"
+msgstr "Cargos e permissões"
+
+#: templates/tenants/role_list.html:27 tenants/forms.py:37
+msgid "Role"
+msgstr "Cargo"
+
+#: templates/tenants/role_list.html:28
+msgid "Status"
+msgstr "Status"
+
+#: templates/tenants/role_list.html:29 tenants/models.py:62
+msgid "Permissions"
+msgstr "Permissões"
+
+#: templates/tenants/role_list.html:40
+msgid "Absolute owner"
+msgstr "Dono absoluto"
+
+#: templates/tenants/role_list.html:42
+msgid "System default"
+msgstr "Padrão do sistema"
+
+#: templates/tenants/role_list.html:44
+msgid "Custom"
+msgstr "Customizado"
+
+#: templates/tenants/role_list.html:49
+msgid "All permissions granted"
+msgstr "Todas as permissões liberadas"
+
+#: templates/tenants/role_list.html:51
+#, python-format
+msgid "%(counter)s permission"
+msgid_plural "%(counter)s permissions"
+msgstr[0] "%(counter)s permissão"
+msgstr[1] "%(counter)s permissões"
+
+#: templates/tenants/team_list.html:14
+msgid "Active members"
+msgstr "Membros ativos"
+
+#: templates/tenants/team_list.html:34
+msgid "Pending invites"
+msgstr "Convites pendentes"
+
+#: templates/tenants/team_list.html:43 templates/tenants/team_list.html:48
+#: tenants/models.py:94
+msgid "Expired"
+msgstr "Expirado"
+
+#: templates/tenants/team_list.html:43
+#, python-format
+msgid "Expires on %(date)s"
+msgstr "Expira em %(date)s"
+
+#: templates/tenants/team_list.html:50 tenants/models.py:92
+msgid "Pending"
+msgstr "Pendente"
+
+#: templates/tenants/team_list.html:54
+msgid "Resend"
+msgstr "Reenviar"
+
+#: templates/tenants/team_list.html:56
+msgid "Cancel this invitation?"
+msgstr "Cancelar este convite?"
+
+#: templates/tenants/team_list.html:70
+msgid "Invite people"
+msgstr "Convidar pessoas"
+
+#: templates/tenants/team_list.html:93
+msgid "Send invitation"
+msgstr "Enviar convite"
+
+#: templates/users/login.html:9
+msgid "Sign in to your account"
+msgstr "Acesse sua conta"
+
+#: templates/users/login.html:10
+msgid "Welcome back to your workspace."
+msgstr "Bem-vindo(a) de volta ao seu workspace."
+
+#: templates/users/login.html:32 templates/users/register.html:36
+#: users/forms.py:9 users/forms.py:38
+msgid "Password"
+msgstr "Senha"
+
+#: templates/users/login.html:33
+msgid "Forgot password?"
+msgstr "Esqueceu a senha?"
+
+#: templates/users/login.html:44
+msgid "Don't have an account yet?"
+msgstr "Ainda não tem uma conta?"
+
+#: templates/users/login.html:45
+msgid "Sign up"
+msgstr "Cadastre-se"
+
+#: templates/users/register.html:4
+msgid "Create account"
+msgstr "Criar conta"
+
+#: templates/users/register.html:9
+msgid "Start your workspace"
+msgstr "Comece seu workspace"
+
+#: templates/users/register.html:10
+msgid "Create your account to set up your environment."
+msgstr "Crie sua conta para configurar seu ambiente."
+
+#: templates/users/register.html:18 tenants/forms.py:8 tenants/forms.py:56
+#: users/models.py:9
+msgid "First name"
+msgstr "Nome"
+
+#: templates/users/register.html:23 tenants/forms.py:9 tenants/forms.py:57
+#: users/models.py:10
+msgid "Last name"
+msgstr "Sobrenome"
+
+#: templates/users/register.html:41
+msgid "At least 8 characters, with uppercase, number and symbol."
+msgstr "Mín. 8 caracteres, com maiúscula, número e símbolo."
+
+#: templates/users/register.html:46 tenants/forms.py:18 tenants/forms.py:64
+#: users/forms.py:14
+msgid "Confirm password"
+msgstr "Confirmar senha"
+
+#: templates/users/register.html:52
+msgid "Create account and continue"
+msgstr "Criar conta e continuar"
+
+#: templates/users/register.html:57
+msgid "Already have an account?"
+msgstr "Já tem uma conta?"
+
+#: templates/users/register_success.html:4
+msgid "Email sent"
+msgstr "E-mail enviado"
+
+#: templates/users/register_success.html:15
+msgid "Check your email"
+msgstr "Verifique seu e-mail"
+
+#: templates/users/register_success.html:17
+msgid ""
+"We sent you a confirmation link. Click it to verify your account and access "
+"the system."
+msgstr ""
+"Enviamos um link de confirmação. Clique nele para verificar sua conta e "
+"acessar o sistema."
+
+#: tenants/decorators.py:30
+#| msgid "You don't have permission to invite new members."
+msgid "You don't have access to this environment."
+msgstr "Você não tem acesso a este ambiente."
+
+#: tenants/decorators.py:37
+#| msgid "You don't have permission to invite new members."
+msgid "You don't have permission to perform this action."
+msgstr "Você não tem permissão para realizar esta ação."
+
+#: tenants/forms.py:10
+msgid "Company name"
+msgstr "Nome da empresa"
+
+#: tenants/forms.py:13 tenants/forms.py:59
+msgid "Create your password"
+msgstr "Crie sua senha"
+
+#: tenants/forms.py:27 tenants/forms.py:73 users/forms.py:28
+msgid "The passwords don't match."
+msgstr "As senhas não coincidem."
+
+#: tenants/forms.py:36
+msgid "Member email"
+msgstr "E-mail do membro"
+
+#: tenants/forms.py:52
+msgid "Select a role..."
+msgstr "Selecione um cargo..."
+
+#: tenants/forms.py:85
+msgid "Role permissions"
+msgstr "Permissões do cargo"
+
+#: tenants/forms.py:92 tenants/models.py:55
+msgid "Role name"
+msgstr "Nome do cargo"
+
+#: tenants/forms.py:93
+msgid "Make this the default role for new invites?"
+msgstr "Tornar este o cargo padrão para novos convites?"
+
+#: tenants/models.py:93
+msgid "Accepted"
+msgstr "Aceito"
+
+#: tenants/models.py:95
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#: tenants/models.py:102
+msgid "Invited email"
+msgstr "E-mail convidado"
+
+#: tenants/views.py:43
+#, python-format
+msgid "Invitation to join %(workspace)s"
+msgstr "Convite para entrar em %(workspace)s"
+
+#: tenants/views.py:45
+#, python-format
+msgid ""
+"Hi!\n"
+"\n"
+"You were invited by %(inviter)s to join the %(workspace)s workspace as %(role)s.\n"
+"\n"
+"Click the link to accept (valid for 24 hours):\n"
+"\n"
+"%(link)s"
+msgstr ""
+"Olá!\n"
+"\n"
+"Você foi convidado(a) por %(inviter)s para participar do workspace %(workspace)s como %(role)s.\n"
+"\n"
+"Clique no link para aceitar (válido por 24 horas):\n"
+"\n"
+"%(link)s"
+
+#: tenants/views.py:156
+msgid ""
+"Something went wrong while provisioning your workspace. Please try again."
+msgstr "Algo deu errado ao provisionar seu workspace. Tente novamente."
+
+#: tenants/views.py:214
+msgid "You don't have permission to invite new members."
+msgstr "Você não tem permissão para convidar novos membros."
+
+#: tenants/views.py:226
+#, python-format
+msgid "Invitation sent to %(email)s."
+msgstr "Convite enviado para %(email)s."
+
+#: tenants/views.py:228
+msgid "Could not send the invitation. Please check the data."
+msgstr "Não foi possível enviar o convite. Verifique os dados."
+
+#: tenants/views.py:242
+#, python-format
+msgid "Invitation to %(email)s cancelled."
+msgstr "Convite para %(email)s cancelado."
+
+#: tenants/views.py:244
+msgid "This invitation cannot be cancelled."
+msgstr "Este convite não pode ser cancelado."
+
+#: tenants/views.py:257
+msgid "This invitation cannot be resent."
+msgstr "Este convite não pode ser reenviado."
+
+#: tenants/views.py:267
+#, python-format
+msgid "Invitation resent to %(email)s."
+msgstr "Convite reenviado para %(email)s."
+
+#: tenants/views.py:289
+msgid "Please log in to accept this invitation."
+msgstr "Faça login para aceitar este convite."
+
+#: tenants/views.py:293
+msgid "This invitation was sent to a different account."
+msgstr "Este convite foi enviado para outra conta."
+
+#: tenants/views.py:310
+#, python-format
+msgid "You have joined %(workspace)s."
+msgstr "Você entrou em %(workspace)s."
+
+#: tenants/views.py:344
+msgid ""
+"Something went wrong while processing your invitation. Please try again."
+msgstr "Algo deu errado ao processar seu convite. Tente novamente."
+
+#: tenants/views.py:381
+#, python-format
+msgid "Role '%(name)s' created."
+msgstr "Cargo '%(name)s' criado."
+
+#: users/forms.py:34 users/models.py:8
+msgid "Email"
+msgstr "E-mail"
+
+#: users/models.py:16
+msgid "Active"
+msgstr "Ativo"
+
+#: users/models.py:19
+msgid "Email verified"
+msgstr "E-mail verificado"
+
+#: users/models.py:28
+msgid "Default workspace"
+msgstr "Workspace padrão"
 
 #: users/validators.py:8
 msgid "The password must be at least 8 characters long."
@@ -293,3 +729,46 @@ msgid ""
 msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
+
+#: users/views.py:55
+msgid "Verify your email to access your workspace"
+msgstr "Verifique seu e-mail para acessar seu workspace"
+
+#: users/views.py:56
+#, python-format
+msgid ""
+"Hi %(name)s,\n"
+"\n"
+"Click the link below to verify your account:\n"
+"\n"
+"%(link)s"
+msgstr ""
+"Olá %(name)s,\n"
+"\n"
+"Clique no link abaixo para verificar sua conta:\n"
+"\n"
+"%(link)s"
+
+#: users/views.py:89
+msgid "Email verified successfully!"
+msgstr "E-mail verificado com sucesso!"
+
+#: users/views.py:90
+msgid "You can now log in."
+msgstr "Você já pode fazer login."
+
+#: users/views.py:93
+msgid "Invalid or expired link."
+msgstr "Link inválido ou expirado."
+
+#: users/views.py:112
+msgid "Please verify your email before accessing the system."
+msgstr "Verifique seu e-mail antes de acessar o sistema."
+
+#: users/views.py:117
+msgid "Your account has been disabled by an administrator."
+msgstr "Sua conta foi desativada por um administrador."
+
+#: users/views.py:137
+msgid "Invalid email or password."
+msgstr "E-mail ou senha incorretos."

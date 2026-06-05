@@ -1,13 +1,17 @@
 {% extends "base.html" %}
-{% load widget_tweaks %}
+{% load widget_tweaks i18n %}
 
-{% block title %}Aceitar Convite | {{ workspace.name }}{% endblock %}
+{% block title %}{% trans "Accept invitation" %} | {{ workspace.name }}{% endblock %}
 
 {% block content %}
 <div class="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-100 p-8">
     <div class="text-center mb-8">
-        <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Junte-se à {{ workspace.name }}</h1>
-        <p class="text-sm text-gray-500 mt-2">Você foi convidado(a) por <strong>{{ invite.invited_by.first_name }}</strong>.</p>
+        <h1 class="text-2xl font-semibold tracking-tight text-gray-900">
+            {% blocktrans with name=workspace.name %}Join {{ name }}{% endblocktrans %}
+        </h1>
+        <p class="text-sm text-gray-500 mt-2">
+            {% blocktrans with inviter=invite.invited_by.first_name %}You were invited by <strong>{{ inviter }}</strong>.{% endblocktrans %}
+        </p>
     </div>
 
     {% if messages %}
@@ -20,46 +24,46 @@
 
     {% if user_exists %}
         <p class="text-center text-sm text-gray-600 mb-6">
-            Identificamos que você já possui uma conta no nosso sistema com o e-mail <strong>{{ invite.email }}</strong>.
+            {% blocktrans with email=invite.email %}We found an existing account for <strong>{{ email }}</strong>.{% endblocktrans %}
         </p>
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none transition-colors">
-                Aceitar Convite e Entrar
+                {% trans "Accept invitation and enter" %}
             </button>
         </form>
     {% else %}
         <form method="post" class="space-y-5">
             {% csrf_token %}
-            
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.first_name.label }}</label>
                     {% render_field form.first_name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Sobrenome</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.last_name.label }}</label>
                     {% render_field form.last_name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">E-mail corporativo</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "Work email" %}</label>
                 <input type="email" value="{{ invite.email }}" disabled class="w-full rounded-md border-gray-300 bg-gray-50 text-gray-500 shadow-sm sm:text-sm px-3 py-2 border">
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Crie sua Senha</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.password.label }}</label>
                 {% render_field form.password class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="••••••••" %}
                 {% if form.password.errors %}
                     <p class="text-xs text-red-600 mt-1">{{ form.password.errors.0 }}</p>
                 {% else %}
-                    <p class="text-xs text-gray-400 mt-1">Mín. 8 caracteres, com maiúscula, minúscula, número e símbolo.</p>
+                    <p class="text-xs text-gray-400 mt-1">{% trans "At least 8 characters, with uppercase, lowercase, number and symbol." %}</p>
                 {% endif %}
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.confirm_password.label }}</label>
                 {% render_field form.confirm_password class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="••••••••" %}
                 {% if form.confirm_password.errors %}
                     <p class="text-xs text-red-600 mt-1">{{ form.confirm_password.errors.0 }}</p>
@@ -67,7 +71,7 @@
             </div>
 
             <button type="submit" class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none transition-colors">
-                Criar Conta e Entrar
+                {% trans "Create account and enter" %}
             </button>
         </form>
     {% endif %}

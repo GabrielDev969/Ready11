@@ -1,19 +1,21 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 from .models import WorkspaceInvite, Role, AVAILABLE_PERMISSIONS
 
+
 class GenesisSetupForm(forms.Form):
-    first_name = forms.CharField(label='Nome', max_length=50)
-    last_name = forms.CharField(label='Sobrenome', max_length=50)
-    company_name = forms.CharField(label='Nome da Empresa', max_length=100)
+    first_name = forms.CharField(label=_('First name'), max_length=50)
+    last_name = forms.CharField(label=_('Last name'), max_length=50)
+    company_name = forms.CharField(label=_('Company name'), max_length=100)
 
     password = forms.CharField(
-        label='Crie sua Senha',
+        label=_('Create your password'),
         widget=forms.PasswordInput,
         validators=[validate_password]
     )
     confirm_password = forms.CharField(
-        label='Confirmar Senha',
+        label=_('Confirm password'),
         widget=forms.PasswordInput
     )
 
@@ -22,43 +24,44 @@ class GenesisSetupForm(forms.Form):
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
         if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', "As senhas não coincidem.")
+            self.add_error('confirm_password', _("The passwords don't match."))
         return cleaned_data
+
 
 class TeamInviteForm(forms.ModelForm):
     class Meta:
         model = WorkspaceInvite
         fields = ['email', 'role']
         labels = {
-            'email': 'E-mail do Funcionário',
-            'role': 'Cargo na Empresa'
+            'email': _('Member email'),
+            'role': _('Role'),
         }
 
     def __init__(self, *args, **kwargs):
-        # Capturamos o workspace que enviamos lá na view antes de iniciar o formulário
+        # Capture the workspace passed from the view before building the form.
         workspace = kwargs.pop('workspace', None)
         super(TeamInviteForm, self).__init__(*args, **kwargs)
-        
+
         if workspace:
-            # Filtra os cargos para mostrar apenas os da empresa logada.
-            # DICA DE SEGURANÇA: Excluímos o cargo is_system_owner para garantir 
-            # que ninguém possa convidar um novo "Dono Absoluto" por acidente.
+            # Only show this workspace's roles. Security: exclude the system owner
+            # role so nobody can accidentally invite another absolute owner.
             self.fields['role'].queryset = Role.objects.filter(
-                workspace=workspace, 
-                is_system_owner=False
+                workspace=workspace,
+                is_system_owner=False,
             )
-            self.fields['role'].empty_label = "Selecione um cargo..."
+            self.fields['role'].empty_label = _("Select a role...")
+
 
 class EmployeeSetupForm(forms.Form):
-    first_name = forms.CharField(label='Nome', max_length=50)
-    last_name = forms.CharField(label='Sobrenome', max_length=50)
+    first_name = forms.CharField(label=_('First name'), max_length=50)
+    last_name = forms.CharField(label=_('Last name'), max_length=50)
     password = forms.CharField(
-        label='Crie sua Senha',
+        label=_('Create your password'),
         widget=forms.PasswordInput,
         validators=[validate_password]
     )
     confirm_password = forms.CharField(
-        label='Confirmar Senha',
+        label=_('Confirm password'),
         widget=forms.PasswordInput
     )
 
@@ -67,28 +70,29 @@ class EmployeeSetupForm(forms.Form):
         password = cleaned_data.get('password')
         confirm_password = cleaned_data.get('confirm_password')
         if password and confirm_password and password != confirm_password:
-            self.add_error('confirm_password', "As senhas não coincidem.")
+            self.add_error('confirm_password', _("The passwords don't match."))
         return cleaned_data
 
+
 class RoleForm(forms.ModelForm):
-    # Transforma a lista do models em opções para os checkboxes
+    # Turn the permissions list from the model into checkbox options.
     PERMISSION_CHOICES = [(perm, perm.replace('.', ' ').title()) for perm in AVAILABLE_PERMISSIONS]
-    
+
     permissions = forms.MultipleChoiceField(
         choices=PERMISSION_CHOICES,
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label="Permissões do Cargo"
+        label=_('Role permissions')
     )
 
     class Meta:
         model = Role
         fields = ['name', 'is_default']
         labels = {
-            'name': 'Nome do Cargo',
-            'is_default': 'Tornar este o cargo padrão para novos convites?'
+            'name': _('Role name'),
+            'is_default': _('Make this the default role for new invites?'),
         }
 
     def clean_permissions(self):
-        # O formulário retorna uma lista de strings, que é exatamente o que o nosso JSONField espera!
+        # The form returns a list of strings, exactly what our JSONField expects.
         return self.cleaned_data.get('permissions', [])

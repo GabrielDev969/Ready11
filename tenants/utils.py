@@ -29,7 +29,7 @@ def effective_workspace(user):
     return membership.workspace if membership else None
 
 
-def workspace_home_url(request, workspace, path='/inicio/'):
+def workspace_home_url(request, workspace, path='/home/'):
     """
     Build an absolute, scheme-aware URL to a page inside a workspace's subdomain,
     preserving the current port (so local development on :8000 keeps working).
