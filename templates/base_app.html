@@ -6,21 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Ready11{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
     {# Apply the saved sidebar state before paint to avoid a flash. #}
     <script>if(localStorage.getItem('ready11-sidebar')==='collapsed'){document.documentElement.classList.add('sidebar-collapsed');}</script>
     {% block head_extra %}{% endblock %}
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+<body class="bg-bg text-fg font-sans antialiased">
     <div class="flex min-h-screen">
 
         <!-- Sidebar -->
-        <aside id="app-sidebar" class="flex shrink-0 flex-col border-r border-gray-200 bg-white">
-            <div class="flex h-16 items-center gap-2 border-b border-gray-100 px-4">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-900 text-sm font-bold text-white">R</span>
-                <span class="sidebar-brand-text text-lg font-semibold tracking-tight text-gray-900">Ready11</span>
+        <aside id="app-sidebar" class="flex shrink-0 flex-col border-r border-line bg-elev">
+            <div class="flex h-16 items-center gap-2 border-b border-line px-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-fg text-sm font-bold text-on-dark">R</span>
+                <span class="sidebar-brand-text text-h3 font-semibold tracking-tight text-fg">Ready11</span>
             </div>
-            <nav class="flex-1 space-y-1 p-3" onclick="closeSidebarDrawer()">
+            <nav class="flex-1 space-y-0.5 p-2" onclick="closeSidebarDrawer()">
                 {% include 'partials/sidebar.html' %}
             </nav>
         </aside>
@@ -30,9 +33,9 @@
 
         <!-- Main column -->
         <div class="flex min-w-0 flex-1 flex-col">
-            <header class="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
+            <header class="flex h-16 items-center justify-between border-b border-line bg-elev px-4 sm:px-6">
                 <button type="button" onclick="toggleSidebar()" aria-label="{% trans 'Toggle sidebar' %}"
-                        class="rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        class="rounded-md p-2 text-fg3 hover:bg-sunken hover:text-fg">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </button>
                 {% include 'partials/topbar_nav.html' %}

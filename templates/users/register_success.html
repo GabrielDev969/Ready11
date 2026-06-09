@@ -4,19 +4,19 @@
 {% block title %}{% trans "Email sent" %}{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-md bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
+<div class="w-full max-w-md gss-card gss-card-pad shadow-card text-center">
 
-    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-good-bg mb-4">
+        <svg class="h-6 w-6 text-good-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
     </div>
 
-    <h2 class="text-2xl font-semibold text-gray-900">{% trans "Check your email" %}</h2>
-    <p class="text-sm text-gray-500 mt-2 mb-6">
+    <h2 class="text-h2 font-semibold text-fg">{% trans "Check your email" %}</h2>
+    <p class="text-body text-fg3 mt-2 mb-6">
         {% trans "We sent you a confirmation link. Click it to verify your account and access the system." %}
     </p>
 
-    <a href="/" class="text-sm font-medium text-black hover:underline">{% trans "Back to home" %}</a>
+    <a href="/" class="text-body font-medium text-fg hover:underline">{% trans "Back to home" %}</a>
 </div>
 {% endblock %}

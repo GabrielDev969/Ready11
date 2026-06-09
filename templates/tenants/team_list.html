@@ -7,25 +7,25 @@
 <div class="mx-auto w-full max-w-6xl px-6 py-10 flex flex-col md:flex-row gap-8">
 
     <div class="flex-1 space-y-6">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-5 border-b border-gray-100">
-                <h2 class="text-lg font-medium text-gray-900">{% trans "Active members" %}</h2>
+        <div class="gss-card overflow-hidden">
+            <div class="px-6 py-5 border-b border-line">
+                <h2 class="text-h2 font-medium text-fg">{% trans "Active members" %}</h2>
             </div>
-            <ul class="divide-y divide-gray-100">
+            <ul class="divide-y divide-line">
                 {% for member in members %}
                 <li class="px-6 py-4 flex items-center justify-between gap-3">
                     <div class="min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">{{ member.user.first_name }} {{ member.user.last_name }}</p>
-                        <p class="text-sm text-gray-500 truncate">{{ member.user.email }}</p>
+                        <p class="text-body font-medium text-fg truncate">{{ member.user.first_name }} {{ member.user.last_name }}</p>
+                        <p class="text-xs text-fg3 truncate">{{ member.user.email }}</p>
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if member.role.is_system_owner %}bg-black text-white{% else %}bg-gray-100 text-gray-800{% endif %}">
+                        <span class="gss-pill-neutral {% if member.role.is_system_owner %}bg-fg text-on-dark font-semibold{% endif %}">
                             {{ member.role.name }}
                         </span>
                         {% if 'users.remove' in tenant_perms and not member.role.is_system_owner and member.user.id != user.id %}
                         <form action="{% url 'member_remove' member.id %}" method="post" onsubmit="return confirm('{% trans "Remove this member from the workspace?" %}');">
                             {% csrf_token %}
-                            <button type="submit" class="text-xs font-medium text-red-600 hover:text-red-800">{% trans "Remove" %}</button>
+                            <button type="submit" class="gss-btn gss-btn-danger gss-btn-sm">{% trans "Remove" %}</button>
                         </form>
                         {% endif %}
                     </div>
@@ -35,33 +35,33 @@
         </div>
 
         {% if pending_invites %}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div class="px-6 py-5 border-b border-gray-100">
-                <h2 class="text-lg font-medium text-gray-900">{% trans "Pending invites" %}</h2>
+        <div class="gss-card overflow-hidden">
+            <div class="px-6 py-5 border-b border-line">
+                <h2 class="text-h2 font-medium text-fg">{% trans "Pending invites" %}</h2>
             </div>
-            <ul class="divide-y divide-gray-100">
+            <ul class="divide-y divide-line">
                 {% for invite in pending_invites %}
                 <li class="px-6 py-4 flex items-center justify-between gap-3">
                     <div class="min-w-0">
-                        <p class="text-sm font-medium text-gray-900 truncate">{{ invite.email }}</p>
-                        <p class="text-xs text-gray-500">
+                        <p class="text-body font-medium text-fg truncate">{{ invite.email }}</p>
+                        <p class="text-xs text-fg3">
                             {{ invite.role.name }} ·
                             {% if invite.is_expired %}{% trans "Expired" %}{% else %}{% blocktrans with date=invite.expires_at|date:"SHORT_DATETIME_FORMAT" %}Expires on {{ date }}{% endblocktrans %}{% endif %}
                         </p>
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
                         {% if invite.is_expired %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">{% trans "Expired" %}</span>
+                        <span class="gss-pill-critical">{% trans "Expired" %}</span>
                         {% else %}
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">{% trans "Pending" %}</span>
+                        <span class="gss-pill-warning">{% trans "Pending" %}</span>
                         {% endif %}
                         <form action="{% url 'invite_resend' invite.id %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="text-xs font-medium text-gray-700 hover:text-black">{% trans "Resend" %}</button>
+                            <button type="submit" class="gss-btn gss-btn-ghost gss-btn-sm">{% trans "Resend" %}</button>
                         </form>
                         <form action="{% url 'invite_cancel' invite.id %}" method="post" onsubmit="return confirm('{% trans "Cancel this invitation?" %}');">
                             {% csrf_token %}
-                            <button type="submit" class="text-xs font-medium text-red-600 hover:text-red-800">{% trans "Cancel" %}</button>
+                            <button type="submit" class="gss-btn gss-btn-danger gss-btn-sm">{% trans "Cancel" %}</button>
                         </form>
                     </div>
                 </li>
@@ -73,19 +73,19 @@
 
     {% if 'users.invite' in tenant_perms %}
     <div class="w-full md:w-80">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">{% trans "Invite people" %}</h3>
+        <div class="gss-card gss-card-pad sticky top-6">
+            <h3 class="text-h2 font-medium text-fg mb-4">{% trans "Invite people" %}</h3>
 
             {% if messages %}
                 {% for message in messages %}
-                    <div class="mb-4 p-3 rounded-md text-sm {% if message.tags == 'error' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-700{% endif %}">
+                    <div class="mb-4 p-3 rounded-md text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg{% else %}bg-good-bg text-good-fg{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
             {% endif %}
 
             {% if 'roles.view' not in tenant_perms %}
-            <div class="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+            <div class="bg-warning-bg text-warning-fg rounded-md p-4 text-body">
                 <p class="font-medium">{% trans "You can't assign a role yet." %}</p>
                 <p class="mt-1">{% blocktrans %}Inviting requires choosing a role, but you don't have permission to view roles. Ask an administrator to grant it (or to send the invite).{% endblocktrans %}</p>
             </div>
@@ -93,25 +93,25 @@
             <form action="{% url 'team_invite' %}" method="post" class="space-y-4">
                 {% csrf_token %}
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.email.label }}</label>
-                    {% render_field form.email class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="member@company.com" %}
+                    <label class="gss-label">{{ form.email.label }}</label>
+                    {% render_field form.email class="gss-input" placeholder="member@company.com" %}
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.role.label }}</label>
-                    {% render_field form.role class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border bg-white" %}
+                    <label class="gss-label">{{ form.role.label }}</label>
+                    {% render_field form.role class="gss-input" %}
                 </div>
 
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none transition-colors mt-4">
+                <button type="submit" class="gss-btn gss-btn-primary w-full mt-4">
                     {% trans "Send invitation" %}
                 </button>
             </form>
             {% else %}
-            <div class="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
+            <div class="bg-warning-bg text-warning-fg rounded-md p-4 text-body">
                 <p class="font-medium">{% trans "A role is required to invite people." %}</p>
                 {% if 'roles.create' in tenant_perms %}
                 <p class="mt-1">{% blocktrans %}Create a role first, then you can assign it to new members.{% endblocktrans %}</p>
-                <a href="{% url 'role_create' %}" class="mt-3 inline-block rounded-md bg-amber-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-amber-700">{% trans "Create a role" %}</a>
+                <a href="{% url 'role_create' %}" class="gss-btn gss-btn-secondary gss-btn-sm mt-3 inline-flex">{% trans "Create a role" %}</a>
                 {% else %}
                 <p class="mt-1">{% blocktrans %}Ask someone with permission to create roles to add one first.{% endblocktrans %}</p>
                 {% endif %}

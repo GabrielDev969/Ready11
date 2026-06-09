@@ -2,5 +2,5 @@
 {% for n in notif_recent %}
     {% include 'partials/notification_item.html' %}
 {% empty %}
-    <p class="px-4 py-8 text-center text-sm text-gray-400">{% trans "No notifications." %}</p>
+    <p class="px-4 py-8 text-center text-body text-fg4">{% trans "No notifications." %}</p>
 {% endfor %}

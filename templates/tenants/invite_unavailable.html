@@ -4,17 +4,17 @@
 {% block title %}{% trans "Invitation unavailable" %}{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm ring-1 ring-gray-200 text-center">
-    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+<div class="w-full max-w-md gss-card gss-card-pad shadow-card text-center">
+    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning-bg text-warning-fg">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
         </svg>
     </div>
-    <h1 class="text-xl font-semibold text-gray-900">{% trans "This invitation is no longer available" %}</h1>
-    <p class="mt-2 text-sm text-gray-600">
+    <h1 class="text-h2 font-semibold text-fg">{% trans "This invitation is no longer available" %}</h1>
+    <p class="mt-2 text-body text-fg2">
         {% trans "The link may have expired, been cancelled or already been used. Please ask the person who invited you to send a new invitation." %}
     </p>
-    <a href="/" class="mt-6 inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700">
+    <a href="/" class="gss-btn gss-btn-primary mt-6">
         {% trans "Back to home" %}
     </a>
 </div>

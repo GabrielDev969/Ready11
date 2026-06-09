@@ -7,20 +7,20 @@
 
 {% block content %}
 <div class="mx-auto w-full max-w-2xl px-6 py-10 space-y-8">
-    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">{% trans "Your profile" %}</h1>
+    <h1 class="text-h1 font-semibold tracking-tight text-fg">{% trans "Your profile" %}</h1>
 
     {% if messages %}
         {% for message in messages %}
-            <div class="rounded-md p-3 text-sm {% if message.tags == 'error' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-700{% endif %}">
+            <div class="rounded-md p-3 text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg border border-critical-fg/20{% else %}bg-good-bg text-good-fg{% endif %}">
                 {{ message }}
             </div>
         {% endfor %}
     {% endif %}
 
     <!-- Personal info -->
-    <section class="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 class="text-lg font-medium text-gray-900">{% trans "Personal information" %}</h2>
-        <p class="mt-1 text-sm text-gray-500">{% trans "Update your name." %}</p>
+    <section class="gss-card gss-card-pad">
+        <h2 class="text-h3 font-medium text-fg">{% trans "Personal information" %}</h2>
+        <p class="mt-1 text-body text-fg3">{% trans "Update your name." %}</p>
 
         <form method="post" class="mt-5 space-y-4">
             {% csrf_token %}
@@ -28,56 +28,56 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ profile_form.first_name.label }}</label>
-                    {% render_field profile_form.first_name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
+                    <label class="gss-label">{{ profile_form.first_name.label }}</label>
+                    {% render_field profile_form.first_name class="gss-input w-full" %}
                     {{ profile_form.first_name.errors }}
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ profile_form.last_name.label }}</label>
-                    {% render_field profile_form.last_name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
+                    <label class="gss-label">{{ profile_form.last_name.label }}</label>
+                    {% render_field profile_form.last_name class="gss-input w-full" %}
                     {{ profile_form.last_name.errors }}
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{% trans "Email" %}</label>
-                <input type="email" value="{{ user.email }}" disabled class="w-full rounded-md border-gray-300 bg-gray-50 text-gray-500 shadow-sm sm:text-sm px-3 py-2 border">
-                <p class="mt-1 text-xs text-gray-400">{% trans "Email can't be changed here." %}</p>
+                <label class="gss-label">{% trans "Email" %}</label>
+                <input type="email" value="{{ user.email }}" disabled class="gss-input w-full bg-sunken text-fg3">
+                <p class="mt-1 text-xs text-fg4">{% trans "Email can't be changed here." %}</p>
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">{% trans "Save changes" %}</button>
+                <button type="submit" class="gss-btn gss-btn-primary">{% trans "Save changes" %}</button>
             </div>
         </form>
     </section>
 
     <!-- Change password -->
-    <section class="rounded-xl border border-gray-200 bg-white p-6">
-        <h2 class="text-lg font-medium text-gray-900">{% trans "Change password" %}</h2>
-        <p class="mt-1 text-sm text-gray-500">{% trans "Use a strong password you don't use elsewhere." %}</p>
+    <section class="gss-card gss-card-pad">
+        <h2 class="text-h3 font-medium text-fg">{% trans "Change password" %}</h2>
+        <p class="mt-1 text-body text-fg3">{% trans "Use a strong password you don't use elsewhere." %}</p>
 
         <form method="post" class="mt-5 space-y-4">
             {% csrf_token %}
             <input type="hidden" name="action" value="password">
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ password_form.old_password.label }}</label>
-                {% render_field password_form.old_password class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
-                {% for e in password_form.old_password.errors %}<p class="text-xs text-red-600 mt-1">{{ e }}</p>{% endfor %}
+                <label class="gss-label">{{ password_form.old_password.label }}</label>
+                {% render_field password_form.old_password class="gss-input w-full" %}
+                {% for e in password_form.old_password.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ password_form.new_password1.label }}</label>
-                {% render_field password_form.new_password1 class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
-                {% for e in password_form.new_password1.errors %}<p class="text-xs text-red-600 mt-1">{{ e }}</p>{% endfor %}
+                <label class="gss-label">{{ password_form.new_password1.label }}</label>
+                {% render_field password_form.new_password1 class="gss-input w-full" %}
+                {% for e in password_form.new_password1.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">{{ password_form.new_password2.label }}</label>
-                {% render_field password_form.new_password2 class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" %}
-                {% for e in password_form.new_password2.errors %}<p class="text-xs text-red-600 mt-1">{{ e }}</p>{% endfor %}
+                <label class="gss-label">{{ password_form.new_password2.label }}</label>
+                {% render_field password_form.new_password2 class="gss-input w-full" %}
+                {% for e in password_form.new_password2.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
             </div>
 
             <div class="flex justify-end">
-                <button type="submit" class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">{% trans "Change password" %}</button>
+                <button type="submit" class="gss-btn gss-btn-primary">{% trans "Change password" %}</button>
             </div>
         </form>
     </section>

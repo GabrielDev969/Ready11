@@ -4,49 +4,49 @@
 {% block title %}{% if role %}{% trans "Edit role" %}{% else %}{% trans "New role" %}{% endif %} | {{ request.tenant.name }}{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-2xl mx-auto my-10 bg-white rounded-xl shadow-sm border border-gray-100 p-6 sm:p-8">
+<div class="w-full max-w-2xl mx-auto my-10 gss-card gss-card-pad">
     <div class="mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">{% if role %}{% trans "Edit role" %}{% else %}{% trans "Create a new role" %}{% endif %}</h2>
-        <p class="text-sm text-gray-500 mt-1">{% trans "Define the name and what members with this role can do." %}</p>
+        <h2 class="text-h2 font-semibold text-fg">{% if role %}{% trans "Edit role" %}{% else %}{% trans "Create a new role" %}{% endif %}</h2>
+        <p class="text-body text-fg3 mt-1">{% trans "Define the name and what members with this role can do." %}</p>
     </div>
 
     <form method="post" class="space-y-6">
         {% csrf_token %}
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ form.name.label }}</label>
-            {% render_field form.name class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="e.g. Finance" %}
-            {% for e in form.name.errors %}<p class="text-xs text-red-600 mt-1">{{ e }}</p>{% endfor %}
+            <label class="gss-label">{{ form.name.label }}</label>
+            {% render_field form.name class="gss-input" placeholder="e.g. Finance" %}
+            {% for e in form.name.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
         </div>
 
-        <div class="flex items-start gap-2 rounded-lg bg-gray-50 p-3">
-            {% render_field form.is_default class="mt-0.5 h-4 w-4 text-black focus:ring-black border-gray-300 rounded" %}
-            <label class="block text-sm text-gray-700">{{ form.is_default.label }}</label>
+        <div class="flex items-start gap-2 bg-sunken rounded-sm p-3">
+            {% render_field form.is_default class="mt-0.5 h-4 w-4 text-black focus:ring-black border-line-2 rounded" %}
+            <label class="block text-body text-fg2">{{ form.is_default.label }}</label>
         </div>
 
-        <div class="border-t border-gray-100 pt-6">
-            <h3 class="text-sm font-medium text-gray-900">{% trans "Permissions" %}</h3>
-            <p class="text-xs text-gray-500 mb-3">{% trans "Pick exactly what this role can do, by area." %}</p>
+        <div class="border-t border-line pt-6">
+            <h3 class="text-body font-medium text-fg">{% trans "Permissions" %}</h3>
+            <p class="text-xs text-fg3 mb-3">{% trans "Pick exactly what this role can do, by area." %}</p>
 
             <div class="space-y-4">
                 {% for group in permission_groups %}
-                <div data-perm-group class="overflow-hidden rounded-lg border border-gray-200">
-                    <div class="flex items-center justify-between bg-gray-50 px-4 py-2.5">
-                        <h4 class="text-sm font-semibold text-gray-800">{{ group.label }}</h4>
-                        <label class="flex cursor-pointer items-center gap-2 text-xs font-medium text-gray-500">
-                            <input type="checkbox" data-group-toggle class="h-4 w-4 rounded border-gray-300 text-black focus:ring-black">
+                <div data-perm-group class="gss-card overflow-hidden">
+                    <div class="flex items-center justify-between bg-sunken border-b border-line px-4 py-2.5">
+                        <h4 class="text-body font-semibold text-fg">{{ group.label }}</h4>
+                        <label class="flex cursor-pointer items-center gap-2 text-xs font-medium text-fg3">
+                            <input type="checkbox" data-group-toggle class="h-4 w-4 rounded border-line-2 text-black focus:ring-black">
                             {% trans "Select all" %}
                         </label>
                     </div>
-                    <div class="divide-y divide-gray-50">
+                    <div class="divide-y divide-line">
                         {% for perm, label, desc in group.permissions %}
-                        <label class="flex cursor-pointer items-start gap-3 px-4 py-3 hover:bg-gray-50">
+                        <label class="flex cursor-pointer items-start gap-3 px-4 py-3 border-b border-line hover:bg-sunken">
                             <input type="checkbox" name="permissions" value="{{ perm }}" data-perm
                                    {% if perm in selected_permissions %}checked{% endif %}
-                                   class="mt-0.5 h-4 w-4 rounded border-gray-300 text-black focus:ring-black">
+                                   class="mt-0.5 h-4 w-4 rounded border-line-2 text-black focus:ring-black">
                             <span class="min-w-0">
-                                <span class="block text-sm font-medium text-gray-800">{{ label }}</span>
-                                <span class="block text-xs text-gray-500">{{ desc }}</span>
+                                <span class="block text-body font-medium text-fg">{{ label }}</span>
+                                <span class="block text-xs text-fg3">{{ desc }}</span>
                             </span>
                         </label>
                         {% endfor %}
@@ -57,8 +57,8 @@
         </div>
 
         <div class="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
-            <a href="{% url 'role_list' %}" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-50">{% trans "Cancel" %}</a>
-            <button type="submit" class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800">
+            <a href="{% url 'role_list' %}" class="gss-btn gss-btn-secondary">{% trans "Cancel" %}</a>
+            <button type="submit" class="gss-btn gss-btn-primary">
                 {% trans "Save role" %}
             </button>
         </div>

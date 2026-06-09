@@ -6,9 +6,9 @@
 {% block content %}
 <div class="mx-auto w-full max-w-5xl px-6 py-10">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">{% trans "Roles & permissions" %}</h1>
+        <h1 class="text-h1 font-semibold text-fg">{% trans "Roles & permissions" %}</h1>
         {% if 'roles.create' in tenant_perms %}
-        <a href="{% url 'role_create' %}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none">
+        <a href="{% url 'role_create' %}" class="gss-btn gss-btn-primary">
             + {% trans "New role" %}
         </a>
         {% endif %}
@@ -16,66 +16,66 @@
 
     {% if messages %}
         {% for message in messages %}
-            <div class="mb-4 p-3 rounded-md text-sm {% if message.tags == 'error' %}bg-red-50 text-red-600{% else %}bg-green-50 text-green-700{% endif %}">{{ message }}</div>
+            <div class="mb-4 p-3 rounded-md text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg{% else %}bg-good-bg text-good-fg{% endif %}">{{ message }}</div>
         {% endfor %}
     {% endif %}
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
+    <div class="gss-card overflow-x-auto">
+        <table class="gss-table">
+            <thead>
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Role" %}</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Status" %}</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Permissions" %}</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Members" %}</th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{% trans "Actions" %}</th>
+                    <th scope="col">{% trans "Role" %}</th>
+                    <th scope="col">{% trans "Status" %}</th>
+                    <th scope="col">{% trans "Permissions" %}</th>
+                    <th scope="col">{% trans "Members" %}</th>
+                    <th scope="col" class="text-right">{% trans "Actions" %}</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody>
                 {% for role in roles %}
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <td class="whitespace-nowrap text-body font-medium text-fg">
                         {{ role.name }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="whitespace-nowrap text-body text-fg2">
                         {% if role.is_system_owner %}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black text-white">{% trans "System role" %}</span>
+                            <span class="gss-pill-neutral bg-fg text-on-dark">{% trans "System role" %}</span>
                         {% else %}
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">{% trans "Custom" %}</span>
+                            <span class="gss-pill-neutral">{% trans "Custom" %}</span>
                             {% if role.is_default %}
-                                <span class="ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700" title="{% trans 'Assigned to new invites by default' %}">{% trans "Default" %}</span>
+                                <span class="gss-pill-good ml-1" title="{% trans 'Assigned to new invites by default' %}">{% trans "Default" %}</span>
                             {% endif %}
                         {% endif %}
                     </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">
+                    <td class="text-body text-fg2">
                         {% if role.is_system_owner %}
                             {% trans "All permissions granted" %}
                         {% else %}
                             {% blocktrans count counter=role.permissions|length %}{{ counter }} permission{% plural %}{{ counter }} permissions{% endblocktrans %}
                         {% endif %}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td class="whitespace-nowrap text-body text-fg2">
                         {{ role.member_count }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                    <td class="whitespace-nowrap text-right text-body">
                         {% if role.is_system_owner %}
-                            <span class="text-gray-300">—</span>
+                            <span class="text-fg4">—</span>
                         {% else %}
                             {% if 'roles.edit' in tenant_perms %}
-                                <a href="{% url 'role_update' role.id %}" class="font-medium text-gray-600 hover:text-black">{% trans "Edit" %}</a>
+                                <a href="{% url 'role_update' role.id %}" class="text-fg2 hover:text-fg text-body font-medium">{% trans "Edit" %}</a>
                             {% endif %}
                             {% if 'roles.delete' in tenant_perms %}
                                 {% if role.member_count == 0 %}
                                     <form action="{% url 'role_delete' role.id %}" method="post" class="ml-3 inline" onsubmit="return confirm('{% trans "Delete this role?" %}');">
                                         {% csrf_token %}
-                                        <button type="submit" class="font-medium text-red-600 hover:text-red-800">{% trans "Delete" %}</button>
+                                        <button type="submit" class="text-critical-fg hover:text-critical-fg text-body font-medium">{% trans "Delete" %}</button>
                                     </form>
                                 {% else %}
-                                    <span class="ml-3 text-gray-300" title="{% trans 'In use by members' %}">{% trans "Delete" %}</span>
+                                    <span class="ml-3 text-fg4" title="{% trans 'In use by members' %}">{% trans "Delete" %}</span>
                                 {% endif %}
                             {% endif %}
                             {% if 'roles.edit' not in tenant_perms and 'roles.delete' not in tenant_perms %}
-                                <span class="text-gray-300">—</span>
+                                <span class="text-fg4">—</span>
                             {% endif %}
                         {% endif %}
                     </td>

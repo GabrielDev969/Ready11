@@ -1,26 +1,26 @@
 {% load i18n %}
 <details class="ui-dropdown relative">
-    <summary class="relative flex cursor-pointer list-none items-center rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900" title="{% trans 'Notifications' %}">
+    <summary class="relative flex cursor-pointer list-none items-center rounded-md p-2 text-fg3 hover:bg-sunken hover:text-fg" title="{% trans 'Notifications' %}">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
-        <span id="notif-badge" data-count="{{ notif_unread_count }}" class="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-semibold text-white {% if not notif_unread_count %}hidden{% endif %}">{{ notif_unread_count }}</span>
+        <span id="notif-badge" data-count="{{ notif_unread_count }}" class="absolute -right-0.5 -top-0.5 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-critical-fg px-1 text-[10px] font-semibold text-on-dark {% if not notif_unread_count %}hidden{% endif %}">{{ notif_unread_count }}</span>
     </summary>
-    <div class="absolute right-0 z-30 mt-2 w-80 max-w-[90vw] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
-        <div class="flex items-center justify-between border-b border-gray-100 px-4 py-2.5">
-            <span class="text-sm font-semibold text-gray-900">{% trans "Notifications" %}</span>
+    <div class="absolute right-0 z-30 mt-2 w-80 max-w-[90vw] overflow-hidden rounded-md border border-line bg-elev shadow-card-md">
+        <div class="flex items-center justify-between border-b border-line px-4 py-2.5">
+            <span class="text-sm font-semibold text-fg">{% trans "Notifications" %}</span>
             {% if notif_unread_count %}
             <form action="{% url 'notifications_read_all' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                <button type="submit" class="text-xs font-medium text-gray-500 hover:text-gray-900">{% trans "Mark all read" %}</button>
+                <button type="submit" class="text-xs font-medium text-fg3 hover:text-fg">{% trans "Mark all read" %}</button>
             </form>
             {% endif %}
         </div>
-        <div id="notif-bell-list" class="max-h-96 divide-y divide-gray-50 overflow-y-auto">
+        <div id="notif-bell-list" class="max-h-96 divide-y divide-line overflow-y-auto">
             {% include 'partials/notification_bell_items.html' %}
         </div>
-        <a href="{% url 'notifications' %}" class="block border-t border-gray-100 px-4 py-2.5 text-center text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <a href="{% url 'notifications' %}" class="block border-t border-line px-4 py-2.5 text-center text-sm font-medium text-fg2 hover:bg-sunken">
             {% trans "View all" %}
         </a>
     </div>

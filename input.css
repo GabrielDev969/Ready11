@@ -3,6 +3,124 @@
 @tailwind utilities;
 
 /* ==========================================
+   GSS Design Tokens
+   ========================================== */
+:root {
+  --gss-bg:          #FAFAF7;
+  --gss-bg-elev:     #FFFFFF;
+  --gss-bg-sunken:   #F3F2EE;
+  --gss-bg-inverse:  #0B0B0D;
+
+  --gss-fg:          #0B0B0D;
+  --gss-fg-2:        #3D3D42;
+  --gss-fg-3:        #6E6E76;
+  --gss-fg-4:        #9C9CA3;
+  --gss-fg-on-dark:  #FAFAF7;
+  --gss-fg-on-dark-2:#B8B8BE;
+
+  --gss-line:        #E8E6DF;
+  --gss-line-2:      #DAD7CE;
+  --gss-line-strong: #C5C2B7;
+
+  --gss-font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --gss-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --gss-r-sm: 6px;
+  --gss-r-md: 10px;
+  --gss-r-lg: 14px;
+  --gss-r-xl: 20px;
+
+  --gss-shadow-sm: 0 1px 0 rgba(11,11,13,0.04), 0 1px 2px rgba(11,11,13,0.04);
+  --gss-shadow-md: 0 1px 0 rgba(11,11,13,0.04), 0 6px 18px -8px rgba(11,11,13,0.10);
+  --gss-shadow-lg: 0 1px 0 rgba(11,11,13,0.04), 0 24px 48px -24px rgba(11,11,13,0.20);
+
+  --gss-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --gss-dur-fast: 0.12s;
+  --gss-dur: 0.15s;
+  --gss-dur-slow: 0.32s;
+}
+
+/* ==========================================
+   GSS Components
+   ========================================== */
+@layer components {
+
+  /* --- Buttons --- */
+  .gss-btn {
+    @apply inline-flex items-center justify-center gap-2 px-3.5 py-2.5
+           rounded-sm text-body font-medium cursor-pointer
+           border border-transparent transition-colors duration-150 ease-gss
+           whitespace-nowrap;
+  }
+  .gss-btn:active { transform: translateY(0.5px); }
+  .gss-btn-primary   { @apply bg-fg text-on-dark; }
+  .gss-btn-primary:hover   { background: #1a1a1d; }
+  .gss-btn-secondary { @apply bg-elev text-fg border-line-2; }
+  .gss-btn-secondary:hover { @apply bg-sunken; }
+  .gss-btn-ghost     { @apply bg-transparent text-fg; }
+  .gss-btn-ghost:hover     { @apply bg-sunken; }
+  .gss-btn-danger    { @apply bg-elev text-critical-fg border-critical-fg; }
+  .gss-btn-danger:hover    { @apply bg-critical-bg; }
+  .gss-btn-sm { @apply px-2.5 py-1.5 text-xs; }
+  .gss-btn-lg { @apply px-[18px] py-3 text-body; }
+
+  /* --- Status Pills --- */
+  .gss-pill {
+    @apply inline-flex items-center gap-1.5 px-2 py-[3px] rounded-full
+           font-mono text-[11px] font-medium uppercase tracking-wide;
+  }
+  .gss-pill-excellent  { @apply bg-excellent-bg  text-excellent-fg; }
+  .gss-pill-good       { @apply bg-good-bg       text-good-fg; }
+  .gss-pill-warning    { @apply bg-warning-bg    text-warning-fg; }
+  .gss-pill-critical   { @apply bg-critical-bg   text-critical-fg; }
+  .gss-pill-neutral    { @apply bg-sunken        text-fg2; }
+  .gss-dot { @apply inline-block w-1.5 h-1.5 rounded-full; }
+
+  /* --- Cards --- */
+  .gss-card     { @apply bg-elev border border-line rounded-md; }
+  .gss-card-pad { @apply p-5; }
+  .gss-kpi      { @apply flex flex-col gap-3.5 p-5 bg-elev border border-line rounded-md; }
+
+  /* --- Inputs --- */
+  .gss-input {
+    @apply w-full px-3 py-2.5 border border-line-2 rounded-sm bg-elev text-fg
+           text-body font-sans transition-shadow duration-150;
+  }
+  .gss-input:focus { @apply outline-none border-fg shadow-focus; }
+  .gss-input:disabled { @apply bg-sunken text-fg3 cursor-not-allowed; }
+  .gss-label { @apply block text-sm font-medium text-fg mb-1; }
+  .gss-hint  { @apply block text-xs text-fg3 mt-1; }
+
+  /* --- Eyebrow --- */
+  .gss-eyebrow {
+    @apply font-mono text-eyebrow uppercase tracking-[0.12em] text-fg3 font-medium;
+  }
+
+  /* --- Tables --- */
+  .gss-table { @apply w-full border-collapse text-body; }
+  .gss-table thead th {
+    @apply text-left font-mono text-eyebrow uppercase tracking-[0.10em]
+           text-fg3 px-3.5 py-3 border-b border-line bg-sunken;
+  }
+  .gss-table tbody td {
+    @apply px-3.5 py-3.5 border-b border-line align-middle;
+  }
+  .gss-table tbody tr:last-child td { @apply border-b-0; }
+  .gss-table tbody tr:hover { @apply bg-sunken; }
+
+  /* --- Avatar --- */
+  .gss-avatar {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-full
+           bg-sunken text-fg2 text-[11px] font-medium font-mono border border-line shrink-0;
+  }
+  .gss-avatar-lg { @apply w-11 h-11 text-sm; }
+
+  /* --- Progress --- */
+  .gss-progress      { @apply h-1.5 bg-line rounded-full overflow-hidden; }
+  .gss-progress-fill { @apply h-full; }
+}
+
+/* ==========================================
    App sidebar — responsive
    ========================================== */
 #app-sidebar {
@@ -14,7 +132,6 @@
     display: none;
 }
 
-/* ---------- Desktop (md+): in-flow, collapsible ---------- */
 @media (min-width: 768px) {
     html.sidebar-collapsed #app-sidebar {
         width: 4rem;
@@ -30,7 +147,6 @@
     }
 }
 
-/* ---------- Mobile (<md): off-canvas drawer ---------- */
 @media (max-width: 767.98px) {
     #app-sidebar {
         position: fixed;
@@ -39,7 +155,7 @@
         bottom: 0;
         z-index: 50;
         transform: translateX(-100%);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--gss-shadow-lg);
     }
     html.sidebar-open #app-sidebar {
         transform: translateX(0);
@@ -49,14 +165,13 @@
         position: fixed;
         inset: 0;
         z-index: 40;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(11, 11, 13, 0.4);
     }
     html.sidebar-open {
         overflow: hidden;
     }
 }
 
-/* Remove the default disclosure triangle from dropdown summaries. */
 details.ui-dropdown > summary::-webkit-details-marker { display: none; }
 details.ui-dropdown > summary { list-style: none; }
 
@@ -81,27 +196,27 @@ details.ui-dropdown > summary { list-style: none; }
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    background: var(--gss-bg-elev, #fff);
+    border: 1px solid var(--gss-line, #E8E6DF);
+    border-radius: var(--gss-r-lg, 14px);
+    box-shadow: var(--gss-shadow-md);
     padding: 0.875rem 1rem;
     animation: toast-in 0.2s ease;
 }
 .toast-content { flex: 1 1 auto; min-width: 0; cursor: pointer; }
-.toast-title { font-size: 0.875rem; font-weight: 600; color: #111827; }
-.toast-body { margin-top: 0.125rem; font-size: 0.8125rem; color: #4b5563; }
+.toast-title { font-size: 0.875rem; font-weight: 600; color: var(--gss-fg, #0B0B0D); }
+.toast-body { margin-top: 0.125rem; font-size: 0.8125rem; color: var(--gss-fg-2, #3D3D42); }
 .toast-close {
     flex-shrink: 0;
     border: 0;
     background: transparent;
-    color: #9ca3af;
+    color: var(--gss-fg-4, #9C9CA3);
     font-size: 1.125rem;
     line-height: 1;
     cursor: pointer;
 }
-.toast-close:hover { color: #4b5563; }
+.toast-close:hover { color: var(--gss-fg-2, #3D3D42); }
 @keyframes toast-in {
     from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }

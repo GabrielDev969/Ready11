@@ -7,16 +7,16 @@
 
 {% block content %}
 <div class="mx-auto w-full max-w-2xl px-6 py-10">
-    <a href="{% url 'notifications' %}" class="text-sm font-medium text-gray-500 hover:text-gray-900">&larr; {% trans "Back to notifications" %}</a>
+    <a href="{% url 'notifications' %}" class="text-body font-medium text-fg3 hover:text-fg">&larr; {% trans "Back to notifications" %}</a>
 
-    <article class="mt-4 rounded-xl border border-gray-200 bg-white p-6">
-        <h1 class="text-xl font-semibold tracking-tight text-gray-900">{{ notification.title }}</h1>
-        <p class="mt-1 text-xs text-gray-400">
+    <article class="gss-card gss-card-pad mt-4">
+        <h1 class="text-h2 font-semibold tracking-tight text-fg">{{ notification.title }}</h1>
+        <p class="mt-1 text-xs text-fg4 font-mono">
             {{ notification.created_at|date:"SHORT_DATETIME_FORMAT" }}
             {% if notification.workspace %}· {{ notification.workspace.name }}{% endif %}
         </p>
         {% if notification.body %}
-        <div class="mt-4 whitespace-pre-line text-sm text-gray-700">{{ notification.body }}</div>
+        <div class="mt-4 whitespace-pre-line text-body text-fg2">{{ notification.body }}</div>
         {% endif %}
     </article>
 </div>

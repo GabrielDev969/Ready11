@@ -6,36 +6,36 @@
 {% block content %}
 <div class="p-4 sm:p-6 lg:p-8">
     <div class="mb-6">
-        <h1 class="text-xl font-semibold text-gray-900">{% trans "Audit Log" %}</h1>
-        <p class="text-sm text-gray-500 mt-1">{% trans "A record of all significant actions taken in this workspace." %}</p>
+        <h1 class="text-h2 font-semibold text-fg">{% trans "Audit Log" %}</h1>
+        <p class="text-body text-fg3 mt-1">{% trans "A record of all significant actions taken in this workspace." %}</p>
     </div>
 
     {% if page.object_list %}
-    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
+    <div class="overflow-x-auto overflow-hidden rounded-md border border-line bg-elev">
+        <table class="gss-table">
+            <thead>
                 <tr>
-                    <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider text-xs">{% trans "Date" %}</th>
-                    <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider text-xs">{% trans "User" %}</th>
-                    <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider text-xs">{% trans "Action" %}</th>
-                    <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider text-xs hidden md:table-cell">{% trans "Resource" %}</th>
-                    <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider text-xs hidden lg:table-cell">{% trans "Detail" %}</th>
+                    <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Date" %}</th>
+                    <th class="px-4 py-3 text-left">{% trans "User" %}</th>
+                    <th class="px-4 py-3 text-left">{% trans "Action" %}</th>
+                    <th class="px-4 py-3 text-left hidden md:table-cell">{% trans "Resource" %}</th>
+                    <th class="px-4 py-3 text-left hidden lg:table-cell">{% trans "Detail" %}</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100 bg-white">
+            <tbody>
                 {% for log in page.object_list %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-4 py-3 whitespace-nowrap text-gray-500 text-xs">{{ log.created_at|date:"Y-m-d H:i" }}</td>
-                    <td class="px-4 py-3 whitespace-nowrap text-gray-900">
-                        {% if log.user %}{{ log.user.email }}{% else %}<span class="text-gray-400">—</span>{% endif %}
+                <tr>
+                    <td class="px-4 py-3 whitespace-nowrap text-fg3 text-xs hidden md:table-cell">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-fg">
+                        {% if log.user %}{{ log.user.email }}{% else %}<span class="text-fg3">—</span>{% endif %}
                     </td>
                     <td class="px-4 py-3">
-                        <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">{{ log.action }}</span>
+                        <span class="gss-pill-neutral">{{ log.action }}</span>
                     </td>
-                    <td class="px-4 py-3 text-gray-500 text-xs hidden md:table-cell">
+                    <td class="px-4 py-3 text-fg3 text-xs hidden md:table-cell">
                         {% if log.resource_type %}{{ log.resource_type }}{% if log.resource_id %} #{{ log.resource_id }}{% endif %}{% else %}—{% endif %}
                     </td>
-                    <td class="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell max-w-xs truncate">
+                    <td class="px-4 py-3 text-fg3 text-xs hidden lg:table-cell max-w-xs truncate">
                         {% if log.detail %}{{ log.detail|pprint }}{% else %}—{% endif %}
                     </td>
                 </tr>
@@ -46,25 +46,25 @@
 
     {% if page.has_other_pages %}
     <div class="mt-4 flex items-center justify-between">
-        <p class="text-sm text-gray-500">
+        <p class="text-body text-fg3">
             {% blocktrans with start=page.start_index end=page.end_index total=page.paginator.count %}
             Showing {{ start }}–{{ end }} of {{ total }}
             {% endblocktrans %}
         </p>
         <div class="flex gap-2">
             {% if page.has_previous %}
-            <a href="?page={{ page.previous_page_number }}" class="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">{% trans "Previous" %}</a>
+            <a href="?page={{ page.previous_page_number }}" class="gss-btn gss-btn-secondary gss-btn-sm">{% trans "Previous" %}</a>
             {% endif %}
             {% if page.has_next %}
-            <a href="?page={{ page.next_page_number }}" class="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50">{% trans "Next" %}</a>
+            <a href="?page={{ page.next_page_number }}" class="gss-btn gss-btn-secondary gss-btn-sm">{% trans "Next" %}</a>
             {% endif %}
         </div>
     </div>
     {% endif %}
 
     {% else %}
-    <div class="rounded-lg border border-dashed border-gray-200 bg-white p-12 text-center">
-        <p class="text-sm text-gray-500">{% trans "No audit log entries yet." %}</p>
+    <div class="rounded-md border border-dashed border-line bg-elev p-12 text-center text-body text-fg3">
+        <p>{% trans "No audit log entries yet." %}</p>
     </div>
     {% endif %}
 </div>
