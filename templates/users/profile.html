@@ -18,72 +18,80 @@
     {% endif %}
 
     <!-- Personal info -->
-    <section class="gss-card gss-card-pad">
-        <h2 class="text-h3 font-medium text-fg">{% trans "Personal information" %}</h2>
-        <p class="mt-1 text-body text-fg3">{% trans "Update your name." %}</p>
-
-        <form method="post" class="mt-5 space-y-4">
+    <section>
+        <form method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="profile">
 
-            <div class="grid grid-cols-2 gap-4">
+            <!-- Sticky bar -->
+            <div class="sticky top-[73px] z-20 bg-elev border border-line rounded-md px-5 py-3 mb-5 flex items-center justify-between shadow-card">
                 <div>
-                    <label class="gss-label">{{ profile_form.first_name.label }}</label>
-                    {% render_field profile_form.first_name class="gss-input w-full" %}
-                    {{ profile_form.first_name.errors }}
+                    <p class="gss-eyebrow">{% trans "Personal information" %}</p>
+                    <p class="text-body text-fg3 mt-0.5">{% trans "Update your name." %}</p>
                 </div>
-                <div>
-                    <label class="gss-label">{{ profile_form.last_name.label }}</label>
-                    {% render_field profile_form.last_name class="gss-input w-full" %}
-                    {{ profile_form.last_name.errors }}
-                </div>
-            </div>
-
-            <div>
-                <label class="gss-label">{% trans "Email" %}</label>
-                <input type="email" value="{{ user.email }}" disabled class="gss-input w-full bg-sunken text-fg3">
-                <p class="mt-1 text-xs text-fg4">{% trans "Email can't be changed here." %}</p>
-            </div>
-
-            <div class="flex justify-end">
-                <button type="submit" class="gss-btn gss-btn-primary">
+                <button type="submit" class="gss-btn gss-btn-primary gss-btn-sm">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                    {% trans "Save changes" %}
+                    {% trans "Save" %}
                 </button>
+            </div>
+
+            <div class="gss-card gss-card-pad space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="gss-label">{{ profile_form.first_name.label }}</label>
+                        {% render_field profile_form.first_name class="gss-input w-full" %}
+                        {{ profile_form.first_name.errors }}
+                    </div>
+                    <div>
+                        <label class="gss-label">{{ profile_form.last_name.label }}</label>
+                        {% render_field profile_form.last_name class="gss-input w-full" %}
+                        {{ profile_form.last_name.errors }}
+                    </div>
+                </div>
+
+                <div>
+                    <label class="gss-label">{% trans "Email" %}</label>
+                    <input type="email" value="{{ user.email }}" disabled class="gss-input w-full bg-sunken text-fg3">
+                    <p class="mt-1 text-xs text-fg4">{% trans "Email can't be changed here." %}</p>
+                </div>
             </div>
         </form>
     </section>
 
     <!-- Change password -->
-    <section class="gss-card gss-card-pad">
-        <h2 class="text-h3 font-medium text-fg">{% trans "Change password" %}</h2>
-        <p class="mt-1 text-body text-fg3">{% trans "Use a strong password you don't use elsewhere." %}</p>
-
-        <form method="post" class="mt-5 space-y-4">
+    <section>
+        <form method="post">
             {% csrf_token %}
             <input type="hidden" name="action" value="password">
 
-            <div>
-                <label class="gss-label">{{ password_form.old_password.label }}</label>
-                {% render_field password_form.old_password class="gss-input w-full" %}
-                {% for e in password_form.old_password.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-                <label class="gss-label">{{ password_form.new_password1.label }}</label>
-                {% render_field password_form.new_password1 class="gss-input w-full" %}
-                {% for e in password_form.new_password1.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
-            </div>
-            <div>
-                <label class="gss-label">{{ password_form.new_password2.label }}</label>
-                {% render_field password_form.new_password2 class="gss-input w-full" %}
-                {% for e in password_form.new_password2.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
+            <!-- Sticky bar -->
+            <div class="sticky top-[73px] z-20 bg-elev border border-line rounded-md px-5 py-3 mb-5 flex items-center justify-between shadow-card">
+                <div>
+                    <p class="gss-eyebrow">{% trans "Change password" %}</p>
+                    <p class="text-body text-fg3 mt-0.5">{% trans "Use a strong password you don't use elsewhere." %}</p>
+                </div>
+                <button type="submit" class="gss-btn gss-btn-primary gss-btn-sm">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                    {% trans "Update" %}
+                </button>
             </div>
 
-            <div class="flex justify-end">
-                <button type="submit" class="gss-btn gss-btn-primary">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-                    {% trans "Change password" %}
-                </button>
+            <div class="gss-card gss-card-pad space-y-4">
+                <div>
+                    <label class="gss-label">{{ password_form.old_password.label }}</label>
+                    {% render_field password_form.old_password class="gss-input w-full" %}
+                    {% for e in password_form.old_password.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
+                </div>
+                <div>
+                    <label class="gss-label">{{ password_form.new_password1.label }}</label>
+                    {% render_field password_form.new_password1 class="gss-input w-full" %}
+                    {% for e in password_form.new_password1.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
+                </div>
+                <div>
+                    <label class="gss-label">{{ password_form.new_password2.label }}</label>
+                    {% render_field password_form.new_password2 class="gss-input w-full" %}
+                    {% for e in password_form.new_password2.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
+                </div>
             </div>
         </form>
     </section>

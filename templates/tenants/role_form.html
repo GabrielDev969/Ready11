@@ -4,18 +4,33 @@
 {% block title %}{% if role %}{% trans "Edit role" %}{% else %}{% trans "New role" %}{% endif %} | {{ request.tenant.name }}{% endblock %}
 
 {% block content %}
-<div class="w-full max-w-2xl mx-auto my-10 gss-card gss-card-pad">
-    <div class="mb-6">
-        <h2 class="text-h2 font-semibold text-fg">{% if role %}{% trans "Edit role" %}{% else %}{% trans "Create a new role" %}{% endif %}</h2>
-        <p class="text-body text-fg3 mt-1">{% trans "Define the name and what members with this role can do." %}</p>
+<form method="post" class="flex flex-col">
+    {% csrf_token %}
+
+    <!-- Sticky action bar -->
+    <div class="sticky top-16 z-20 bg-elev border-b border-line px-6 py-3 flex items-center justify-between shadow-card">
+        <div>
+            <p class="gss-eyebrow">{% if role %}{% trans "Editing role" %}{% else %}{% trans "New role" %}{% endif %}</p>
+            <p class="text-h3 font-semibold text-fg mt-0.5" id="role-name-preview">{{ form.name.value|default:_("Untitled") }}</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'role_list' %}" class="gss-btn gss-btn-secondary gss-btn-sm">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                {% trans "Cancel" %}
+            </a>
+            <button type="submit" class="gss-btn gss-btn-primary gss-btn-sm">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                {% trans "Save role" %}
+            </button>
+        </div>
     </div>
 
-    <form method="post" class="space-y-6">
-        {% csrf_token %}
+    <!-- Form body -->
+    <div class="w-full max-w-2xl mx-auto px-6 py-8 space-y-6">
 
         <div>
             <label class="gss-label">{{ form.name.label }}</label>
-            {% render_field form.name class="gss-input" placeholder="e.g. Finance" %}
+            {% render_field form.name class="gss-input" placeholder="e.g. Finance" id="role-name-input" %}
             {% for e in form.name.errors %}<p class="text-xs text-critical-fg mt-1">{{ e }}</p>{% endfor %}
         </div>
 
@@ -26,7 +41,7 @@
 
         <div class="border-t border-line pt-6">
             <h3 class="text-body font-medium text-fg">{% trans "Permissions" %}</h3>
-            <p class="text-xs text-fg3 mb-3">{% trans "Pick exactly what this role can do, by area." %}</p>
+            <p class="text-xs text-fg3 mb-4">{% trans "Pick exactly what this role can do, by area." %}</p>
 
             <div class="space-y-4">
                 {% for group in permission_groups %}
@@ -40,7 +55,7 @@
                     </div>
                     <div class="divide-y divide-line">
                         {% for perm, label, desc in group.permissions %}
-                        <label class="flex cursor-pointer items-start gap-3 px-4 py-3 border-b border-line hover:bg-sunken">
+                        <label class="flex cursor-pointer items-start gap-3 px-4 py-3 hover:bg-sunken">
                             <input type="checkbox" name="permissions" value="{{ perm }}" data-perm
                                    {% if perm in selected_permissions %}checked{% endif %}
                                    class="mt-0.5 h-4 w-4 rounded border-line-2 text-black focus:ring-black">
@@ -56,20 +71,19 @@
             </div>
         </div>
 
-        <div class="flex flex-col-reverse gap-3 pt-4 sm:flex-row sm:justify-end">
-            <a href="{% url 'role_list' %}" class="gss-btn gss-btn-secondary">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                {% trans "Cancel" %}
-            </a>
-            <button type="submit" class="gss-btn gss-btn-primary">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
-                {% trans "Save role" %}
-            </button>
-        </div>
-    </form>
-</div>
+    </div>
+</form>
 
 <script>
+    // Sync role name into the sticky bar preview
+    var nameInput = document.getElementById('role-name-input');
+    var namePreview = document.getElementById('role-name-preview');
+    if (nameInput && namePreview) {
+        nameInput.addEventListener('input', function () {
+            namePreview.textContent = this.value || '{% trans "Untitled" %}';
+        });
+    }
+
     document.querySelectorAll('[data-perm-group]').forEach(function (group) {
         var toggle = group.querySelector('[data-group-toggle]');
         var perms = Array.prototype.slice.call(group.querySelectorAll('[data-perm]'));
