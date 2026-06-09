@@ -17,6 +17,7 @@ _PUBLIC_ONLY_PREFIXES = (
     '/forgot-password/',
     '/reset-password/',
     '/verify/',
+    '/2fa/',
 )
 
 _SKIP_PREFIXES = ('/static/', '/ws/')

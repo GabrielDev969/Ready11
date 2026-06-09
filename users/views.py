@@ -1,3 +1,10 @@
+import base64
+import io
+import secrets
+import urllib.parse
+
+import qrcode
+import qrcode.image.svg
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout, update_session_auth_hash
@@ -11,6 +18,9 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext as _
+from django_otp import login as otp_login
+from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from tenants.models import WorkspaceMembership
 from tenants.utils import effective_workspace, workspace_home_url
@@ -122,6 +132,19 @@ def login_view(request):
                     messages.error(request, _("Your account has been disabled by an administrator."))
                     return render(request, 'users/login.html', {'form': form})
 
+                # 2FA: if the user has a confirmed TOTP device, require verification
+                # before creating the session.
+                if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+                    request.session['_2fa_user_id'] = user.pk
+                    next_url = request.POST.get('next') or request.GET.get('next')
+                    if next_url and url_has_allowed_host_and_scheme(
+                        next_url,
+                        allowed_hosts={request.get_host()},
+                        require_https=request.is_secure(),
+                    ):
+                        request.session['_2fa_next'] = next_url
+                    return redirect('2fa_verify')
+
                 # All good: start the session.
                 login(request, user)
 
@@ -163,6 +186,9 @@ def profile_view(request):
     profile_form = ProfileForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
     language_form = LanguageForm(instance=request.user)
+    totp_device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+    static_device = StaticDevice.objects.filter(user=request.user, confirmed=True).first()
+    backup_codes_count = static_device.token_set.count() if static_device else 0
 
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -194,14 +220,20 @@ def profile_view(request):
         'profile_form': profile_form,
         'password_form': password_form,
         'language_form': language_form,
+        'totp_enabled': bool(totp_device),
+        'backup_codes_count': backup_codes_count,
     })
 
 
 def settings_view(request):
-    """Account settings. Minimal for now (language is in the header switcher)."""
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'users/settings.html')
+    totp_device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
+    static_device = StaticDevice.objects.filter(user=request.user, confirmed=True).first()
+    return render(request, 'users/settings.html', {
+        'totp_enabled': bool(totp_device),
+        'backup_codes_count': static_device.token_set.count() if static_device else 0,
+    })
 
 
 def set_default_workspace(request, workspace_id):
@@ -279,3 +311,153 @@ def password_reset_confirm_view(request, uidb64, token):
 
 def password_reset_complete_view(request):
     return render(request, 'users/password_reset_complete.html')
+
+
+# ============================================================
+# Two-factor authentication (TOTP)
+# ============================================================
+
+def verify_2fa_view(request):
+    """Step 2 of login when the user has 2FA enabled. Not yet authenticated."""
+    if request.user.is_authenticated:
+        return _redirect_authenticated_home(request)
+
+    user_id = request.session.get('_2fa_user_id')
+    if not user_id:
+        return redirect('login')
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        del request.session['_2fa_user_id']
+        return redirect('login')
+
+    if request.method == 'POST':
+        token = request.POST.get('token', '').strip().replace(' ', '')
+        device = None
+
+        for dev in TOTPDevice.objects.filter(user=user, confirmed=True):
+            if dev.verify_token(token):
+                device = dev
+                break
+
+        if device is None:
+            for dev in StaticDevice.objects.filter(user=user, confirmed=True):
+                if dev.verify_token(token):
+                    device = dev
+                    break
+
+        if device is not None:
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            otp_login(request, device)
+            next_url = request.session.pop('_2fa_next', None)
+            request.session.pop('_2fa_user_id', None)
+            if next_url:
+                return redirect(next_url)
+            return _redirect_authenticated_home(request)
+
+        messages.error(request, _('Invalid code. Please try again.'))
+
+    return render(request, 'users/2fa_verify.html')
+
+
+def setup_2fa_view(request):
+    """Enable TOTP 2FA: show QR code and confirm the first token."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    user = request.user
+
+    if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+        return redirect('profile')
+
+    if request.method == 'GET':
+        TOTPDevice.objects.filter(user=user, confirmed=False).delete()
+        device = TOTPDevice.objects.create(user=user, name='Authenticator app', confirmed=False)
+    else:
+        device = TOTPDevice.objects.filter(user=user, confirmed=False).first()
+        if device is None:
+            return redirect('2fa_setup')
+
+        token = request.POST.get('token', '').strip().replace(' ', '')
+        if device.verify_token(token):
+            device.confirmed = True
+            device.save()
+
+            StaticDevice.objects.filter(user=user).delete()
+            static_device = StaticDevice.objects.create(user=user, name='Backup codes', confirmed=True)
+            backup_codes = []
+            for _ in range(8):
+                raw = secrets.token_hex(4).upper()
+                code = f'{raw[:4]}-{raw[4:]}'
+                StaticToken.objects.create(device=static_device, token=code)
+                backup_codes.append(code)
+
+            request.session['_backup_codes'] = backup_codes
+            messages.success(request, _('Two-factor authentication enabled.'))
+            return redirect('2fa_backup_codes')
+
+        messages.error(request, _('Invalid code. Make sure your device clock is correct and try again.'))
+
+    secret_b32 = base64.b32encode(device.bin_key).decode()
+    label = urllib.parse.quote(f'Ready11:{user.email}')
+    qs = urllib.parse.urlencode({
+        'secret': secret_b32,
+        'issuer': 'Ready11',
+        'algorithm': 'SHA1',
+        'digits': 6,
+        'period': 30,
+    })
+    otpauth_url = f'otpauth://totp/{label}?{qs}'
+
+    factory = qrcode.image.svg.SvgPathImage
+    qr_obj = qrcode.QRCode(image_factory=factory, box_size=10, border=4)
+    qr_obj.add_data(otpauth_url)
+    qr_obj.make(fit=True)
+    buf = io.BytesIO()
+    qr_obj.make_image().save(buf)
+    qr_svg = buf.getvalue().decode()
+
+    secret_display = ' '.join(secret_b32[i:i + 4] for i in range(0, len(secret_b32), 4))
+
+    return render(request, 'users/2fa_setup.html', {
+        'qr_svg': qr_svg,
+        'secret_display': secret_display,
+    })
+
+
+def backup_codes_view(request):
+    """Show backup codes once after setup, or remaining count on repeat visits."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    backup_codes = request.session.pop('_backup_codes', None)
+    static_device = StaticDevice.objects.filter(user=request.user, confirmed=True).first()
+    remaining = static_device.token_set.count() if static_device else 0
+
+    return render(request, 'users/2fa_backup_codes.html', {
+        'backup_codes': backup_codes,
+        'remaining': remaining,
+    })
+
+
+def disable_2fa_view(request):
+    """Disable 2FA after password confirmation."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    user = request.user
+
+    if not TOTPDevice.objects.filter(user=user, confirmed=True).exists():
+        return redirect('profile')
+
+    if request.method == 'POST':
+        password = request.POST.get('password', '')
+        if authenticate(request, username=user.email, password=password):
+            TOTPDevice.objects.filter(user=user).delete()
+            StaticDevice.objects.filter(user=user).delete()
+            messages.success(request, _('Two-factor authentication disabled.'))
+            return redirect('profile')
+        messages.error(request, _('Incorrect password.'))
+
+    return render(request, 'users/2fa_disable.html')

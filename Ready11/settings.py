@@ -82,6 +82,9 @@ SHARED_APPS = (
     'audit',           # workspace audit log
     'tenants',
     'users',
+    'django_otp',                            # TOTP / backup-code models (global — users are global)
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_static',
 
     # Native Django apps that must be global
     'django.contrib.admin',
@@ -148,6 +151,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',                    # must follow AuthenticationMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',                       # MUST be last

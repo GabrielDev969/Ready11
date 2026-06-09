@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 12:45-0300\n"
+"POT-Creation-Date: 2026-06-09 17:43-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:272
+#: Ready11/settings.py:276
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:273
+#: Ready11/settings.py:277
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
@@ -32,7 +32,7 @@ msgstr "Usuário"
 msgid "Workspace schema"
 msgstr "Schema do workspace"
 
-#: audit/models.py:17 tenants/forms.py:102
+#: audit/models.py:17 tenants/forms.py:103
 msgid "Workspace name"
 msgstr "Nome do workspace"
 
@@ -61,7 +61,7 @@ msgstr "Endereço IP"
 msgid "Created at"
 msgstr "Criado em"
 
-#: audit/models.py:29
+#: audit/models.py:29 templates/core/landing.html:143
 msgid "Audit log"
 msgstr "Log de auditoria"
 
@@ -179,174 +179,426 @@ msgstr "Abrir/fechar menu lateral"
 msgid "Ready11 — B2B SaaS base project"
 msgstr "Ready11 — projeto base para SaaS B2B"
 
-#: templates/core/landing.html:13
-msgid "Open base project · Django + PostgreSQL"
+#: templates/core/landing.html:16
+#, fuzzy
+#| msgid "Open base project · Django + PostgreSQL"
+msgid "Open source · Django 6 + PostgreSQL · MIT"
 msgstr "Projeto base aberto · Django + PostgreSQL"
 
-#: templates/core/landing.html:16
-msgid "A production-ready foundation for multi-tenant B2B SaaS"
+#: templates/core/landing.html:19
+#, fuzzy
+#| msgid "A production-ready foundation for multi-tenant B2B SaaS"
+msgid "The production-ready foundation"
 msgstr "Uma base pronta para produção para SaaS B2B multi-tenant"
 
-#: templates/core/landing.html:19
+#: templates/core/landing.html:20
+#, fuzzy
+#| msgid "A production-ready foundation for multi-tenant B2B SaaS"
+msgid "for multi-tenant B2B SaaS"
+msgstr "Uma base pronta para produção para SaaS B2B multi-tenant"
+
+#: templates/core/landing.html:23
+#, fuzzy
+#| msgid ""
+#| "Ready11 is a starter codebase with schema-isolated multi-tenancy, global "
+#| "accounts, role-based access control and an invite-only onboarding flow — "
+#| "so you can start building your product instead of the plumbing."
 msgid ""
-"Ready11 is a starter codebase with schema-isolated multi-tenancy, global "
-"accounts, role-based access control and an invite-only onboarding flow — so "
-"you can start building your product instead of the plumbing."
+"Ready11 ships everything a real SaaS needs on day one — schema-isolated "
+"tenants, global accounts, RBAC, real-time notifications, audit logs and CI/"
+"CD — so you build your product, not the plumbing."
 msgstr ""
 "O Ready11 é uma base de código inicial com multi-tenancy isolado por schema, "
 "contas globais, controle de acesso por cargos e onboarding apenas por "
 "convite — para você começar a construir seu produto em vez da infraestrutura."
 
-#: templates/core/landing.html:24 templates/tenants/genesis_success.html:21
+#: templates/core/landing.html:29 templates/core/landing.html:371
+#: templates/tenants/genesis_success.html:21
 msgid "Go to my workspace"
 msgstr "Ir para meu workspace"
 
-#: templates/core/landing.html:28
+#: templates/core/landing.html:34
 msgid "Get started"
 msgstr "Começar"
 
-#: templates/core/landing.html:32
-msgid "View on GitHub"
-msgstr "Ver no GitHub"
+#: templates/core/landing.html:37 templates/partials/topbar_nav.html:8
+#: templates/users/login.html:4 templates/users/login.html:40
+#: templates/users/password_reset_complete.html:16
+#: templates/users/register.html:59
+msgid "Sign in"
+msgstr "Entrar"
 
-#: templates/core/landing.html:41
-msgid "What's included"
+#: templates/core/landing.html:50
+msgid "ready-to-use features"
+msgstr ""
+
+#: templates/core/landing.html:54
+msgid "extra services needed"
+msgstr ""
+
+#: templates/core/landing.html:58
+#, fuzzy
+#| msgid "Provision workspace"
+msgid "to first running workspace"
+msgstr "Provisionar workspace"
+
+#: templates/core/landing.html:62
+msgid "free to use & modify"
+msgstr ""
+
+#: templates/core/landing.html:74
+#, fuzzy
+#| msgid "What's included"
+msgid "What's inside"
 msgstr "O que está incluído"
 
-#: templates/core/landing.html:44
-msgid "Schema isolation"
+#: templates/core/landing.html:75
+msgid "Everything a SaaS needs, already wired up"
+msgstr ""
+
+#: templates/core/landing.html:76
+msgid ""
+"Every feature below is implemented, tested and production-hardened — not a "
+"stub or a TODO."
+msgstr ""
+
+#: templates/core/landing.html:87
+#, fuzzy
+#| msgid "Schema isolation"
+msgid "Schema-isolated multi-tenancy"
 msgstr "Isolamento por schema"
 
-#: templates/core/landing.html:45
+#: templates/core/landing.html:89
+#, fuzzy
+#| msgid ""
+#| "Each customer (Workspace) lives in its own PostgreSQL schema via django-"
+#| "tenants. No data leaks between clients."
 msgid ""
-"Each customer (Workspace) lives in its own PostgreSQL schema via django-"
-"tenants. No data leaks between clients."
+"Each company gets its own PostgreSQL schema via <strong class=\"text-"
+"fg2\">django-tenants</strong>. Complete data isolation — no shared tables, "
+"no accidental leaks between clients."
 msgstr ""
 "Cada cliente (Workspace) vive em seu próprio schema PostgreSQL via django-"
 "tenants. Sem vazamento de dados entre clientes."
 
-#: templates/core/landing.html:48
-msgid "Global identity"
-msgstr "Identidade global"
+#: templates/core/landing.html:99
+#, fuzzy
+#| msgid "Create account"
+msgid "Global accounts"
+msgstr "Criar conta"
 
-#: templates/core/landing.html:49
+#: templates/core/landing.html:101
 msgid ""
-"A single account works across workspaces, with email verification and a "
-"strict password policy out of the box."
+"One account, many workspaces. Email verification on signup. Strict password "
+"policy. Password reset by email. The same user can own one workspace and be "
+"a member of another."
 msgstr ""
-"Uma única conta funciona em vários workspaces, com verificação de e-mail e "
-"política de senha rígida já incluídas."
 
-#: templates/core/landing.html:52
-msgid "Role-based access"
-msgstr "Acesso por cargos"
+#: templates/core/landing.html:110
+#, fuzzy
+#| msgid "Roles & permissions"
+msgid "Roles & permissions (RBAC)"
+msgstr "Cargos e permissões"
 
-#: templates/core/landing.html:53
+#: templates/core/landing.html:112
 msgid ""
-"Per-workspace roles and permissions. The same person can be Owner in one "
-"workspace and Viewer in another."
+"Per-workspace roles with granular permissions (<code class=\"text-"
+"fg2\">users.invite</code>, <code class=\"text-fg2\">roles.edit</code>, "
+"etc.). The Owner role is locked. All others are fully customisable by the "
+"workspace admin."
 msgstr ""
-"Cargos e permissões por workspace. A mesma pessoa pode ser Dono em um "
-"workspace e Visualizador em outro."
 
-#: templates/core/landing.html:56
+#: templates/core/landing.html:121
 msgid "Invite-only onboarding"
 msgstr "Onboarding apenas por convite"
 
-#: templates/core/landing.html:57
+#: templates/core/landing.html:123
 msgid ""
-"Controlled signup through expiring invitations, for both new company owners "
-"and internal team members."
+"Controlled access through expiring invite links (24h). Super admins send "
+"genesis invites to create new companies. Workspace owners invite their team. "
+"In-app notifications for existing users."
 msgstr ""
-"Cadastro controlado por convites com expiração, tanto para novos donos de "
-"empresa quanto para membros internos da equipe."
 
-#: templates/core/landing.html:60
-msgid "Hardened & i18n-ready"
-msgstr "Seguro e pronto para i18n"
+#: templates/core/landing.html:132
+#, fuzzy
+#| msgid "Back to notifications"
+msgid "Real-time notifications"
+msgstr "Voltar para notificações"
 
-#: templates/core/landing.html:61
+#: templates/core/landing.html:134
 msgid ""
-"Security headers, brute-force protection and full internationalization — "
-"English and Brazilian Portuguese included."
+"WebSocket push via <strong class=\"text-fg2\">Django Channels + Redis</"
+"strong>. Personal, workspace-broadcast and global notifications. Unread "
+"badge in the topbar. 30-day retention with automatic cleanup."
 msgstr ""
-"Cabeçalhos de segurança, proteção contra força bruta e internacionalização "
-"completa — inglês e português do Brasil incluídos."
 
-#: templates/core/landing.html:64
-msgid "Docker-first"
-msgstr "Docker em primeiro lugar"
-
-#: templates/core/landing.html:65
+#: templates/core/landing.html:145
 msgid ""
-"Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, ready "
-"to deploy behind a reverse proxy."
+"Every important action is recorded: member invited/joined/removed, role "
+"created/updated/deleted, workspace settings changed. Stored in the public "
+"schema with 90-day retention."
 msgstr ""
-"Já vem com Docker, Gunicorn, WhiteNoise e um endpoint de health check, "
-"pronto para implantar atrás de um proxy reverso."
 
-#: templates/core/landing.html:74
+#: templates/core/landing.html:154
+msgid "Security hardening"
+msgstr ""
+
+#: templates/core/landing.html:156
+msgid ""
+"Brute-force protection (<strong class=\"text-fg2\">django-axes</strong>, 5 "
+"attempts → 1h lockout), HSTS, CSRF, secure cookies, content-type protection, "
+"clickjacking headers — all active in production by default."
+msgstr ""
+
+#: templates/core/landing.html:165
+msgid "Observability"
+msgstr ""
+
+#: templates/core/landing.html:167
+msgid ""
+"Request logging with method/path/status/duration. Optional <strong "
+"class=\"text-fg2\">Sentry</strong> for errors (HTTP + WebSocket). Structured "
+"JSON logs for CloudWatch, Grafana Loki or Datadog. Health check at <code "
+"class=\"text-fg2\">/healthz/</code>."
+msgstr ""
+
+#: templates/core/landing.html:176
+#, fuzzy
+#| msgid "Workspace settings"
+msgid "i18n + user & workspace settings"
+msgstr "Configurações do workspace"
+
+#: templates/core/landing.html:178
+msgid ""
+"English source strings with Brazilian Portuguese translation. Each user "
+"saves their preferred language — applies on every device on login. Each "
+"workspace sets its own timezone (default UTC)."
+msgstr ""
+
+#: templates/core/landing.html:191
+msgid "Flow"
+msgstr ""
+
+#: templates/core/landing.html:192
 msgid "How it works"
 msgstr "Como funciona"
 
-#: templates/core/landing.html:78
-msgid ""
-"A super admin sends a \"genesis\" invitation to a future workspace owner."
-msgstr ""
-"Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
+#: templates/core/landing.html:197
+#, fuzzy
+#| msgid "Pending invites"
+msgid "Genesis invite"
+msgstr "Convites pendentes"
 
-#: templates/core/landing.html:82
+#: templates/core/landing.html:198
 msgid ""
-"The owner sets their name and company. The backend creates an isolated "
-"database schema on demand."
+"A super admin creates an invite with no workspace assigned from the Django "
+"admin. The token link is printed to the server console."
+msgstr ""
+
+#: templates/core/landing.html:202 templates/tenants/genesis_success.html:4
+msgid "Workspace created"
+msgstr "Workspace criado"
+
+#: templates/core/landing.html:203
+#, fuzzy
+#| msgid ""
+#| "The owner sets their name and company. The backend creates an isolated "
+#| "database schema on demand."
+msgid ""
+"The owner opens the link, fills in name and company. The backend creates a "
+"dedicated PostgreSQL schema and subdomain on the fly."
 msgstr ""
 "O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
 "sob demanda."
 
-#: templates/core/landing.html:86
+#: templates/core/landing.html:207
+#, fuzzy
+#| msgid "Pending invites"
+msgid "Team invited"
+msgstr "Convites pendentes"
+
+#: templates/core/landing.html:208
 msgid ""
-"The owner invites their team and assigns roles. Members access the workspace "
-"on its own subdomain."
+"The owner invites the team from <code class=\"text-fg2\">/team/</code>, "
+"assigns roles and configures permissions. Each member gets an email or an in-"
+"app notification."
 msgstr ""
-"O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
-"em seu próprio subdomínio."
 
-#: templates/core/landing.html:95
-msgid "Install & run"
-msgstr "Instalar e rodar"
+#: templates/core/landing.html:212
+msgid "Ship your product"
+msgstr ""
 
-#: templates/core/landing.html:96
+#: templates/core/landing.html:213
 msgid ""
-"Requires Python 3.12, Docker and Node. The full guide lives in the README."
-msgstr "Requer Python 3.12, Docker e Node. O guia completo está no README."
+"Multi-tenancy, auth, RBAC, notifications, audit and CI/CD are done. Add your "
+"own models inside the tenant schema and focus on the feature that sets you "
+"apart."
+msgstr ""
 
-#: templates/core/landing.html:97
-msgid "Start the PostgreSQL database"
+#: templates/core/landing.html:225
+msgid "Stack"
+msgstr ""
+
+#: templates/core/landing.html:226
+msgid "Built on proven technology"
+msgstr ""
+
+#: templates/core/landing.html:232
+#, fuzzy
+#| msgid "Language"
+msgid "language"
+msgstr "Idioma"
+
+#: templates/core/landing.html:236
+msgid "framework"
+msgstr ""
+
+#: templates/core/landing.html:240
+#, fuzzy
+#| msgid "Database status"
+msgid "database"
+msgstr "Status do banco"
+
+#: templates/core/landing.html:244
+msgid "multi-tenancy"
+msgstr ""
+
+#: templates/core/landing.html:248
+msgid "real-time"
+msgstr ""
+
+#: templates/core/landing.html:252
+msgid "server"
+msgstr ""
+
+#: templates/core/landing.html:256
+msgid "static files"
+msgstr ""
+
+#: templates/core/landing.html:260
+msgid "design system"
+msgstr ""
+
+#: templates/core/landing.html:264
+msgid "brute-force"
+msgstr ""
+
+#: templates/core/landing.html:268
+msgid "error tracking"
+msgstr ""
+
+#: templates/core/landing.html:272
+msgid "lint + SAST"
+msgstr ""
+
+#: templates/core/landing.html:276
+msgid "CI/CD"
+msgstr ""
+
+#: templates/core/landing.html:288
+msgid "Local setup"
+msgstr ""
+
+#: templates/core/landing.html:289
+#, fuzzy
+#| msgid "Sign in to your account"
+msgid "Running on your machine"
+msgstr "Acesse sua conta"
+
+#: templates/core/landing.html:290
+msgid ""
+"You need <strong>Python 3.12</strong>, <strong>Docker Desktop</strong> and "
+"<strong>Node.js 18+</strong>. Everything else is installed by the commands "
+"below."
+msgstr ""
+
+#: templates/core/landing.html:298
+#, fuzzy
+#| msgid "Start the PostgreSQL database"
+msgid "Start the database and Redis"
 msgstr "Suba o banco de dados PostgreSQL"
 
-#: templates/core/landing.html:100
-msgid "Create the virtualenv and install dependencies"
+#: templates/core/landing.html:301
+msgid ""
+"Starts PostgreSQL 17, Redis and Mailpit (email preview). Runs in background."
+msgstr ""
+
+#: templates/core/landing.html:307
+#, fuzzy
+#| msgid "Create the virtualenv and install dependencies"
+msgid "Create the virtual environment and install dependencies"
 msgstr "Crie o ambiente virtual e instale as dependências"
 
-#: templates/core/landing.html:104
-msgid "Build the CSS (Tailwind)"
-msgstr "Compile o CSS (Tailwind)"
+#: templates/core/landing.html:317
+msgid "Configure environment variables"
+msgstr ""
 
-#: templates/core/landing.html:108
-msgid "Apply migrations and create the public tenant"
+#: templates/core/landing.html:326
+#, fuzzy
+#| msgid "Apply migrations and create the public tenant"
+msgid "Run migrations and create the public tenant"
 msgstr "Aplique as migrações e crie o tenant público"
 
-#: templates/core/landing.html:112
-msgid "Run the development server"
-msgstr "Rode o servidor de desenvolvimento"
-
-#: templates/core/landing.html:115
-msgid ""
-"Then open the app, create a super admin and send your first genesis "
-"invitation from the Django admin."
+#: templates/core/landing.html:335
+msgid "Start the server"
 msgstr ""
-"Depois abra a aplicação, crie um super admin e envie seu primeiro convite "
-"gênesis pelo admin do Django."
+
+#: templates/core/landing.html:343
+#, fuzzy
+#| msgid "Start your workspace"
+msgid "Creating your first workspace"
+msgstr "Comece seu workspace"
+
+#: templates/core/landing.html:345
+msgid ""
+"Log in to <code class=\"text-fg font-mono\">/admin</code> with <code "
+"class=\"text-fg font-mono\">admin@example.com</code>"
+msgstr ""
+
+#: templates/core/landing.html:346
+msgid ""
+"Under <strong>Workspace invites</strong>, create an invite with no workspace "
+"selected (genesis invite). The link appears in the server console."
+msgstr ""
+
+#: templates/core/landing.html:347
+msgid ""
+"Open the link, fill in your name and company — the backend creates an "
+"isolated PostgreSQL schema and a subdomain (<code class=\"text-fg font-"
+"mono\">company.localhost:8000</code>) automatically."
+msgstr ""
+
+#: templates/core/landing.html:348
+msgid ""
+"Go to <code class=\"text-fg font-mono\">/team/</code> inside your workspace "
+"to invite the rest of the team."
+msgstr ""
+
+#: templates/core/landing.html:350
+msgid ""
+"Browsers resolve *.localhost to 127.0.0.1 natively — no /etc/hosts editing "
+"needed."
+msgstr ""
+
+#: templates/core/landing.html:356
+msgid "Full README on GitHub"
+msgstr ""
+
+#: templates/core/landing.html:367
+msgid "Skip the boilerplate. Ship your product."
+msgstr ""
+
+#: templates/core/landing.html:368
+msgid ""
+"Multi-tenancy, auth, RBAC and real-time are solved. Fork Ready11 and start "
+"on the feature that actually matters."
+msgstr ""
+
+#: templates/core/landing.html:374
+#, fuzzy
+#| msgid "Get started"
+msgid "Get started free"
+msgstr "Começar"
 
 #: templates/notifications/detail.html:10
 msgid "Back to notifications"
@@ -404,7 +656,7 @@ msgstr "Perfil"
 
 #: templates/partials/profile_menu.html:23 templates/partials/sidebar.html:32
 #: templates/partials/sidebar.html:35 templates/users/settings.html:4
-#: templates/users/settings.html:10
+#: templates/users/settings.html:9
 msgid "Settings"
 msgstr "Configurações"
 
@@ -440,13 +692,6 @@ msgstr "Equipe"
 #: templates/tenants/home.html:36 tenants/models.py:28
 msgid "Roles"
 msgstr "Cargos"
-
-#: templates/partials/topbar_nav.html:8 templates/users/login.html:4
-#: templates/users/login.html:40
-#: templates/users/password_reset_complete.html:16
-#: templates/users/register.html:59
-msgid "Sign in"
-msgstr "Entrar"
 
 #: templates/partials/workspace_switcher.html:9
 msgid "Workspaces"
@@ -559,10 +804,6 @@ msgstr "Este nome será usado para criar o seu ambiente isolado."
 msgid "Provision workspace"
 msgstr "Provisionar workspace"
 
-#: templates/tenants/genesis_success.html:4
-msgid "Workspace created"
-msgstr "Workspace criado"
-
 #: templates/tenants/genesis_success.html:14
 #, python-format
 msgid "%(name)s is ready!"
@@ -647,6 +888,7 @@ msgstr ""
 
 #: templates/tenants/role_form.html:19
 #: templates/tenants/workspace_settings.html:19
+#: templates/users/2fa_disable.html:47
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -671,7 +913,7 @@ msgstr "Selecionar tudo"
 msgid "Roles & permissions"
 msgstr "Cargos e permissões"
 
-#: templates/tenants/role_list.html:28 tenants/forms.py:48
+#: templates/tenants/role_list.html:28 tenants/forms.py:49
 msgid "Role"
 msgstr "Cargo"
 
@@ -851,7 +1093,165 @@ msgid ""
 "UTC is the recommended default for teams spread across multiple time zones."
 msgstr ""
 "Alterar o fuso horário não modifica os dados armazenados — apenas a forma "
-"como são exibidos. UTC é o padrão recomendado para equipes em múltiplos fusos."
+"como são exibidos. UTC é o padrão recomendado para equipes em múltiplos "
+"fusos."
+
+#: templates/users/2fa_backup_codes.html:4
+#: templates/users/2fa_backup_codes.html:40
+msgid "Backup codes"
+msgstr "Códigos de recuperação"
+
+#: templates/users/2fa_backup_codes.html:15
+msgid "2FA is now active"
+msgstr "2FA ativado com sucesso"
+
+#: templates/users/2fa_backup_codes.html:16
+msgid ""
+"Save your backup codes in a safe place. Each code can only be used once."
+msgstr ""
+
+#: templates/users/2fa_backup_codes.html:22
+msgid ""
+"These codes will NOT be shown again. Copy them now before leaving this page."
+msgstr ""
+
+#: templates/users/2fa_backup_codes.html:34
+msgid "I've saved my backup codes"
+msgstr "Salvei meus códigos de recuperação"
+
+#: templates/users/2fa_backup_codes.html:42
+#, python-format
+msgid "You have <strong>%(count)s</strong> backup code(s) remaining."
+msgstr ""
+"Você tem <strong>%(count)s</strong> código(s) de recuperação restante(s)."
+
+#: templates/users/2fa_backup_codes.html:47
+msgid ""
+"Backup codes are shown only once, right after enabling 2FA. To get a new "
+"set, disable and re-enable two-factor authentication from your profile."
+msgstr ""
+
+#: templates/users/2fa_backup_codes.html:48 templates/users/2fa_disable.html:12
+#: templates/users/2fa_setup.html:12
+#, fuzzy
+#| msgid "Go to profile"
+msgid "Back to profile"
+msgstr "Ir para o perfil"
+
+#: templates/users/2fa_disable.html:4 templates/users/2fa_disable.html:14
+msgid "Disable two-factor authentication"
+msgstr "Desativar autenticação em dois fatores"
+
+#: templates/users/2fa_disable.html:28
+msgid ""
+"Disabling 2FA reduces your account security. All backup codes will also be "
+"deleted."
+msgstr ""
+
+#: templates/users/2fa_disable.html:34
+#, fuzzy
+#| msgid "Confirm password"
+msgid "Confirm your password to continue"
+msgstr "Confirmar senha"
+
+#: templates/users/2fa_disable.html:51 templates/users/profile.html:97
+msgid "Disable 2FA"
+msgstr "Desativar 2FA"
+
+#: templates/users/2fa_setup.html:4 templates/users/2fa_setup.html:14
+msgid "Set up two-factor authentication"
+msgstr "Configurar autenticação em dois fatores"
+
+#: templates/users/2fa_setup.html:15
+msgid ""
+"Protect your account with an authenticator app (Google Authenticator, Authy, "
+"1Password, etc.)."
+msgstr ""
+
+#: templates/users/2fa_setup.html:30
+msgid "Step 1 — Scan"
+msgstr "Passo 1 — Escaneie"
+
+#: templates/users/2fa_setup.html:31
+msgid "Open your authenticator app and scan this QR code."
+msgstr "Abra seu aplicativo autenticador e escaneie este QR code."
+
+#: templates/users/2fa_setup.html:38
+msgid "Can't scan? Enter manually"
+msgstr "Não consegue escanear? Insira manualmente"
+
+#: templates/users/2fa_setup.html:40 templates/users/settings.html:67
+msgid "Account"
+msgstr "Conta"
+
+#: templates/users/2fa_setup.html:41
+msgid "Key"
+msgstr "Chave"
+
+#: templates/users/2fa_setup.html:43
+msgid "Type"
+msgstr "Tipo"
+
+#: templates/users/2fa_setup.html:43
+msgid "Digits"
+msgstr "Dígitos"
+
+#: templates/users/2fa_setup.html:43
+msgid "Period"
+msgstr "Período"
+
+#: templates/users/2fa_setup.html:50
+msgid "Step 2 — Confirm"
+msgstr "Passo 2 — Confirme"
+
+#: templates/users/2fa_setup.html:51
+msgid "Enter the 6-digit code shown in your app to confirm the setup."
+msgstr "Digite o código de 6 dígitos exibido no aplicativo para confirmar."
+
+#: templates/users/2fa_setup.html:56
+#, fuzzy
+#| msgid "New notification"
+msgid "Verification code"
+msgstr "Nova notificação"
+
+#: templates/users/2fa_setup.html:71
+msgid "Enable two-factor authentication"
+msgstr "Ativar autenticação em dois fatores"
+
+#: templates/users/2fa_setup.html:80
+msgid ""
+"After enabling 2FA you will receive 8 one-time backup codes. Keep them safe "
+"— they are the only way to access your account if you lose your phone."
+msgstr ""
+
+#: templates/users/2fa_verify.html:4 templates/users/2fa_verify.html:12
+#, fuzzy
+#| msgid "Back to notifications"
+msgid "Two-factor verification"
+msgstr "Voltar para notificações"
+
+#: templates/users/2fa_verify.html:13
+msgid "Enter the 6-digit code from your authenticator app."
+msgstr "Digite o código de 6 dígitos do seu aplicativo autenticador."
+
+#: templates/users/2fa_verify.html:27
+msgid "Authentication code"
+msgstr "Código de autenticação"
+
+#: templates/users/2fa_verify.html:39
+msgid "Or enter one of your 8-character backup codes (e.g. A1B2-C3D4)."
+msgstr ""
+"Ou insira um dos seus códigos de recuperação de 8 caracteres (ex: A1B2-C3D4)."
+
+#: templates/users/2fa_verify.html:44
+msgid "Verify"
+msgstr "Verificar"
+
+#: templates/users/2fa_verify.html:49
+#, fuzzy
+#| msgid "Back to sign in"
+msgid "← Back to sign in"
+msgstr "Voltar para o login"
 
 #: templates/users/login.html:9
 msgid "Sign in to your account"
@@ -981,7 +1381,7 @@ msgstr "E-mail"
 msgid "Email can't be changed here."
 msgstr "O e-mail não pode ser alterado aqui."
 
-#: templates/users/profile.html:70 templates/users/settings.html:13
+#: templates/users/profile.html:70 templates/users/settings.html:56
 #: users/forms.py:60
 msgid "Language"
 msgstr "Idioma"
@@ -994,15 +1394,55 @@ msgstr "Seu idioma preferido em todos os dispositivos."
 msgid "Saved here, applied on every device you log in from."
 msgstr "Salvo aqui, aplicado em todos os dispositivos em que você fizer login."
 
-#: templates/users/profile.html:96
+#: templates/users/profile.html:91
+#, fuzzy
+#| msgid "Back to notifications"
+msgid "Two-factor authentication"
+msgstr "Voltar para notificações"
+
+#: templates/users/profile.html:92
+msgid "Add a second layer of security to your sign-in."
+msgstr "Adicione uma segunda camada de segurança ao seu login."
+
+#: templates/users/profile.html:102
+msgid "Enable 2FA"
+msgstr "Ativar 2FA"
+
+#: templates/users/profile.html:113
+#, fuzzy
+#| msgid "Active"
+msgid "2FA is active"
+msgstr "Ativo"
+
+#: templates/users/profile.html:115
+#, python-format
+msgid "Your account is protected. You have %(count)s backup code(s) remaining."
+msgstr ""
+"Sua conta está protegida. Você tem %(count)s código(s) de recuperação "
+"restante(s)."
+
+#: templates/users/profile.html:117
+msgid "View backup codes →"
+msgstr "Ver códigos de recuperação →"
+
+#: templates/users/profile.html:124
+msgid "2FA is not enabled"
+msgstr "2FA não ativado"
+
+#: templates/users/profile.html:125
+msgid ""
+"Enable two-factor authentication to add a second verification step at login."
+msgstr ""
+
+#: templates/users/profile.html:140
 msgid "Change password"
 msgstr "Alterar senha"
 
-#: templates/users/profile.html:97
+#: templates/users/profile.html:141
 msgid "Use a strong password you don't use elsewhere."
 msgstr "Use uma senha forte que você não usa em outros lugares."
 
-#: templates/users/profile.html:101
+#: templates/users/profile.html:145
 msgid "Update"
 msgstr ""
 
@@ -1018,12 +1458,12 @@ msgstr "Comece seu workspace"
 msgid "Create your account to set up your environment."
 msgstr "Crie sua conta para configurar seu ambiente."
 
-#: templates/users/register.html:18 tenants/forms.py:19 tenants/forms.py:70
+#: templates/users/register.html:18 tenants/forms.py:20 tenants/forms.py:71
 #: users/forms.py:53 users/models.py:12
 msgid "First name"
 msgstr "Nome"
 
-#: templates/users/register.html:23 tenants/forms.py:20 tenants/forms.py:71
+#: templates/users/register.html:23 tenants/forms.py:21 tenants/forms.py:72
 #: users/forms.py:54 users/models.py:13
 msgid "Last name"
 msgstr "Sobrenome"
@@ -1032,7 +1472,7 @@ msgstr "Sobrenome"
 msgid "At least 8 characters, with uppercase, number and symbol."
 msgstr "Mín. 8 caracteres, com maiúscula, número e símbolo."
 
-#: templates/users/register.html:46 tenants/forms.py:29 tenants/forms.py:78
+#: templates/users/register.html:46 tenants/forms.py:30 tenants/forms.py:79
 #: users/forms.py:16
 msgid "Confirm password"
 msgstr "Confirmar senha"
@@ -1058,18 +1498,55 @@ msgstr ""
 "acessar o sistema."
 
 #: templates/users/settings.html:14
+msgid "Security"
+msgstr "Segurança"
+
+#: templates/users/settings.html:15
+#, fuzzy
+#| msgid "Enable two-factor authentication"
+msgid "Control two-factor authentication for your account."
+msgstr "Ativar autenticação em dois fatores"
+
+#: templates/users/settings.html:30
+#, fuzzy
+#| msgid "Back to notifications"
+msgid "Two-factor authentication (2FA)"
+msgstr "Voltar para notificações"
+
+#: templates/users/settings.html:33
+#, fuzzy, python-format
+#| msgid "You have <strong>%(count)s</strong> backup code(s) remaining."
+msgid "Active — %(count)s backup code(s) remaining."
+msgstr "Ativa — %(count)s código(s) de recuperação restante(s)."
+"Você tem <strong>%(count)s</strong> código(s) de recuperação restante(s)."
+
+#: templates/users/settings.html:36
+#, fuzzy
+#| msgid "Add a second layer of security to your sign-in."
+msgid "Not enabled. Add a second step to protect your sign-in."
+msgstr "Adicione uma segunda camada de segurança ao seu login."
+
+#: templates/users/settings.html:43
+#, fuzzy
+#| msgid "Disable 2FA"
+msgid "Disable"
+msgstr "Desativar 2FA"
+
+#: templates/users/settings.html:47
+#, fuzzy
+#| msgid "Enable 2FA"
+msgid "Enable"
+msgstr "Ativar 2FA"
+
+#: templates/users/settings.html:57
 msgid "Choose your preferred language."
 msgstr "Escolha seu idioma preferido."
 
-#: templates/users/settings.html:21
-msgid "Account"
-msgstr "Conta"
+#: templates/users/settings.html:68
+msgid "Update your name and change your password."
+msgstr "Atualize seu nome e altere sua senha."
 
-#: templates/users/settings.html:22
-msgid "Manage your personal information and password."
-msgstr "Gerencie suas informações pessoais e senha."
-
-#: templates/users/settings.html:25
+#: templates/users/settings.html:73
 msgid "Go to profile"
 msgstr "Ir para o perfil"
 
@@ -1081,43 +1558,43 @@ msgstr "Você não tem acesso a este ambiente."
 msgid "You don't have permission to perform this action."
 msgstr "Você não tem permissão para realizar esta ação."
 
-#: tenants/forms.py:21
+#: tenants/forms.py:22
 msgid "Company name"
 msgstr "Nome da empresa"
 
-#: tenants/forms.py:24 tenants/forms.py:73
+#: tenants/forms.py:25 tenants/forms.py:74
 msgid "Create your password"
 msgstr "Crie sua senha"
 
-#: tenants/forms.py:38 tenants/forms.py:87 users/forms.py:30
+#: tenants/forms.py:39 tenants/forms.py:88 users/forms.py:30
 msgid "The passwords don't match."
 msgstr "As senhas não coincidem."
 
-#: tenants/forms.py:47
+#: tenants/forms.py:48
 msgid "Member email"
 msgstr "E-mail do membro"
 
-#: tenants/forms.py:66
+#: tenants/forms.py:67
 msgid "Select a role..."
 msgstr "Selecione um cargo..."
 
-#: tenants/forms.py:93 tenants/models.py:79
+#: tenants/forms.py:94 tenants/models.py:79
 msgid "Timezone"
 msgstr ""
 
-#: tenants/forms.py:95
+#: tenants/forms.py:96
 msgid "All dates and times across the workspace will use this timezone."
 msgstr "Todas as datas e horários do workspace seguirão este fuso horário."
 
-#: tenants/forms.py:114
+#: tenants/forms.py:115
 msgid "Role permissions"
 msgstr "Permissões do cargo"
 
-#: tenants/forms.py:121 tenants/models.py:107
+#: tenants/forms.py:122 tenants/models.py:107
 msgid "Role name"
 msgstr "Nome do cargo"
 
-#: tenants/forms.py:122
+#: tenants/forms.py:123
 msgid "Make this the default role for new invites?"
 msgstr "Tornar este o cargo padrão para novos convites?"
 
@@ -1383,11 +1860,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: users/views.py:60
+#: users/views.py:70
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: users/views.py:61
+#: users/views.py:71
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -1402,49 +1879,73 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: users/views.py:94
+#: users/views.py:104
 msgid "Email verified successfully!"
 msgstr "E-mail verificado com sucesso!"
 
-#: users/views.py:95
+#: users/views.py:105
 msgid "You can now log in."
 msgstr "Você já pode fazer login."
 
-#: users/views.py:98
+#: users/views.py:108
 msgid "Invalid or expired link."
 msgstr "Link inválido ou expirado."
 
-#: users/views.py:117
+#: users/views.py:127
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: users/views.py:122
+#: users/views.py:132
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: users/views.py:142
+#: users/views.py:165
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
-#: users/views.py:174
+#: users/views.py:200
 msgid "Profile updated."
 msgstr "Perfil atualizado."
 
-#: users/views.py:183
+#: users/views.py:209
 msgid "Password changed."
 msgstr "Senha alterada."
 
-#: users/views.py:190
+#: users/views.py:216
 msgid "Language preference saved."
 msgstr "Preferência de idioma salva."
 
-#: users/views.py:220
+#: users/views.py:252
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: users/views.py:222
+#: users/views.py:254
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
+
+#: users/views.py:359
+msgid "Invalid code. Please try again."
+msgstr "Código inválido. Tente novamente."
+
+#: users/views.py:397
+msgid "Two-factor authentication enabled."
+msgstr "Autenticação em dois fatores ativada."
+
+#: users/views.py:400
+msgid "Invalid code. Make sure your device clock is correct and try again."
+msgstr ""
+"Código inválido. Verifique se o relógio do seu dispositivo está correto e "
+"tente novamente."
+
+#: users/views.py:459
+msgid "Two-factor authentication disabled."
+msgstr "Autenticação em dois fatores desativada."
+
+#: users/views.py:461
+#, fuzzy
+#| msgid "Forgot password"
+msgid "Incorrect password."
+msgstr "Esqueci a senha"
 
 #: venv/lib/python3.14/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -2762,6 +3263,92 @@ msgstr ""
 #| msgid "You don't have permission to perform this action."
 msgid "You don't have permission to view or edit anything."
 msgstr "Você não tem permissão para realizar esta ação."
+
+#~ msgid "Manage your personal information and password."
+#~ msgstr "Gerencie suas informações pessoais e senha."
+
+#~ msgid "View on GitHub"
+#~ msgstr "Ver no GitHub"
+
+#~ msgid "Global identity"
+#~ msgstr "Identidade global"
+
+#~ msgid ""
+#~ "A single account works across workspaces, with email verification and a "
+#~ "strict password policy out of the box."
+#~ msgstr ""
+#~ "Uma única conta funciona em vários workspaces, com verificação de e-mail "
+#~ "e política de senha rígida já incluídas."
+
+#~ msgid "Role-based access"
+#~ msgstr "Acesso por cargos"
+
+#~ msgid ""
+#~ "Per-workspace roles and permissions. The same person can be Owner in one "
+#~ "workspace and Viewer in another."
+#~ msgstr ""
+#~ "Cargos e permissões por workspace. A mesma pessoa pode ser Dono em um "
+#~ "workspace e Visualizador em outro."
+
+#~ msgid ""
+#~ "Controlled signup through expiring invitations, for both new company "
+#~ "owners and internal team members."
+#~ msgstr ""
+#~ "Cadastro controlado por convites com expiração, tanto para novos donos de "
+#~ "empresa quanto para membros internos da equipe."
+
+#~ msgid "Hardened & i18n-ready"
+#~ msgstr "Seguro e pronto para i18n"
+
+#~ msgid ""
+#~ "Security headers, brute-force protection and full internationalization — "
+#~ "English and Brazilian Portuguese included."
+#~ msgstr ""
+#~ "Cabeçalhos de segurança, proteção contra força bruta e "
+#~ "internacionalização completa — inglês e português do Brasil incluídos."
+
+#~ msgid "Docker-first"
+#~ msgstr "Docker em primeiro lugar"
+
+#~ msgid ""
+#~ "Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, "
+#~ "ready to deploy behind a reverse proxy."
+#~ msgstr ""
+#~ "Já vem com Docker, Gunicorn, WhiteNoise e um endpoint de health check, "
+#~ "pronto para implantar atrás de um proxy reverso."
+
+#~ msgid ""
+#~ "A super admin sends a \"genesis\" invitation to a future workspace owner."
+#~ msgstr ""
+#~ "Um super admin envia um convite \"gênesis\" para um futuro dono de "
+#~ "workspace."
+
+#~ msgid ""
+#~ "The owner invites their team and assigns roles. Members access the "
+#~ "workspace on its own subdomain."
+#~ msgstr ""
+#~ "O dono convida sua equipe e atribui cargos. Os membros acessam o "
+#~ "workspace em seu próprio subdomínio."
+
+#~ msgid "Install & run"
+#~ msgstr "Instalar e rodar"
+
+#~ msgid ""
+#~ "Requires Python 3.12, Docker and Node. The full guide lives in the README."
+#~ msgstr "Requer Python 3.12, Docker e Node. O guia completo está no README."
+
+#~ msgid "Build the CSS (Tailwind)"
+#~ msgstr "Compile o CSS (Tailwind)"
+
+#~ msgid "Run the development server"
+#~ msgstr "Rode o servidor de desenvolvimento"
+
+#~ msgid ""
+#~ "Then open the app, create a super admin and send your first genesis "
+#~ "invitation from the Django admin."
+#~ msgstr ""
+#~ "Depois abra a aplicação, crie um super admin e envie seu primeiro convite "
+#~ "gênesis pelo admin do Django."
 
 #~ msgid "Create a new role"
 #~ msgstr "Criar um novo cargo"
