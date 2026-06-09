@@ -55,9 +55,9 @@
                     </div>
                     <div class="flex items-center gap-3 shrink-0">
                         {% if invite.is_expired %}
-                        <span class="gss-pill-critical">{% trans "Expired" %}</span>
+                        <span class="gss-pill gss-pill-critical">{% trans "Expired" %}</span>
                         {% else %}
-                        <span class="gss-pill-warning">{% trans "Pending" %}</span>
+                        <span class="gss-pill gss-pill-warning">{% trans "Pending" %}</span>
                         {% endif %}
                         <form action="{% url 'invite_resend' invite.id %}" method="post">
                             {% csrf_token %}
