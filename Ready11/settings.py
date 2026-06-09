@@ -77,11 +77,11 @@ SHARED_APPS = (
     'django_tenants',  # tenant routing
     'widget_tweaks',
     'axes',            # brute-force protection (global access-attempt log)
-    'core',            # landing page + healthcheck (public)
-    'notifications',   # in-app notifications (global)
-    'audit',           # workspace audit log
-    'tenants',
-    'users',
+    'apps.core',            # landing page + healthcheck (public)
+    'apps.notifications',   # in-app notifications (global)
+    'apps.audit',           # workspace audit log
+    'apps.tenants',
+    'apps.users',
     'django_otp',                            # TOTP / backup-code models (global — users are global)
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_static',
@@ -142,12 +142,12 @@ MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',  # MUST be first
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'core.middleware.RequestLoggingMiddleware',
-    'core.middleware.PublicOnlyMiddleware',
+    'apps.core.middleware.RequestLoggingMiddleware',
+    'apps.core.middleware.PublicOnlyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',            # i18n: detects language
-    'core.middleware.WorkspaceTimezoneMiddleware',          # activates workspace timezone for tenant requests
-    'core.middleware.UserLanguageMiddleware',               # overrides with user's saved preference
+    'apps.core.middleware.WorkspaceTimezoneMiddleware',          # activates workspace timezone for tenant requests
+    'apps.core.middleware.UserLanguageMiddleware',               # overrides with user's saved preference
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -170,9 +170,9 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.workspaces',
-                'core.context_processors.tenant_permissions',
-                'notifications.context_processors.notifications',
+                'apps.core.context_processors.workspaces',
+                'apps.core.context_processors.tenant_permissions',
+                'apps.notifications.context_processors.notifications',
             ],
         },
     },
@@ -250,7 +250,7 @@ else:
 # ==========================================
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'users.validators.StrictPasswordValidator',
+        'NAME': 'apps.users.validators.StrictPasswordValidator',
     },
 ]
 

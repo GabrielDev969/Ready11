@@ -1,0 +1,14 @@
+[run]
+source = apps
+omit =
+    */migrations/*
+
+[report]
+show_missing = true
+skip_covered = false
+exclude_lines =
+    pragma: no cover
+    if TYPE_CHECKING:
+    raise NotImplementedError
+    def __repr__
+    def __str__

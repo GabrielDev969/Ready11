@@ -361,15 +361,31 @@ For dev-only tools (testing, linting):
 
 ### Created a new app
 
+All apps live inside `apps/`. Create the app there and update its `AppConfig.name`:
+
 ```bash
-python manage.py startapp myapp
+cd apps
+python ../manage.py startapp myapp
 ```
 
-Then:
-1. Add it to `SHARED_APPS` or `TENANT_APPS` in `settings.py`
-2. Create `myapp/migrations/__init__.py` and run `makemigrations myapp`
-3. Add a URL include in `Ready11/urls.py` or the tenant urlconf
-4. Write at least basic tests in `myapp/tests.py`
+Then edit `apps/myapp/apps.py`:
+```python
+class MyappConfig(AppConfig):
+    name = 'apps.myapp'   # ← must include the "apps." prefix
+```
+
+And in `Ready11/settings.py`, add to `SHARED_APPS` (data shared across all tenants) or `TENANT_APPS` (isolated per workspace):
+```python
+SHARED_APPS = (
+    ...
+    'apps.myapp',
+)
+```
+
+Finally:
+1. Run `python manage.py makemigrations myapp` (Django uses the `app_label` — the last part — as the migration target)
+2. Add a URL include in `Ready11/urls.py` or the tenant urlconf
+3. Write tests in `apps/myapp/tests.py`
 
 ### After pulling changes from the team
 
@@ -428,14 +444,13 @@ make css                             # rebuild CSS if templates changed
 ```
 Ready11/
 ├── Ready11/                  # Django config package (settings, urls, asgi)
-├── core/                     # Public landing page, health check, error pages, robots.txt
-│   ├── middleware.py         # RequestLoggingMiddleware (logs every request with method/path/status/ms)
-│   └── management/commands/  # seed
-├── users/                    # Global user model, auth, registration, password reset
-├── tenants/                  # Workspaces, domains, RBAC, memberships, invites
-├── notifications/            # In-app notifications (WebSocket + Redis)
-├── audit/                    # Workspace audit log (shared schema)
-│   └── management/commands/  # cleanup_audit_logs
+├── apps/                     # All Django apps live here
+│   ├── core/                 # Public landing page, health check, error pages, robots.txt
+│   │   └── middleware.py     # RequestLogging, PublicOnly, WorkspaceTZ, UserLanguage
+│   ├── users/                # Global user model, auth, registration, password reset, 2FA
+│   ├── tenants/              # Workspaces, domains, RBAC, memberships, invites
+│   ├── notifications/        # In-app notifications (WebSocket + Redis)
+│   └── audit/                # Workspace audit log (shared schema)
 ├── templates/                # Django templates organized by app
 │   ├── users/                # login, register, password reset, email templates
 │   ├── tenants/              # workspace, team, roles, invite

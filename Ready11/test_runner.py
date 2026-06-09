@@ -20,7 +20,7 @@ class TenantAwareTestRunner(DiscoverRunner):
     def _bootstrap_public_tenant():
         from django.core.management import call_command
 
-        from tenants.models import Domain, Workspace
+        from apps.tenants.models import Domain, Workspace
 
         # Create the public workspace (schema already exists from migrations).
         call_command('setup_public_tenant', verbosity=0)

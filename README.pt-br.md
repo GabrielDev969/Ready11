@@ -361,15 +361,31 @@ Para ferramentas de dev/teste:
 
 ### Criou um novo app Django
 
+Todos os apps ficam dentro de `apps/`. Crie o app lá e atualize o `AppConfig.name`:
+
 ```bash
-python manage.py startapp meuapp
+cd apps
+python ../manage.py startapp meuapp
 ```
 
-Depois:
-1. Adicione em `SHARED_APPS` ou `TENANT_APPS` no `settings.py`
-2. Crie `meuapp/migrations/__init__.py` e rode `makemigrations meuapp`
-3. Adicione um include de URL em `Ready11/urls.py` ou no urlconf de tenant
-4. Escreva pelo menos testes básicos em `meuapp/tests.py`
+Depois edite `apps/meuapp/apps.py`:
+```python
+class MeuappConfig(AppConfig):
+    name = 'apps.meuapp'   # ← obrigatório incluir o prefixo "apps."
+```
+
+E em `Ready11/settings.py`, adicione em `SHARED_APPS` (dados compartilhados entre todos os tenants) ou `TENANT_APPS` (isolado por workspace):
+```python
+SHARED_APPS = (
+    ...
+    'apps.meuapp',
+)
+```
+
+Por fim:
+1. Rode `python manage.py makemigrations meuapp` (o Django usa o `app_label` — a última parte — como alvo da migration)
+2. Adicione um include de URL em `Ready11/urls.py` ou no urlconf de tenant
+3. Escreva testes em `apps/meuapp/tests.py`
 
 ### Após fazer pull das alterações do time
 
@@ -428,14 +444,13 @@ make css                             # reconstrói o CSS se os templates mudaram
 ```
 Ready11/
 ├── Ready11/                  # Pacote de configuração (settings, urls, asgi)
-├── core/                     # Landing pública, health check, páginas de erro, robots.txt
-│   ├── middleware.py         # RequestLoggingMiddleware (loga cada request com método/rota/status/ms)
-│   └── management/commands/  # seed
-├── users/                    # Model de usuário global, auth, cadastro, redefinição de senha
-├── tenants/                  # Workspaces, domínios, RBAC, membros, convites
-├── notifications/            # Notificações in-app (WebSocket + Redis)
-├── audit/                    # Log de auditoria do workspace (schema público)
-│   └── management/commands/  # cleanup_audit_logs
+├── apps/                     # Todos os apps Django ficam aqui
+│   ├── core/                 # Landing pública, health check, páginas de erro, robots.txt
+│   │   └── middleware.py     # RequestLogging, PublicOnly, WorkspaceTZ, UserLanguage
+│   ├── users/                # Model de usuário global, auth, cadastro, redefinição de senha, 2FA
+│   ├── tenants/              # Workspaces, domínios, RBAC, membros, convites
+│   ├── notifications/        # Notificações in-app (WebSocket + Redis)
+│   └── audit/                # Log de auditoria do workspace (schema público)
 ├── templates/                # Templates Django organizados por app
 │   ├── users/                # login, cadastro, redefinição de senha, templates de email
 │   ├── tenants/              # workspace, team, cargos, convite

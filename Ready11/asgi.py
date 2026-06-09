@@ -19,7 +19,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 
-from notifications.routing import websocket_urlpatterns
+from apps.notifications.routing import websocket_urlpatterns
 
 # AllowedHostsOriginValidator rejects WebSocket handshakes whose Origin isn't in
 # ALLOWED_HOSTS — prevents Cross-Site WebSocket Hijacking (a malicious page opening
