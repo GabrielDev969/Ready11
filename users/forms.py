@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 
@@ -52,3 +53,17 @@ class ProfileForm(forms.ModelForm):
             'first_name': _('First name'),
             'last_name': _('Last name'),
         }
+
+
+class LanguageForm(forms.ModelForm):
+    language = forms.ChoiceField(
+        label=_('Language'),
+        choices=[('', _('System default (English)'))] + [
+            (code, name) for code, name in settings.LANGUAGES
+        ],
+        required=False,
+    )
+
+    class Meta:
+        model = CustomUser
+        fields = ['language']

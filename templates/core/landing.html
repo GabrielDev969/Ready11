@@ -2,118 +2,384 @@
 {% load i18n %}
 
 {% block title %}{% trans "Ready11 — B2B SaaS base project" %}{% endblock %}
-
 {% block main_class %}flex-grow{% endblock %}
 
 {% block content %}
-<!-- Hero -->
-<section class="bg-gradient-to-b from-elev to-bg">
-    <div class="mx-auto max-w-5xl px-6 py-20 text-center">
-        <span class="inline-flex items-center rounded-full bg-fg/5 px-3 py-1 text-xs font-medium text-fg2 ring-1 ring-inset ring-line">
-            {% trans "Open base project · Django + PostgreSQL" %}
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="border-b border-line bg-elev">
+    <div class="mx-auto max-w-5xl px-6 py-24 text-center">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-fg/5 px-3 py-1 text-xs font-medium text-fg2 ring-1 ring-inset ring-line">
+            <span class="h-1.5 w-1.5 rounded-full bg-good-fg"></span>
+            {% trans "Open source · Django 6 + PostgreSQL · MIT" %}
         </span>
-        <h1 class="mt-6 text-display font-semibold tracking-tight text-fg">
-            {% trans "A production-ready foundation for multi-tenant B2B SaaS" %}
+        <h1 class="mt-6 text-[42px] font-semibold leading-[1.15] tracking-tight text-fg">
+            {% trans "The production-ready foundation" %}<br>
+            {% trans "for multi-tenant B2B SaaS" %}
         </h1>
-        <p class="mx-auto mt-5 max-w-2xl text-h3 text-fg2">
-            {% blocktrans %}Ready11 is a starter codebase with schema-isolated multi-tenancy, global accounts, role-based access control and an invite-only onboarding flow — so you can start building your product instead of the plumbing.{% endblocktrans %}
+        <p class="mx-auto mt-5 max-w-2xl text-h3 leading-relaxed text-fg2">
+            {% blocktrans %}Ready11 ships everything a real SaaS needs on day one — schema-isolated tenants, global accounts, RBAC, real-time notifications, audit logs and CI/CD — so you build your product, not the plumbing.{% endblocktrans %}
         </p>
-        <div class="mt-8 flex items-center justify-center gap-3">
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
             {% if user.is_authenticated and workspace_url %}
             <a href="{{ workspace_url }}" class="gss-btn gss-btn-primary gss-btn-lg">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
                 {% trans "Go to my workspace" %}
             </a>
             {% else %}
             <a href="#install" class="gss-btn gss-btn-primary gss-btn-lg">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-8m0 0L8 12m4-4l4 4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/></svg>
                 {% trans "Get started" %}
             </a>
+            <a href="{% url 'login' %}" class="gss-btn gss-btn-secondary gss-btn-lg">
+                {% trans "Sign in" %}
+            </a>
             {% endif %}
-            <a href="https://github.com/GabrielDev969/Ready11" class="gss-btn gss-btn-secondary gss-btn-lg">
-                {% trans "View on GitHub" %}
+            <a href="https://github.com/GabrielDev969/Ready11" class="gss-btn gss-btn-ghost gss-btn-lg" target="_blank" rel="noopener">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+            </a>
+        </div>
+
+        <!-- Quick stats -->
+        <div class="mt-14 grid grid-cols-2 gap-px sm:grid-cols-4 rounded-lg overflow-hidden border border-line">
+            <div class="bg-elev px-6 py-5 text-center">
+                <p class="text-[28px] font-semibold text-fg font-mono">15+</p>
+                <p class="mt-1 text-xs text-fg3">{% trans "ready-to-use features" %}</p>
+            </div>
+            <div class="bg-elev px-6 py-5 text-center">
+                <p class="text-[28px] font-semibold text-fg font-mono">0</p>
+                <p class="mt-1 text-xs text-fg3">{% trans "extra services needed" %}</p>
+            </div>
+            <div class="bg-elev px-6 py-5 text-center">
+                <p class="text-[28px] font-semibold text-fg font-mono">5min</p>
+                <p class="mt-1 text-xs text-fg3">{% trans "to first running workspace" %}</p>
+            </div>
+            <div class="bg-elev px-6 py-5 text-center">
+                <p class="text-[28px] font-semibold text-fg font-mono">MIT</p>
+                <p class="mt-1 text-xs text-fg3">{% trans "free to use & modify" %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     FEATURES GRID
+============================================================ -->
+<section class="border-b border-line bg-bg">
+    <div class="mx-auto max-w-6xl px-6 py-20">
+        <div class="text-center mb-12">
+            <p class="gss-eyebrow">{% trans "What's inside" %}</p>
+            <h2 class="mt-2 text-h1 font-semibold text-fg">{% trans "Everything a SaaS needs, already wired up" %}</h2>
+            <p class="mt-3 text-fg2 max-w-xl mx-auto">{% trans "Every feature below is implemented, tested and production-hardened — not a stub or a TODO." %}</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Multi-tenancy -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Schema-isolated multi-tenancy" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Each company gets its own PostgreSQL schema via <strong class="text-fg2">django-tenants</strong>. Complete data isolation — no shared tables, no accidental leaks between clients.{% endblocktrans %}</p>
+                <p class="mt-3 font-mono text-xs text-fg4">acme.yourdomain.com → schema: acme</p>
+            </div>
+
+            <!-- Global accounts -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Global accounts" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}One account, many workspaces. Email verification on signup. Strict password policy. Password reset by email. The same user can own one workspace and be a member of another.{% endblocktrans %}</p>
+            </div>
+
+            <!-- RBAC -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Roles & permissions (RBAC)" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Per-workspace roles with granular permissions (<code class="text-fg2">users.invite</code>, <code class="text-fg2">roles.edit</code>, etc.). The Owner role is locked. All others are fully customisable by the workspace admin.{% endblocktrans %}</p>
+            </div>
+
+            <!-- Invite-only -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Invite-only onboarding" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Controlled access through expiring invite links (24h). Super admins send genesis invites to create new companies. Workspace owners invite their team. In-app notifications for existing users.{% endblocktrans %}</p>
+            </div>
+
+            <!-- Real-time -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Real-time notifications" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}WebSocket push via <strong class="text-fg2">Django Channels + Redis</strong>. Personal, workspace-broadcast and global notifications. Unread badge in the topbar. 30-day retention with automatic cleanup.{% endblocktrans %}</p>
+            </div>
+
+            <!-- Audit log -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Audit log" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Every important action is recorded: member invited/joined/removed, role created/updated/deleted, workspace settings changed. Stored in the public schema with 90-day retention.{% endblocktrans %}</p>
+            </div>
+
+            <!-- Security -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Security hardening" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Brute-force protection (<strong class="text-fg2">django-axes</strong>, 5 attempts → 1h lockout), HSTS, CSRF, secure cookies, content-type protection, clickjacking headers — all active in production by default.{% endblocktrans %}</p>
+            </div>
+
+            <!-- Observability -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "Observability" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}Request logging with method/path/status/duration. Optional <strong class="text-fg2">Sentry</strong> for errors (HTTP + WebSocket). Structured JSON logs for CloudWatch, Grafana Loki or Datadog. Health check at <code class="text-fg2">/healthz/</code>.{% endblocktrans %}</p>
+            </div>
+
+            <!-- i18n + settings -->
+            <div class="gss-card gss-card-pad">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-md bg-sunken">
+                        <svg class="h-5 w-5 text-fg2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 01-3.827-5.802"/></svg>
+                    </span>
+                    <h3 class="text-body font-semibold text-fg">{% trans "i18n + user & workspace settings" %}</h3>
+                </div>
+                <p class="text-body text-fg3">{% blocktrans %}English source strings with Brazilian Portuguese translation. Each user saves their preferred language — applies on every device on login. Each workspace sets its own timezone (default UTC).{% endblocktrans %}</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     HOW IT WORKS
+============================================================ -->
+<section class="border-b border-line bg-elev">
+    <div class="mx-auto max-w-5xl px-6 py-20">
+        <div class="text-center mb-12">
+            <p class="gss-eyebrow">{% trans "Flow" %}</p>
+            <h2 class="mt-2 text-h1 font-semibold text-fg">{% trans "How it works" %}</h2>
+        </div>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div class="relative">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">1</div>
+                <h3 class="mt-4 text-body font-semibold text-fg">{% trans "Genesis invite" %}</h3>
+                <p class="mt-1.5 text-body text-fg3">{% blocktrans %}A super admin creates an invite with no workspace assigned from the Django admin. The token link is printed to the server console.{% endblocktrans %}</p>
+            </div>
+            <div class="relative">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">2</div>
+                <h3 class="mt-4 text-body font-semibold text-fg">{% trans "Workspace created" %}</h3>
+                <p class="mt-1.5 text-body text-fg3">{% blocktrans %}The owner opens the link, fills in name and company. The backend creates a dedicated PostgreSQL schema and subdomain on the fly.{% endblocktrans %}</p>
+            </div>
+            <div class="relative">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">3</div>
+                <h3 class="mt-4 text-body font-semibold text-fg">{% trans "Team invited" %}</h3>
+                <p class="mt-1.5 text-body text-fg3">{% blocktrans %}The owner invites the team from <code class="text-fg2">/team/</code>, assigns roles and configures permissions. Each member gets an email or an in-app notification.{% endblocktrans %}</p>
+            </div>
+            <div class="relative">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">4</div>
+                <h3 class="mt-4 text-body font-semibold text-fg">{% trans "Ship your product" %}</h3>
+                <p class="mt-1.5 text-body text-fg3">{% blocktrans %}Multi-tenancy, auth, RBAC, notifications, audit and CI/CD are done. Add your own models inside the tenant schema and focus on the feature that sets you apart.{% endblocktrans %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     TECH STACK
+============================================================ -->
+<section class="border-b border-line bg-bg">
+    <div class="mx-auto max-w-5xl px-6 py-20">
+        <div class="text-center mb-10">
+            <p class="gss-eyebrow">{% trans "Stack" %}</p>
+            <h2 class="mt-2 text-h1 font-semibold text-fg">{% trans "Built on proven technology" %}</h2>
+        </div>
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {% for item in ""|ljust:"12"|make_list %}{% endfor %}
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Python 3.12</span>
+                <span class="text-xs text-fg4">{% trans "language" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Django 6.0</span>
+                <span class="text-xs text-fg4">{% trans "framework" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">PostgreSQL 17</span>
+                <span class="text-xs text-fg4">{% trans "database" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">django-tenants</span>
+                <span class="text-xs text-fg4">{% trans "multi-tenancy" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Channels + Redis</span>
+                <span class="text-xs text-fg4">{% trans "real-time" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Daphne (ASGI)</span>
+                <span class="text-xs text-fg4">{% trans "server" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">WhiteNoise</span>
+                <span class="text-xs text-fg4">{% trans "static files" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Tailwind CSS v3</span>
+                <span class="text-xs text-fg4">{% trans "design system" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">django-axes</span>
+                <span class="text-xs text-fg4">{% trans "brute-force" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Sentry SDK</span>
+                <span class="text-xs text-fg4">{% trans "error tracking" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">Ruff + Bandit</span>
+                <span class="text-xs text-fg4">{% trans "lint + SAST" %}</span>
+            </div>
+            <div class="gss-card px-4 py-3 flex items-center gap-3">
+                <span class="font-mono text-xs font-medium text-fg2 w-28 shrink-0">GitHub Actions</span>
+                <span class="text-xs text-fg4">{% trans "CI/CD" %}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     INSTALL
+============================================================ -->
+<section id="install" class="border-b border-line bg-elev">
+    <div class="mx-auto max-w-3xl px-6 py-20">
+        <div class="mb-10">
+            <p class="gss-eyebrow">{% trans "Local setup" %}</p>
+            <h2 class="mt-2 text-h1 font-semibold text-fg">{% trans "Running on your machine" %}</h2>
+            <p class="mt-3 text-fg2">{% blocktrans %}You need <strong>Python 3.12</strong>, <strong>Docker Desktop</strong> and <strong>Node.js 18+</strong>. Everything else is installed by the commands below.{% endblocktrans %}</p>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="space-y-6">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-xs font-semibold text-on-dark">1</span>
+                    <p class="text-body font-medium text-fg">{% trans "Start the database and Redis" %}</p>
+                </div>
+                <pre class="overflow-x-auto rounded-md bg-fg px-5 py-4 text-sm text-on-dark font-mono leading-relaxed"><code>docker compose up -d</code></pre>
+                <p class="mt-1.5 text-xs text-fg4">{% trans "Starts PostgreSQL 17, Redis and Mailpit (email preview). Runs in background." %}</p>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-xs font-semibold text-on-dark">2</span>
+                    <p class="text-body font-medium text-fg">{% trans "Create the virtual environment and install dependencies" %}</p>
+                </div>
+                <pre class="overflow-x-auto rounded-md bg-fg px-5 py-4 text-sm text-on-dark font-mono leading-relaxed"><code>python3 -m venv venv
+source venv/bin/activate   <span class="opacity-50"># Windows: .\venv\Scripts\Activate.ps1</span>
+make setup                 <span class="opacity-50"># pip install + npm install + build CSS</span></code></pre>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-xs font-semibold text-on-dark">3</span>
+                    <p class="text-body font-medium text-fg">{% trans "Configure environment variables" %}</p>
+                </div>
+                <pre class="overflow-x-auto rounded-md bg-fg px-5 py-4 text-sm text-on-dark font-mono leading-relaxed"><code>cp .env.example .env
+<span class="opacity-50"># Open .env — the defaults already work for local dev (DEBUG=True)</span></code></pre>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-xs font-semibold text-on-dark">4</span>
+                    <p class="text-body font-medium text-fg">{% trans "Run migrations and create the public tenant" %}</p>
+                </div>
+                <pre class="overflow-x-auto rounded-md bg-fg px-5 py-4 text-sm text-on-dark font-mono leading-relaxed"><code>make migrate    <span class="opacity-50"># migrate_schemas --shared + --tenant</span>
+make seed       <span class="opacity-50"># creates admin@example.com / Admin1234!</span></code></pre>
+            </div>
+
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-xs font-semibold text-on-dark">5</span>
+                    <p class="text-body font-medium text-fg">{% trans "Start the server" %}</p>
+                </div>
+                <pre class="overflow-x-auto rounded-md bg-fg px-5 py-4 text-sm text-on-dark font-mono leading-relaxed"><code>make run    <span class="opacity-50"># http://127.0.0.1:8000</span></code></pre>
+            </div>
+        </div>
+
+        <!-- First workspace callout -->
+        <div class="mt-10 rounded-md border border-line bg-sunken px-5 py-4 space-y-2">
+            <p class="text-body font-semibold text-fg">{% trans "Creating your first workspace" %}</p>
+            <ol class="list-decimal list-inside space-y-1.5 text-body text-fg2">
+                <li>{% blocktrans %}Log in to <code class="text-fg font-mono">/admin</code> with <code class="text-fg font-mono">admin@example.com</code>{% endblocktrans %}</li>
+                <li>{% blocktrans %}Under <strong>Workspace invites</strong>, create an invite with no workspace selected (genesis invite). The link appears in the server console.{% endblocktrans %}</li>
+                <li>{% blocktrans %}Open the link, fill in your name and company — the backend creates an isolated PostgreSQL schema and a subdomain (<code class="text-fg font-mono">company.localhost:8000</code>) automatically.{% endblocktrans %}</li>
+                <li>{% blocktrans %}Go to <code class="text-fg font-mono">/team/</code> inside your workspace to invite the rest of the team.{% endblocktrans %}</li>
+            </ol>
+            <p class="text-xs text-fg4 pt-1">{% trans "Browsers resolve *.localhost to 127.0.0.1 natively — no /etc/hosts editing needed." %}</p>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+            <a href="https://github.com/GabrielDev969/Ready11" class="gss-btn gss-btn-secondary" target="_blank" rel="noopener">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                {% trans "Full README on GitHub" %}
             </a>
         </div>
     </div>
 </section>
 
-<!-- Features -->
-<section class="border-t border-line bg-elev">
-    <div class="mx-auto max-w-6xl px-6 py-16">
-        <h2 class="text-center text-h1 font-semibold text-fg">{% trans "What's included" %}</h2>
-        <div class="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Schema isolation" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}Each customer (Workspace) lives in its own PostgreSQL schema via django-tenants. No data leaks between clients.{% endblocktrans %}</p>
-            </div>
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Global identity" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}A single account works across workspaces, with email verification and a strict password policy out of the box.{% endblocktrans %}</p>
-            </div>
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Role-based access" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}Per-workspace roles and permissions. The same person can be Owner in one workspace and Viewer in another.{% endblocktrans %}</p>
-            </div>
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Invite-only onboarding" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}Controlled signup through expiring invitations, for both new company owners and internal team members.{% endblocktrans %}</p>
-            </div>
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Hardened & i18n-ready" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}Security headers, brute-force protection and full internationalization — English and Brazilian Portuguese included.{% endblocktrans %}</p>
-            </div>
-            <div class="gss-card gss-card-pad">
-                <h3 class="text-h3 font-semibold text-fg">{% trans "Docker-first" %}</h3>
-                <p class="mt-2 text-body text-fg2">{% blocktrans %}Ships with Docker, Gunicorn, WhiteNoise and a health check endpoint, ready to deploy behind a reverse proxy.{% endblocktrans %}</p>
-            </div>
+<!-- ============================================================
+     FOOTER CTA
+============================================================ -->
+<section class="bg-fg">
+    <div class="mx-auto max-w-3xl px-6 py-16 text-center">
+        <h2 class="text-h1 font-semibold text-on-dark">{% trans "Skip the boilerplate. Ship your product." %}</h2>
+        <p class="mt-4 text-fg3">{% blocktrans %}Multi-tenancy, auth, RBAC and real-time are solved. Fork Ready11 and start on the feature that actually matters.{% endblocktrans %}</p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            {% if user.is_authenticated and workspace_url %}
+            <a href="{{ workspace_url }}" class="gss-btn gss-btn-primary gss-btn-lg">{% trans "Go to my workspace" %}</a>
+            {% else %}
+            <a href="#install" class="inline-flex items-center gap-2 rounded-md bg-elev px-5 py-2.5 text-body font-medium text-fg shadow-card hover:bg-bg transition-colors">
+                {% trans "Get started free" %}
+            </a>
+            {% endif %}
+            <a href="https://github.com/GabrielDev969/Ready11" class="inline-flex items-center gap-2 rounded-md border border-white/20 px-5 py-2.5 text-body font-medium text-on-dark hover:bg-white/10 transition-colors" target="_blank" rel="noopener">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                GitHub
+            </a>
         </div>
     </div>
 </section>
 
-<!-- How it works -->
-<section class="border-t border-line bg-bg">
-    <div class="mx-auto max-w-5xl px-6 py-16">
-        <h2 class="text-center text-h1 font-semibold text-fg">{% trans "How it works" %}</h2>
-        <ol class="mt-10 space-y-6">
-            <li class="flex gap-4">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">1</span>
-                <p class="text-fg2">{% blocktrans %}A super admin sends a "genesis" invitation to a future workspace owner.{% endblocktrans %}</p>
-            </li>
-            <li class="flex gap-4">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">2</span>
-                <p class="text-fg2">{% blocktrans %}The owner sets their name and company. The backend creates an isolated database schema on demand.{% endblocktrans %}</p>
-            </li>
-            <li class="flex gap-4">
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fg text-sm font-semibold text-on-dark">3</span>
-                <p class="text-fg2">{% blocktrans %}The owner invites their team and assigns roles. Members access the workspace on its own subdomain.{% endblocktrans %}</p>
-            </li>
-        </ol>
-    </div>
-</section>
-
-<!-- Install -->
-<section id="install" class="border-t border-line bg-elev">
-    <div class="mx-auto max-w-3xl px-6 py-16">
-        <h2 class="text-h1 font-semibold text-fg">{% trans "Install & run" %}</h2>
-        <p class="mt-3 text-fg2">{% blocktrans %}Requires Python 3.12, Docker and Node. The full guide lives in the README.{% endblocktrans %}</p>
-        <pre class="mt-6 overflow-x-auto rounded-md bg-inverse p-5 text-body leading-relaxed text-on-dark-2"><code># 1. {% trans "Start the PostgreSQL database" %}
-docker compose up -d
-
-# 2. {% trans "Create the virtualenv and install dependencies" %}
-python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-
-# 3. {% trans "Build the CSS (Tailwind)" %}
-npm install
-npx tailwindcss -i input.css -o static/css/output.css
-
-# 4. {% trans "Apply migrations and create the public tenant" %}
-python manage.py migrate_schemas --shared
-python manage.py setup_public_tenant
-
-# 5. {% trans "Run the development server" %}
-python manage.py runserver</code></pre>
-        <p class="mt-6 text-body text-fg3">
-            {% blocktrans %}Then open the app, create a super admin and send your first genesis invitation from the Django admin.{% endblocktrans %}
-        </p>
-    </div>
-</section>
 {% endblock %}

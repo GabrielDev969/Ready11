@@ -1,8 +1,19 @@
+import zoneinfo
+
 from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 
-from .models import AVAILABLE_PERMISSIONS, Role, WorkspaceInvite
+from .models import AVAILABLE_PERMISSIONS, Role, Workspace, WorkspaceInvite
+
+
+# Build timezone choices grouped by region for better UX.
+def _timezone_choices():
+    zones = sorted(zoneinfo.available_timezones())
+    # Put UTC at the top, then the rest sorted.
+    result = [('UTC', 'UTC')]
+    result += [(z, z.replace('_', ' ')) for z in zones if z != 'UTC']
+    return result
 
 
 class GenesisSetupForm(forms.Form):
@@ -76,6 +87,21 @@ class EmployeeSetupForm(forms.Form):
         if password and confirm_password and password != confirm_password:
             self.add_error('confirm_password', _("The passwords don't match."))
         return cleaned_data
+
+
+class WorkspaceSettingsForm(forms.ModelForm):
+    timezone = forms.ChoiceField(
+        label=_('Timezone'),
+        choices=_timezone_choices,
+        help_text=_('All dates and times across the workspace will use this timezone.'),
+    )
+
+    class Meta:
+        model = Workspace
+        fields = ['name', 'timezone']
+        labels = {
+            'name': _('Workspace name'),
+        }
 
 
 class RoleForm(forms.ModelForm):

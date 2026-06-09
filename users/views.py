@@ -15,7 +15,7 @@ from django.utils.translation import gettext as _
 from tenants.models import WorkspaceMembership
 from tenants.utils import effective_workspace, workspace_home_url
 
-from .forms import LoginForm, ProfileForm, RegisterForm
+from .forms import LanguageForm, LoginForm, ProfileForm, RegisterForm
 
 User = get_user_model()
 
@@ -162,6 +162,7 @@ def profile_view(request):
 
     profile_form = ProfileForm(instance=request.user)
     password_form = PasswordChangeForm(request.user)
+    language_form = LanguageForm(instance=request.user)
 
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -182,9 +183,17 @@ def profile_view(request):
                 messages.success(request, _("Password changed."))
                 return redirect('profile')
 
+        elif action == 'language':
+            language_form = LanguageForm(request.POST, instance=request.user)
+            if language_form.is_valid():
+                language_form.save()
+                messages.success(request, _("Language preference saved."))
+                return redirect('profile')
+
     return render(request, 'users/profile.html', {
         'profile_form': profile_form,
         'password_form': password_form,
+        'language_form': language_form,
     })
 
 

@@ -76,6 +76,7 @@ def expand_permissions(permissions):
 
 class Workspace(TenantMixin):
     name = models.CharField(max_length=100)
+    timezone = models.CharField(max_length=50, default='UTC', verbose_name=_('Timezone'))
     created_at = models.DateTimeField(auto_now_add=True)
 
     # The single absolute owner of the workspace; the only one that can't be removed.

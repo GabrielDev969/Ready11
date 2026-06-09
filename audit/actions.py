@@ -1,4 +1,5 @@
 WORKSPACE_CREATED = 'workspace.created'
+WORKSPACE_UPDATED = 'workspace.updated'
 
 MEMBER_INVITED = 'member.invited'
 MEMBER_JOINED = 'member.joined'

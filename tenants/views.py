@@ -17,7 +17,7 @@ from audit.services import log_action
 from notifications.services import create_invite_notification, delete_invite_notifications
 
 from .decorators import tenant_permission_required
-from .forms import EmployeeSetupForm, GenesisSetupForm, RoleForm, TeamInviteForm
+from .forms import EmployeeSetupForm, GenesisSetupForm, RoleForm, TeamInviteForm, WorkspaceSettingsForm
 from .models import (
     PERMISSION_GROUPS,
     Domain,
@@ -545,3 +545,25 @@ def role_delete_view(request, role_id):
                detail={'name': name}, request=request)
     messages.success(request, _("Role '%(name)s' deleted.") % {'name': name})
     return redirect('role_list')
+
+
+@tenant_permission_required('tenant.update')
+def workspace_settings_view(request):
+    workspace = request.tenant
+    form = WorkspaceSettingsForm(instance=workspace)
+
+    if request.method == 'POST':
+        form = WorkspaceSettingsForm(request.POST, instance=workspace)
+        if form.is_valid():
+            form.save()
+            log_action(request.user, audit_actions.WORKSPACE_UPDATED,
+                       resource=workspace,
+                       detail={'name': workspace.name, 'timezone': workspace.timezone},
+                       request=request)
+            messages.success(request, _("Workspace settings saved."))
+            return redirect('workspace_settings')
+
+    return render(request, 'tenants/workspace_settings.html', {
+        'workspace': workspace,
+        'form': form,
+    })

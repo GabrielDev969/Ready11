@@ -12,6 +12,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50, verbose_name=_("First name"))
     last_name = models.CharField(max_length=50, verbose_name=_("Last name"))
 
+    language = models.CharField(
+        max_length=10,
+        blank=True,
+        verbose_name=_("Preferred language"),
+    )
+
     created_at = models.DateTimeField(default=timezone.now)
 
     # Access control and status

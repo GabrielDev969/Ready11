@@ -19,4 +19,6 @@ urlpatterns = [
     path('roles/new/', views.role_create_view, name='role_create'),
     path('roles/<int:role_id>/edit/', views.role_update_view, name='role_update'),
     path('roles/<int:role_id>/delete/', views.role_delete_view, name='role_delete'),
+
+    path('workspace/settings/', views.workspace_settings_view, name='workspace_settings'),
 ]

@@ -143,6 +143,8 @@ MIDDLEWARE = [
     'core.middleware.PublicOnlyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',            # i18n: detects language
+    'core.middleware.WorkspaceTimezoneMiddleware',          # activates workspace timezone for tenant requests
+    'core.middleware.UserLanguageMiddleware',               # overrides with user's saved preference
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-09 08:58-0300\n"
+"POT-Creation-Date: 2026-06-09 12:45-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:264
+#: Ready11/settings.py:272
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:265
+#: Ready11/settings.py:273
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
@@ -32,7 +32,7 @@ msgstr "Usuário"
 msgid "Workspace schema"
 msgstr "Schema do workspace"
 
-#: audit/models.py:17
+#: audit/models.py:17 tenants/forms.py:102
 msgid "Workspace name"
 msgstr "Nome do workspace"
 
@@ -53,6 +53,7 @@ msgid "Detail"
 msgstr "Detalhe"
 
 #: audit/models.py:24
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2219
 msgid "IP address"
 msgstr "Endereço IP"
 
@@ -76,7 +77,7 @@ msgstr "Convite"
 msgid "Global"
 msgstr "Global"
 
-#: notifications/models.py:18 tenants/models.py:37
+#: notifications/models.py:18 tenants/models.py:38
 msgid "Workspace"
 msgstr "Workspace"
 
@@ -88,7 +89,7 @@ msgstr "Pessoal"
 msgid "This invitation is no longer available."
 msgstr "Este convite não está mais disponível."
 
-#: notifications/views.py:116 tenants/views.py:387
+#: notifications/views.py:116 tenants/views.py:397
 #, python-format
 msgid "You have joined %(workspace)s."
 msgstr "Você entrou em %(workspace)s."
@@ -126,13 +127,14 @@ msgid "Go back"
 msgstr "Voltar"
 
 #: templates/audit/log_list.html:4 templates/audit/log_list.html:9
-#: templates/partials/sidebar.html:31 templates/partials/sidebar.html:34
+#: templates/partials/sidebar.html:40 templates/partials/sidebar.html:43
 msgid "Audit Log"
 msgstr "Log de Auditoria"
 
 #: templates/audit/log_list.html:10
 msgid "A record of all significant actions taken in this workspace."
-msgstr "Um registro de todas as ações significativas realizadas neste workspace."
+msgstr ""
+"Um registro de todas as ações significativas realizadas neste workspace."
 
 #: templates/audit/log_list.html:18
 msgid "Date"
@@ -165,11 +167,11 @@ msgstr "Próxima"
 msgid "No audit log entries yet."
 msgstr "Nenhum registro de auditoria ainda."
 
-#: templates/base.html:33
+#: templates/base.html:36
 msgid "Ready11 — base project for B2B SaaS systems."
 msgstr "Ready11 — projeto base para sistemas SaaS B2B."
 
-#: templates/base_app.html:34
+#: templates/base_app.html:37
 msgid "Toggle sidebar"
 msgstr "Abrir/fechar menu lateral"
 
@@ -388,11 +390,11 @@ msgid "You were invited to <strong>%(workspace)s</strong> as %(role)s."
 msgstr ""
 "Você foi convidado(a) para <strong>%(workspace)s</strong> como %(role)s."
 
-#: templates/partials/notification_item.html:13
+#: templates/partials/notification_item.html:15
 msgid "Accept"
 msgstr "Aceitar"
 
-#: templates/partials/notification_item.html:17
+#: templates/partials/notification_item.html:22
 msgid "Decline"
 msgstr "Recusar"
 
@@ -400,7 +402,8 @@ msgstr "Recusar"
 msgid "Profile"
 msgstr "Perfil"
 
-#: templates/partials/profile_menu.html:23 templates/users/settings.html:4
+#: templates/partials/profile_menu.html:23 templates/partials/sidebar.html:32
+#: templates/partials/sidebar.html:35 templates/users/settings.html:4
 #: templates/users/settings.html:10
 msgid "Settings"
 msgstr "Configurações"
@@ -429,19 +432,19 @@ msgstr "Painel"
 
 #: templates/partials/sidebar.html:16 templates/partials/sidebar.html:19
 #: templates/tenants/home.html:31 templates/tenants/team_list.html:4
-#: tenants/models.py:18
+#: tenants/models.py:19
 msgid "Team"
 msgstr "Equipe"
 
 #: templates/partials/sidebar.html:24 templates/partials/sidebar.html:27
-#: templates/tenants/home.html:36 tenants/models.py:27
+#: templates/tenants/home.html:36 tenants/models.py:28
 msgid "Roles"
 msgstr "Cargos"
 
 #: templates/partials/topbar_nav.html:8 templates/users/login.html:4
-#: templates/users/login.html:39
+#: templates/users/login.html:40
 #: templates/users/password_reset_complete.html:16
-#: templates/users/register.html:58
+#: templates/users/register.html:59
 msgid "Sign in"
 msgstr "Entrar"
 
@@ -457,7 +460,7 @@ msgstr "Seus workspaces"
 msgid "current"
 msgstr "atual"
 
-#: templates/partials/workspace_switcher.html:27 users/models.py:28
+#: templates/partials/workspace_switcher.html:27 users/models.py:39
 msgid "Default workspace"
 msgstr "Workspace padrão"
 
@@ -623,103 +626,110 @@ msgstr ""
 msgid "Back to home"
 msgstr "Voltar ao início"
 
-#: templates/tenants/role_form.html:4 templates/tenants/role_form.html:9
+#: templates/tenants/role_form.html:4
 msgid "Edit role"
 msgstr "Editar cargo"
 
-#: templates/tenants/role_form.html:4 templates/tenants/role_list.html:12
+#: templates/tenants/role_form.html:4 templates/tenants/role_form.html:13
+#: templates/tenants/role_list.html:13
 msgid "New role"
 msgstr "Novo cargo"
 
-#: templates/tenants/role_form.html:9
-msgid "Create a new role"
-msgstr "Criar um novo cargo"
+#: templates/tenants/role_form.html:13
+#, fuzzy
+#| msgid "Edit role"
+msgid "Editing role"
+msgstr "Editar cargo"
 
-#: templates/tenants/role_form.html:10
-msgid "Define the name and what members with this role can do."
-msgstr "Defina o nome e o que os membros com este cargo podem fazer."
+#: templates/tenants/role_form.html:14 templates/tenants/role_form.html:83
+msgid "Untitled"
+msgstr ""
 
-#: templates/tenants/role_form.html:28 templates/tenants/role_list.html:29
-#: tenants/models.py:112
-msgid "Permissions"
-msgstr "Permissões"
-
-#: templates/tenants/role_form.html:29
-msgid "Pick exactly what this role can do, by area."
-msgstr "Escolha exatamente o que este cargo pode fazer, por área."
-
-#: templates/tenants/role_form.html:38
-msgid "Select all"
-msgstr "Selecionar tudo"
-
-#: templates/tenants/role_form.html:60 templates/tenants/team_list.html:64
+#: templates/tenants/role_form.html:19
+#: templates/tenants/workspace_settings.html:19
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: templates/tenants/role_form.html:62
+#: templates/tenants/role_form.html:23
 msgid "Save role"
 msgstr "Salvar cargo"
+
+#: templates/tenants/role_form.html:43 templates/tenants/role_list.html:30
+#: tenants/models.py:114
+msgid "Permissions"
+msgstr "Permissões"
+
+#: templates/tenants/role_form.html:44
+msgid "Pick exactly what this role can do, by area."
+msgstr "Escolha exatamente o que este cargo pode fazer, por área."
+
+#: templates/tenants/role_form.html:53
+msgid "Select all"
+msgstr "Selecionar tudo"
 
 #: templates/tenants/role_list.html:4 templates/tenants/role_list.html:9
 msgid "Roles & permissions"
 msgstr "Cargos e permissões"
 
-#: templates/tenants/role_list.html:27 tenants/forms.py:37
+#: templates/tenants/role_list.html:28 tenants/forms.py:48
 msgid "Role"
 msgstr "Cargo"
 
-#: templates/tenants/role_list.html:28
+#: templates/tenants/role_list.html:29
 msgid "Status"
 msgstr "Status"
 
-#: templates/tenants/role_list.html:30
+#: templates/tenants/role_list.html:31
 msgid "Members"
 msgstr "Membros"
 
-#: templates/tenants/role_list.html:31
+#: templates/tenants/role_list.html:32
 msgid "Actions"
 msgstr "Ações"
 
-#: templates/tenants/role_list.html:42
-msgid "System role"
+#: templates/tenants/role_list.html:43
+#, fuzzy
+#| msgid "System role"
+msgid "System"
 msgstr "Cargo do sistema"
 
-#: templates/tenants/role_list.html:44
+#: templates/tenants/role_list.html:45
 msgid "Custom"
 msgstr "Customizado"
 
-#: templates/tenants/role_list.html:46
+#: templates/tenants/role_list.html:47
 msgid "Assigned to new invites by default"
 msgstr "Atribuído a novos convites por padrão"
 
-#: templates/tenants/role_list.html:46
+#: templates/tenants/role_list.html:48
 msgid "Default"
 msgstr "Padrão"
 
-#: templates/tenants/role_list.html:52
+#: templates/tenants/role_list.html:55
 msgid "All permissions granted"
 msgstr "Todas as permissões liberadas"
 
-#: templates/tenants/role_list.html:54
+#: templates/tenants/role_list.html:57
 #, python-format
 msgid "%(counter)s permission"
 msgid_plural "%(counter)s permissions"
 msgstr[0] "%(counter)s permissão"
 msgstr[1] "%(counter)s permissões"
 
-#: templates/tenants/role_list.html:65
+#: templates/tenants/role_list.html:68
 msgid "Edit"
 msgstr "Editar"
 
-#: templates/tenants/role_list.html:69
+#: templates/tenants/role_list.html:74
 msgid "Delete this role?"
 msgstr "Excluir este cargo?"
 
-#: templates/tenants/role_list.html:71 templates/tenants/role_list.html:74
+#: templates/tenants/role_list.html:76
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:499
 msgid "Delete"
 msgstr "Excluir"
 
-#: templates/tenants/role_list.html:74
+#: templates/tenants/role_list.html:81
 msgid "In use by members"
 msgstr "Em uso por membros"
 
@@ -727,49 +737,59 @@ msgstr "Em uso por membros"
 msgid "Active members"
 msgstr "Membros ativos"
 
-#: templates/tenants/team_list.html:26
+#: templates/tenants/team_list.html:28
 msgid "Remove this member from the workspace?"
 msgstr "Remover este membro do workspace?"
 
-#: templates/tenants/team_list.html:28
-msgid "Remove"
-msgstr "Remover"
+#: templates/tenants/team_list.html:30
+#, fuzzy
+#| msgid "Remove members"
+msgid "Remove member"
+msgstr "Remover membros"
 
-#: templates/tenants/team_list.html:40
+#: templates/tenants/team_list.html:44
 msgid "Pending invites"
 msgstr "Convites pendentes"
 
-#: templates/tenants/team_list.html:49 templates/tenants/team_list.html:54
-#: tenants/models.py:144
+#: templates/tenants/team_list.html:53 templates/tenants/team_list.html:58
+#: tenants/models.py:146
 msgid "Expired"
 msgstr "Expirado"
 
-#: templates/tenants/team_list.html:49
+#: templates/tenants/team_list.html:53
 #, python-format
 msgid "Expires on %(date)s"
 msgstr "Expira em %(date)s"
 
-#: templates/tenants/team_list.html:56 tenants/models.py:142
+#: templates/tenants/team_list.html:60 tenants/models.py:144
 msgid "Pending"
 msgstr "Pendente"
 
-#: templates/tenants/team_list.html:60
-msgid "Resend"
-msgstr "Reenviar"
+#: templates/tenants/team_list.html:64
+#, fuzzy
+#| msgid "Pending invites"
+msgid "Resend invite"
+msgstr "Convites pendentes"
 
-#: templates/tenants/team_list.html:62
+#: templates/tenants/team_list.html:68
 msgid "Cancel this invitation?"
 msgstr "Cancelar este convite?"
 
-#: templates/tenants/team_list.html:77
+#: templates/tenants/team_list.html:70
+#, fuzzy
+#| msgid "Cancel this invitation?"
+msgid "Cancel invite"
+msgstr "Cancelar este convite?"
+
+#: templates/tenants/team_list.html:85
 msgid "Invite people"
 msgstr "Convidar pessoas"
 
-#: templates/tenants/team_list.html:89
+#: templates/tenants/team_list.html:97
 msgid "You can't assign a role yet."
 msgstr "Você ainda não pode atribuir um cargo."
 
-#: templates/tenants/team_list.html:90
+#: templates/tenants/team_list.html:98
 msgid ""
 "Inviting requires choosing a role, but you don't have permission to view "
 "roles. Ask an administrator to grant it (or to send the invite)."
@@ -778,26 +798,60 @@ msgstr ""
 "cargos. Peça a um administrador para conceder essa permissão (ou para enviar "
 "o convite)."
 
-#: templates/tenants/team_list.html:106
+#: templates/tenants/team_list.html:115
 msgid "Send invitation"
 msgstr "Enviar convite"
 
-#: templates/tenants/team_list.html:111
+#: templates/tenants/team_list.html:120
 msgid "A role is required to invite people."
 msgstr "É necessário um cargo para convidar pessoas."
 
-#: templates/tenants/team_list.html:113
+#: templates/tenants/team_list.html:122
 msgid "Create a role first, then you can assign it to new members."
 msgstr "Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
 
-#: templates/tenants/team_list.html:114
+#: templates/tenants/team_list.html:123
 msgid "Create a role"
 msgstr "Criar um cargo"
 
-#: templates/tenants/team_list.html:116
+#: templates/tenants/team_list.html:125
 msgid "Ask someone with permission to create roles to add one first."
 msgstr ""
 "Peça a alguém com permissão para criar cargos que adicione um primeiro."
+
+#: templates/tenants/workspace_settings.html:4
+#: templates/tenants/workspace_settings.html:13
+msgid "Workspace settings"
+msgstr "Configurações do workspace"
+
+#: templates/tenants/workspace_settings.html:23 templates/users/profile.html:34
+#: templates/users/profile.html:75
+msgid "Save"
+msgstr "Salvar"
+
+#: templates/tenants/workspace_settings.html:41
+msgid "General"
+msgstr "Geral"
+
+#: templates/tenants/workspace_settings.html:50
+msgid "Date & time"
+msgstr "Data e hora"
+
+#: templates/tenants/workspace_settings.html:57
+msgid ""
+"Default is UTC — how the database stores all timestamps. Change this and "
+"every date shown in the workspace will follow the selected timezone."
+msgstr ""
+"O padrão é UTC — como o banco de dados armazena todos os horários. Altere "
+"para que todas as datas exibidas no workspace sigam o fuso horário escolhido."
+
+#: templates/tenants/workspace_settings.html:63
+msgid ""
+"Changing the timezone does not alter stored data — only how it is displayed. "
+"UTC is the recommended default for teams spread across multiple time zones."
+msgstr ""
+"Alterar o fuso horário não modifica os dados armazenados — apenas a forma "
+"como são exibidos. UTC é o padrão recomendado para equipes em múltiplos fusos."
 
 #: templates/users/login.html:9
 msgid "Sign in to your account"
@@ -808,7 +862,7 @@ msgid "Welcome back to your workspace."
 msgstr "Bem-vindo(a) de volta ao seu workspace."
 
 #: templates/users/login.html:32 templates/users/register.html:36
-#: users/forms.py:9 users/forms.py:38
+#: users/forms.py:11 users/forms.py:40
 msgid "Password"
 msgstr "Senha"
 
@@ -816,11 +870,11 @@ msgstr "Senha"
 msgid "Forgot password?"
 msgstr "Esqueceu a senha?"
 
-#: templates/users/login.html:44
+#: templates/users/login.html:45
 msgid "Don't have an account yet?"
 msgstr "Ainda não tem uma conta?"
 
-#: templates/users/login.html:45
+#: templates/users/login.html:46
 msgid "Sign up"
 msgstr "Cadastre-se"
 
@@ -887,7 +941,7 @@ msgstr ""
 "senha. Verifique sua caixa de entrada (e a pasta de spam)."
 
 #: templates/users/password_reset_done.html:18
-#: templates/users/password_reset_request.html:26
+#: templates/users/password_reset_request.html:27
 msgid "Back to sign in"
 msgstr "Voltar para o login"
 
@@ -903,7 +957,7 @@ msgstr "Esqueceu sua senha?"
 msgid "Enter your email and we'll send you a reset link."
 msgstr "Informe seu e-mail e enviaremos um link de redefinição."
 
-#: templates/users/password_reset_request.html:21
+#: templates/users/password_reset_request.html:22
 msgid "Send reset link"
 msgstr "Enviar link de redefinição"
 
@@ -911,33 +965,46 @@ msgstr "Enviar link de redefinição"
 msgid "Your profile"
 msgstr "Seu perfil"
 
-#: templates/users/profile.html:22
+#: templates/users/profile.html:29
 msgid "Personal information"
 msgstr "Informações pessoais"
 
-#: templates/users/profile.html:23
+#: templates/users/profile.html:30
 msgid "Update your name."
 msgstr "Atualize seu nome."
 
-#: templates/users/profile.html:43 users/forms.py:34 users/models.py:8
+#: templates/users/profile.html:53 users/forms.py:36 users/models.py:11
 msgid "Email"
 msgstr "E-mail"
 
-#: templates/users/profile.html:45
+#: templates/users/profile.html:55
 msgid "Email can't be changed here."
 msgstr "O e-mail não pode ser alterado aqui."
 
-#: templates/users/profile.html:49
-msgid "Save changes"
-msgstr "Salvar alterações"
+#: templates/users/profile.html:70 templates/users/settings.html:13
+#: users/forms.py:60
+msgid "Language"
+msgstr "Idioma"
 
-#: templates/users/profile.html:56 templates/users/profile.html:80
+#: templates/users/profile.html:71
+msgid "Your preferred language across all devices."
+msgstr "Seu idioma preferido em todos os dispositivos."
+
+#: templates/users/profile.html:82
+msgid "Saved here, applied on every device you log in from."
+msgstr "Salvo aqui, aplicado em todos os dispositivos em que você fizer login."
+
+#: templates/users/profile.html:96
 msgid "Change password"
 msgstr "Alterar senha"
 
-#: templates/users/profile.html:57
+#: templates/users/profile.html:97
 msgid "Use a strong password you don't use elsewhere."
 msgstr "Use uma senha forte que você não usa em outros lugares."
+
+#: templates/users/profile.html:101
+msgid "Update"
+msgstr ""
 
 #: templates/users/register.html:4
 msgid "Create account"
@@ -951,13 +1018,13 @@ msgstr "Comece seu workspace"
 msgid "Create your account to set up your environment."
 msgstr "Crie sua conta para configurar seu ambiente."
 
-#: templates/users/register.html:18 tenants/forms.py:8 tenants/forms.py:59
-#: users/forms.py:51 users/models.py:9
+#: templates/users/register.html:18 tenants/forms.py:19 tenants/forms.py:70
+#: users/forms.py:53 users/models.py:12
 msgid "First name"
 msgstr "Nome"
 
-#: templates/users/register.html:23 tenants/forms.py:9 tenants/forms.py:60
-#: users/forms.py:52 users/models.py:10
+#: templates/users/register.html:23 tenants/forms.py:20 tenants/forms.py:71
+#: users/forms.py:54 users/models.py:13
 msgid "Last name"
 msgstr "Sobrenome"
 
@@ -965,16 +1032,16 @@ msgstr "Sobrenome"
 msgid "At least 8 characters, with uppercase, number and symbol."
 msgstr "Mín. 8 caracteres, com maiúscula, número e símbolo."
 
-#: templates/users/register.html:46 tenants/forms.py:18 tenants/forms.py:67
-#: users/forms.py:14
+#: templates/users/register.html:46 tenants/forms.py:29 tenants/forms.py:78
+#: users/forms.py:16
 msgid "Confirm password"
 msgstr "Confirmar senha"
 
-#: templates/users/register.html:52
+#: templates/users/register.html:53
 msgid "Create account and continue"
 msgstr "Criar conta e continuar"
 
-#: templates/users/register.html:57
+#: templates/users/register.html:58
 msgid "Already have an account?"
 msgstr "Já tem uma conta?"
 
@@ -990,10 +1057,6 @@ msgstr ""
 "Enviamos um link de confirmação. Clique nele para verificar sua conta e "
 "acessar o sistema."
 
-#: templates/users/settings.html:13
-msgid "Language"
-msgstr "Idioma"
-
 #: templates/users/settings.html:14
 msgid "Choose your preferred language."
 msgstr "Escolha seu idioma preferido."
@@ -1006,136 +1069,144 @@ msgstr "Conta"
 msgid "Manage your personal information and password."
 msgstr "Gerencie suas informações pessoais e senha."
 
-#: templates/users/settings.html:24
+#: templates/users/settings.html:25
 msgid "Go to profile"
 msgstr "Ir para o perfil"
 
-#: tenants/decorators.py:30
+#: tenants/decorators.py:33
 msgid "You don't have access to this environment."
 msgstr "Você não tem acesso a este ambiente."
 
-#: tenants/decorators.py:39
+#: tenants/decorators.py:42
 msgid "You don't have permission to perform this action."
 msgstr "Você não tem permissão para realizar esta ação."
 
-#: tenants/forms.py:10
+#: tenants/forms.py:21
 msgid "Company name"
 msgstr "Nome da empresa"
 
-#: tenants/forms.py:13 tenants/forms.py:62
+#: tenants/forms.py:24 tenants/forms.py:73
 msgid "Create your password"
 msgstr "Crie sua senha"
 
-#: tenants/forms.py:27 tenants/forms.py:76 users/forms.py:28
+#: tenants/forms.py:38 tenants/forms.py:87 users/forms.py:30
 msgid "The passwords don't match."
 msgstr "As senhas não coincidem."
 
-#: tenants/forms.py:36
+#: tenants/forms.py:47
 msgid "Member email"
 msgstr "E-mail do membro"
 
-#: tenants/forms.py:55
+#: tenants/forms.py:66
 msgid "Select a role..."
 msgstr "Selecione um cargo..."
 
-#: tenants/forms.py:88
+#: tenants/forms.py:93 tenants/models.py:79
+msgid "Timezone"
+msgstr ""
+
+#: tenants/forms.py:95
+msgid "All dates and times across the workspace will use this timezone."
+msgstr "Todas as datas e horários do workspace seguirão este fuso horário."
+
+#: tenants/forms.py:114
 msgid "Role permissions"
 msgstr "Permissões do cargo"
 
-#: tenants/forms.py:95 tenants/models.py:105
+#: tenants/forms.py:121 tenants/models.py:107
 msgid "Role name"
 msgstr "Nome do cargo"
 
-#: tenants/forms.py:96
+#: tenants/forms.py:122
 msgid "Make this the default role for new invites?"
 msgstr "Tornar este o cargo padrão para novos convites?"
 
-#: tenants/models.py:20
+#: tenants/models.py:21
 msgid "View team"
 msgstr "Ver equipe"
 
-#: tenants/models.py:20
+#: tenants/models.py:21
 msgid "See the members list."
 msgstr "Ver a lista de membros."
 
-#: tenants/models.py:21
+#: tenants/models.py:22
 msgid "Invite members"
 msgstr "Convidar membros"
 
-#: tenants/models.py:21
+#: tenants/models.py:22
 msgid "Send invitations and assign a role."
 msgstr "Enviar convites e atribuir um cargo."
 
-#: tenants/models.py:22
+#: tenants/models.py:23
 msgid "Remove members"
 msgstr "Remover membros"
 
-#: tenants/models.py:22
+#: tenants/models.py:23
 msgid "Remove people from the workspace."
 msgstr "Remover pessoas do workspace."
 
-#: tenants/models.py:29
+#: tenants/models.py:30
 msgid "View roles"
 msgstr "Ver cargos"
 
-#: tenants/models.py:29
+#: tenants/models.py:30
 msgid "See roles and pick one when inviting."
 msgstr "Ver cargos e escolher um ao convidar."
 
-#: tenants/models.py:30
+#: tenants/models.py:31
 msgid "Create roles"
 msgstr "Criar cargos"
 
-#: tenants/models.py:30
+#: tenants/models.py:31
 msgid "Add new roles."
 msgstr "Adicionar novos cargos."
 
-#: tenants/models.py:31
+#: tenants/models.py:32
 msgid "Edit roles"
 msgstr "Editar cargos"
 
-#: tenants/models.py:31
+#: tenants/models.py:32
 msgid "Change roles and their permissions."
 msgstr "Alterar cargos e suas permissões."
 
-#: tenants/models.py:32
+#: tenants/models.py:33
 msgid "Delete roles"
 msgstr "Excluir cargos"
 
-#: tenants/models.py:32
+#: tenants/models.py:33
 msgid "Remove roles."
 msgstr "Remover cargos."
 
-#: tenants/models.py:39
+#: tenants/models.py:40
 msgid "Edit workspace"
 msgstr "Editar workspace"
 
-#: tenants/models.py:39
+#: tenants/models.py:40
 msgid "Change the company data."
 msgstr "Alterar os dados da empresa."
 
-#: tenants/models.py:143
+#: tenants/models.py:145
 msgid "Accepted"
 msgstr "Aceito"
 
-#: tenants/models.py:145
+#: tenants/models.py:147
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#: tenants/models.py:146
+#: tenants/models.py:148
 msgid "Declined"
 msgstr "Recusado"
 
-#: tenants/models.py:153
+#: tenants/models.py:155
 msgid "Invited email"
 msgstr "E-mail convidado"
 
-#: tenants/views.py:48
+#: tenants/views.py:58
 #, python-format
 msgid "Invitation to join %(workspace)s"
 msgstr "Convite para entrar em %(workspace)s"
 
-#: tenants/views.py:50
+#: tenants/views.py:60
 #, python-format
 msgid ""
 "Hi!\n"
@@ -1156,12 +1227,12 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: tenants/views.py:149
+#: tenants/views.py:159
 msgid ""
 "Something went wrong while provisioning your workspace. Please try again."
 msgstr "Algo deu errado ao provisionar seu workspace. Tente novamente."
 
-#: tenants/views.py:212
+#: tenants/views.py:222
 msgid ""
 "You need permission to view roles before you can assign one. Ask an "
 "administrator."
@@ -1169,124 +1240,142 @@ msgstr ""
 "Você precisa de permissão para ver os cargos antes de atribuir um. Peça a um "
 "administrador."
 
-#: tenants/views.py:226
+#: tenants/views.py:236
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr "Convite enviado para %(email)s."
 
-#: tenants/views.py:228
+#: tenants/views.py:238
 msgid "Could not send the invitation. Please check the data."
 msgstr "Não foi possível enviar o convite. Verifique os dados."
 
-#: tenants/views.py:249
+#: tenants/views.py:259
 msgid "The workspace owner cannot be removed."
 msgstr "O dono do workspace não pode ser removido."
 
-#: tenants/views.py:253
+#: tenants/views.py:263
 msgid "You cannot remove yourself."
 msgstr "Você não pode remover a si mesmo."
 
-#: tenants/views.py:268
+#: tenants/views.py:278
 #, python-format
 msgid "%(email)s was removed from the workspace."
 msgstr "%(email)s foi removido(a) do workspace."
 
-#: tenants/views.py:283
+#: tenants/views.py:293
 msgid "The owner can't leave the workspace. Transfer ownership first."
 msgstr "O dono não pode sair do workspace. Transfira a posse primeiro."
 
-#: tenants/views.py:294
+#: tenants/views.py:304
 #, python-format
 msgid "You left %(workspace)s."
 msgstr "Você saiu de %(workspace)s."
 
-#: tenants/views.py:315
+#: tenants/views.py:325
 #, python-format
 msgid "Invitation to %(email)s cancelled."
 msgstr "Convite para %(email)s cancelado."
 
-#: tenants/views.py:317
+#: tenants/views.py:327
 msgid "This invitation cannot be cancelled."
 msgstr "Este convite não pode ser cancelado."
 
-#: tenants/views.py:330
+#: tenants/views.py:340
 msgid "This invitation cannot be resent."
 msgstr "Este convite não pode ser reenviado."
 
-#: tenants/views.py:342
+#: tenants/views.py:352
 #, python-format
 msgid "Invitation resent to %(email)s."
 msgstr "Convite reenviado para %(email)s."
 
-#: tenants/views.py:364
+#: tenants/views.py:374
 msgid "Please log in to accept this invitation."
 msgstr "Faça login para aceitar este convite."
 
-#: tenants/views.py:368
+#: tenants/views.py:378
 msgid "This invitation was sent to a different account."
 msgstr "Este convite foi enviado para outra conta."
 
-#: tenants/views.py:423
+#: tenants/views.py:433
 msgid ""
 "Something went wrong while processing your invitation. Please try again."
 msgstr "Algo deu errado ao processar seu convite. Tente novamente."
 
-#: tenants/views.py:467
+#: tenants/views.py:477
 #, python-format
 msgid "Role '%(name)s' created."
 msgstr "Cargo '%(name)s' criado."
 
-#: tenants/views.py:486
+#: tenants/views.py:496
 msgid "The owner role cannot be edited."
 msgstr "O cargo de dono não pode ser editado."
 
-#: tenants/views.py:502
+#: tenants/views.py:512
 #, python-format
 msgid "Role '%(name)s' updated."
 msgstr "Cargo '%(name)s' atualizado."
 
-#: tenants/views.py:525
+#: tenants/views.py:535
 msgid "The owner role cannot be deleted."
 msgstr "O cargo de dono não pode ser excluído."
 
-#: tenants/views.py:529
+#: tenants/views.py:539
 msgid "This role can't be deleted while members are using it."
 msgstr "Este cargo não pode ser excluído enquanto houver membros usando ele."
 
-#: tenants/views.py:536
+#: tenants/views.py:546
 #, python-format
 msgid "Role '%(name)s' deleted."
 msgstr "Cargo '%(name)s' excluído."
 
-#: users/models.py:16
+#: tenants/views.py:563
+#, fuzzy
+#| msgid "Workspace name"
+msgid "Workspace settings saved."
+msgstr "Configurações do workspace salvas."
+
+#: users/forms.py:61
+#, fuzzy
+#| msgid "System default"
+msgid "System default (English)"
+msgstr "Padrão do sistema (Inglês)"
+
+#: users/models.py:18
+#, fuzzy
+#| msgid "Choose your preferred language."
+msgid "Preferred language"
+msgstr "Idioma preferido"
+
+#: users/models.py:27
 msgid "Active"
 msgstr "Ativo"
 
-#: users/models.py:19
+#: users/models.py:30
 msgid "Email verified"
 msgstr "E-mail verificado"
 
-#: users/validators.py:8
+#: users/validators.py:10
 msgid "The password must be at least 8 characters long."
 msgstr "A senha deve ter no mínimo 8 caracteres."
 
-#: users/validators.py:10
+#: users/validators.py:12
 msgid "The password must contain at least one uppercase letter."
 msgstr "A senha deve conter pelo menos uma letra maiúscula."
 
-#: users/validators.py:12
+#: users/validators.py:14
 msgid "The password must contain at least one lowercase letter."
 msgstr "A senha deve conter pelo menos uma letra minúscula."
 
-#: users/validators.py:14
+#: users/validators.py:16
 msgid "The password must contain at least one number."
 msgstr "A senha deve conter pelo menos um número."
 
-#: users/validators.py:16
+#: users/validators.py:18
 msgid "The password must contain at least one special character."
 msgstr "A senha deve conter pelo menos um caractere especial."
 
-#: users/validators.py:19
+#: users/validators.py:21
 msgid ""
 "Your password must be at least 8 characters long and include uppercase, "
 "lowercase, numbers and symbols."
@@ -1294,11 +1383,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: users/views.py:58
+#: users/views.py:60
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: users/views.py:59
+#: users/views.py:61
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -1313,45 +1402,1381 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: users/views.py:92
+#: users/views.py:94
 msgid "Email verified successfully!"
 msgstr "E-mail verificado com sucesso!"
 
-#: users/views.py:93
+#: users/views.py:95
 msgid "You can now log in."
 msgstr "Você já pode fazer login."
 
-#: users/views.py:96
+#: users/views.py:98
 msgid "Invalid or expired link."
 msgstr "Link inválido ou expirado."
 
-#: users/views.py:115
+#: users/views.py:117
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: users/views.py:120
+#: users/views.py:122
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: users/views.py:140
+#: users/views.py:142
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
-#: users/views.py:171
+#: users/views.py:174
 msgid "Profile updated."
 msgstr "Perfil atualizado."
 
-#: users/views.py:180
+#: users/views.py:183
 msgid "Password changed."
 msgstr "Senha alterada."
 
-#: users/views.py:209
+#: users/views.py:190
+msgid "Language preference saved."
+msgstr "Preferência de idioma salva."
+
+#: users/views.py:220
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: users/views.py:211
+#: users/views.py:222
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
+
+#: venv/lib/python3.14/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/contrib/syndication/apps.py:7
+#, fuzzy
+#| msgid "Send invitation"
+msgid "Syndication"
+msgstr "Enviar convite"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.14/site-packages/django/core/paginator.py:33
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/paginator.py:35
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/paginator.py:36
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/paginator.py:37
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:153
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:773
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:211
+#, fuzzy
+#| msgid "Invalid email or password."
+msgid "Enter a valid email address."
+msgstr "E-mail ou senha incorretos."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.14/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:309
+#: venv/lib/python3.14/site-packages/django/core/validators.py:318
+#: venv/lib/python3.14/site-packages/django/core/validators.py:332
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:320
+#: venv/lib/python3.14/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:514
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:364
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:403
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/base.py:1633
+#: venv/lib/python3.14/site-packages/django/forms/models.py:932
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/base.py:1635
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/constraints.py:20
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:135
+#, fuzzy
+#| msgid "This invitation cannot be cancelled."
+msgid "This field cannot be null."
+msgstr "Este convite não pode ser cancelado."
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:136
+#, fuzzy
+#| msgid "This invitation cannot be cancelled."
+msgid "This field cannot be blank."
+msgstr "Este convite não pode ser cancelado."
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1161
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1164
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1214
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1216
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1325
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1426
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1430
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1565
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1434
+msgid "Date (without time)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1561
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD "
+"HH:MM[:ss[.uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1569
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1574
+msgid "Date (with time)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1701
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1703
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] "
+"[[HH:]MM:]ss[.uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1868
+msgid "Duration"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1920
+#, fuzzy
+#| msgid "IP address"
+msgid "Email address"
+msgstr "Endereço IP"
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2188
+#, fuzzy
+#| msgid "IP address"
+msgid "IPv4 address"
+msgstr "Endereço IP"
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:974
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:977
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:1271
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:1328
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:1330
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/db/models/fields/related.py:1378
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to
+#. the label
+#: venv/lib/python3.14/site-packages/django/forms/boundfield.py:188
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:91
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:313
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:484
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1241
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:507
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1242
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:534
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:568
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:569
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:638
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:639
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:640
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:642
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:647
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:715
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:862
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:949
+#: venv/lib/python3.14/site-packages/django/forms/models.py:1621
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:951
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1070
+#: venv/lib/python3.14/site-packages/django/forms/models.py:1619
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1071
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1313
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/fields.py:1343
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.14/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.14/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:925
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:930
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:937
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:946
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:1383
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:1474
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/models.py:1623
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:528
+msgid "Clear"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:529
+#, fuzzy
+#| msgid "current"
+msgid "Currently"
+msgstr "atual"
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:530
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:52
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:60
+msgid "Change"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:869
+msgid "Unknown"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:870
+msgid "Yes"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/forms/widgets.py:871
+msgid "No"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/tasks/base.py:34
+msgctxt "Task"
+msgid "Ready"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/tasks/base.py:36
+msgctxt "Task"
+msgid "Running"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/tasks/base.py:38
+msgctxt "Task"
+msgid "Failed"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/tasks/base.py:40
+msgctxt "Task"
+msgid "Successful"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:878
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:908
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:925
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:927
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:929
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:931
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:933
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/template/defaultfilters.py:935
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:21
+#, fuzzy
+#| msgid "Status"
+msgid "Sat"
+msgstr "Status"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:33
+#, fuzzy
+#| msgid "Members"
+msgid "September"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:35
+#, fuzzy
+#| msgid "Members"
+msgid "November"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:36
+#, fuzzy
+#| msgid "Members"
+msgid "December"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:75
+#, fuzzy
+#| msgid "Members"
+msgctxt "alt. month"
+msgid "September"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:77
+#, fuzzy
+#| msgid "Members"
+msgctxt "alt. month"
+msgid "November"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/dates.py:78
+#, fuzzy
+#| msgid "Members"
+msgctxt "alt. month"
+msgid "December"
+msgstr "Membros"
+
+#: venv/lib/python3.14/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/text.py:282
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.14/site-packages/django/utils/text.py:301
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:353
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because "
+"%(class_name)s.allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/static.py:68
+#: venv/lib/python3.14/site-packages/django/views/templates/directory_index.html:8
+#: venv/lib/python3.14/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:227
+#, fuzzy
+#| msgid "Get started"
+msgid "Get started with Django"
+msgstr "Começar"
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:24
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:32
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:32
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:40
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:26
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:34
+msgid "Not available for this type of schema"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:26
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:34
+msgid "Not available for global schema"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:43
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:51
+msgid "Add"
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:50
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:58
+#, fuzzy
+#| msgid "View all"
+msgid "View"
+msgstr "Ver todas"
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/app_list.html:64
+#, fuzzy
+#| msgid "You don't have permission to perform this action."
+msgid "You don’t have permission to view or edit anything."
+msgstr "Você não tem permissão para realizar esta ação."
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/django_tenants/tenant/change_form.html:10
+msgid ""
+"Can't update tenant outside it's own schema or the public schema. Current "
+"schema is "
+msgstr ""
+
+#: venv/lib/python3.14/site-packages/django_tenants/templates/admin/index.html:72
+#, fuzzy
+#| msgid "You don't have permission to perform this action."
+msgid "You don't have permission to view or edit anything."
+msgstr "Você não tem permissão para realizar esta ação."
+
+#~ msgid "Create a new role"
+#~ msgstr "Criar um novo cargo"
+
+#~ msgid "Define the name and what members with this role can do."
+#~ msgstr "Defina o nome e o que os membros com este cargo podem fazer."
+
+#~ msgid "Remove"
+#~ msgstr "Remover"
+
+#~ msgid "Resend"
+#~ msgstr "Reenviar"
+
+#~ msgid "Save changes"
+#~ msgstr "Salvar alterações"
 
 #~ msgid "Delete workspace"
 #~ msgstr "Excluir workspace"
@@ -1361,9 +2786,6 @@ msgstr "Você não tem acesso a esse workspace."
 
 #~ msgid "Absolute owner"
 #~ msgstr "Dono absoluto"
-
-#~ msgid "System default"
-#~ msgstr "Padrão do sistema"
 
 #~ msgid "You don't have permission to invite new members."
 #~ msgstr "Você não tem permissão para convidar novos membros."
