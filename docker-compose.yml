@@ -23,5 +23,16 @@ services:
     ports:
       - "6379:6379"
 
+  # Captures all outgoing emails in dev — no real SMTP needed.
+  # Access the inbox at http://localhost:8025
+  # In .env set: EMAIL_HOST=localhost  EMAIL_PORT=1025
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ready_mailpit
+    restart: always
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI
+
 volumes:
   postgres_data:
