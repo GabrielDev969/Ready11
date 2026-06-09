@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib import admin
 from django_tenants.admin import TenantAdminMixin
 
-from .models import Workspace, Domain, Role, WorkspaceMembership, WorkspaceInvite, AVAILABLE_PERMISSIONS
+from .models import AVAILABLE_PERMISSIONS, Domain, Role, Workspace, WorkspaceInvite, WorkspaceMembership
 from .services import provision_workspace_defaults
 
 logger = logging.getLogger(__name__)

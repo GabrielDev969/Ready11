@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from notifications.models import Notification, NotificationType, NOTIFICATION_RETENTION_DAYS
+from notifications.models import NOTIFICATION_RETENTION_DAYS, Notification, NotificationType
 from notifications.services import purge_old_notifications
 
 

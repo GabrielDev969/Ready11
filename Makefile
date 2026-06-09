@@ -1,4 +1,4 @@
-.PHONY: help setup run migrate css test messages compile check docker-up docker-down clean
+.PHONY: help setup run migrate css test lint messages compile check docker-up docker-down clean
 
 PYTHON := python
 MANAGE := $(PYTHON) manage.py
@@ -10,6 +10,7 @@ help:
 	@echo "  make migrate      Apply all schema migrations (shared + tenant)"
 	@echo "  make css          Watch and rebuild Tailwind CSS"
 	@echo "  make test         Run the test suite"
+	@echo "  make lint         Run Ruff linter"
 	@echo "  make messages     Extract translatable strings"
 	@echo "  make compile      Compile .po translation files"
 	@echo "  make check        Run Django deployment checks"
@@ -35,6 +36,9 @@ css:
 
 test:
 	$(MANAGE) test
+
+lint:
+	ruff check .
 
 messages:
 	$(MANAGE) makemessages -l pt_BR --ignore=venv --ignore=node_modules

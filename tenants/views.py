@@ -1,25 +1,35 @@
 import logging
 import uuid
 
-from django.shortcuts import render, redirect, get_object_or_404
+from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.core.mail import send_mail
+from django.db import transaction
+from django.db.models import Count
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
-from django.db import transaction
-from django.db.models import Count
-from django.contrib import messages
-from django.conf import settings
-from django.core.mail import send_mail
+
+import audit.actions as audit_actions
+from audit.services import log_action
+from notifications.services import create_invite_notification, delete_invite_notifications
 
 from .decorators import tenant_permission_required
-from .models import WorkspaceInvite, Workspace, Domain, WorkspaceMembership, InviteStatus, Role, default_expiration, PERMISSION_GROUPS
-from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
+from .forms import EmployeeSetupForm, GenesisSetupForm, RoleForm, TeamInviteForm
+from .models import (
+    PERMISSION_GROUPS,
+    Domain,
+    InviteStatus,
+    Role,
+    Workspace,
+    WorkspaceInvite,
+    WorkspaceMembership,
+    default_expiration,
+)
 from .services import provision_workspace_defaults
-from .utils import workspace_home_url, tenant_permission_set
-from notifications.services import create_invite_notification, delete_invite_notifications
-from audit.services import log_action
-import audit.actions as audit_actions
+from .utils import tenant_permission_set, workspace_home_url
 
 User = get_user_model()
 logger = logging.getLogger(__name__)

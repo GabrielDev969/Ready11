@@ -1,6 +1,9 @@
 import os
+
 from django.core.management.base import BaseCommand
-from tenants.models import Workspace, Domain
+
+from tenants.models import Domain, Workspace
+
 
 class Command(BaseCommand):
     help = 'Create the base public tenant and domain if they do not exist.'

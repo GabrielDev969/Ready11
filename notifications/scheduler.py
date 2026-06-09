@@ -21,6 +21,7 @@ _started = False
 
 def _run_loop(interval_seconds):
     from django.db import close_old_connections
+
     from .locks import distributed_lock
     from .services import purge_old_notifications
 

@@ -1,7 +1,8 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
-from .models import WorkspaceInvite, Role, AVAILABLE_PERMISSIONS
+from django.utils.translation import gettext_lazy as _
+
+from .models import AVAILABLE_PERMISSIONS, Role, WorkspaceInvite
 
 
 class GenesisSetupForm(forms.Form):
@@ -40,7 +41,7 @@ class TeamInviteForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # Capture the workspace passed from the view before building the form.
         workspace = kwargs.pop('workspace', None)
-        super(TeamInviteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # A role is mandatory: every membership needs one, so the invite must carry it.
         self.fields['role'].required = True

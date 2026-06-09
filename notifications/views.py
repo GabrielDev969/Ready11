@@ -9,7 +9,7 @@ from tenants.models import InviteStatus, WorkspaceMembership
 from tenants.utils import workspace_home_url
 
 from .models import Notification, NotificationType
-from .services import mark_read, mark_all_read, recent_notifications
+from .services import mark_all_read, mark_read, recent_notifications
 
 
 def notification_list(request):

@@ -1,4 +1,4 @@
-from .models import WorkspaceMembership, AVAILABLE_PERMISSIONS, expand_permissions
+from .models import AVAILABLE_PERMISSIONS, WorkspaceMembership, expand_permissions
 
 
 def tenant_permission_set(request):

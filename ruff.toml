@@ -1,0 +1,28 @@
+target-version = "py312"
+line-length = 120
+
+exclude = [
+    "venv",
+    "node_modules",
+    "staticfiles",
+    ".git",
+]
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes (undefined names, unused imports)
+    "I",   # isort (import order)
+    "B",   # flake8-bugbear (likely bugs / design issues)
+    "UP",  # pyupgrade (modern Python syntax)
+]
+ignore = [
+    "E501",  # line too long — not enforced (Django views can be verbose)
+    "B904",  # raise from inside except — Django convention sometimes omits this
+]
+
+[lint.per-file-ignores]
+"*/migrations/*.py" = ["E501", "F401", "F811"]
+"Ready11/settings.py" = ["F401", "E402"]
+"Ready11/asgi.py" = ["E402"]

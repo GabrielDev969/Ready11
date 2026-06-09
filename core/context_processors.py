@@ -1,5 +1,5 @@
-from tenants.utils import user_workspaces as _user_workspaces
 from tenants.utils import tenant_permission_set
+from tenants.utils import user_workspaces as _user_workspaces
 
 
 def workspaces(request):

@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from .models import Notification, NotificationRead, NotificationType, NOTIFICATION_RETENTION_DAYS
+from .models import NOTIFICATION_RETENTION_DAYS, Notification, NotificationRead, NotificationType
 
 
 def purge_old_notifications():

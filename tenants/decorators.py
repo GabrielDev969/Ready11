@@ -1,8 +1,11 @@
 from functools import wraps
-from django.shortcuts import redirect
+
 from django.contrib import messages
+from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+
 from .models import WorkspaceMembership, expand_permissions
+
 
 def tenant_permission_required(required_permission=None):
     """

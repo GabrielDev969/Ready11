@@ -1,19 +1,21 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, authenticate, login, logout, update_session_auth_hash
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, get_user_model, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.forms import PasswordResetForm as DjangoPasswordResetForm
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode, url_has_allowed_host_and_scheme
-from django.utils.encoding import force_bytes, force_str
-from django.utils.translation import gettext as _
 from django.contrib.auth.tokens import default_token_generator
-from django.conf import settings
+from django.core.mail import send_mail
 from django.http import HttpResponse
-from .forms import RegisterForm, LoginForm, ProfileForm
-from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.translation import gettext as _
+
 from tenants.models import WorkspaceMembership
 from tenants.utils import effective_workspace, workspace_home_url
+
+from .forms import LoginForm, ProfileForm, RegisterForm
 
 User = get_user_model()
 

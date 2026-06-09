@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .models import Role, Domain, WorkspaceMembership
+from .models import Domain, Role, WorkspaceMembership
 
 
 def provision_workspace_defaults(workspace, owner=None):

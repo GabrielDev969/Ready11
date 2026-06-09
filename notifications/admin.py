@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Notification, NotificationRead, NotificationType
+from .models import Notification, NotificationRead
 
 
 @admin.register(Notification)

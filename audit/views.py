@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 from tenants.decorators import tenant_permission_required
 from tenants.utils import tenant_permission_set
+
 from .models import AuditLog
 
 
