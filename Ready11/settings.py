@@ -78,6 +78,7 @@ SHARED_APPS = (
     'axes',            # brute-force protection (global access-attempt log)
     'core',            # landing page + healthcheck (public)
     'notifications',   # in-app notifications (global)
+    'audit',           # workspace audit log
     'tenants',
     'users',
 
@@ -188,6 +189,12 @@ if REDIS_URL:
             'CONFIG': {'hosts': [REDIS_URL]},
         }
     }
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+        }
+    }
 else:
     CHANNEL_LAYERS = {
         'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'}
@@ -291,6 +298,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ==========================================
 # Production security hardening
 # ==========================================
+# ==========================================
+# Error monitoring (Sentry)
+# ==========================================
+# Set SENTRY_DSN in production to enable automatic error capture and performance tracing.
+SENTRY_DSN = os.environ.get('SENTRY_DSN', '')
+if SENTRY_DSN:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        traces_sample_rate=float(os.environ.get('SENTRY_TRACES_SAMPLE_RATE', '0.1')),
+        send_default_pii=False,
+    )
+
+
 if not DEBUG:
     # We sit behind a reverse proxy (Easypanel/Nginx) that terminates TLS.
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -302,6 +323,7 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
     SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', str(60 * 60 * 24 * 365)))
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True

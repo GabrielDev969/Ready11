@@ -1,6 +1,7 @@
 from django.db import connection
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 
 from tenants.utils import effective_workspace, workspace_home_url
 
@@ -36,3 +37,20 @@ def healthz(request):
         return JsonResponse({'status': 'ok'})
     except Exception:
         return JsonResponse({'status': 'error'}, status=503)
+
+
+def robots_txt(request):
+    content = render_to_string('robots.txt')
+    return HttpResponse(content, content_type='text/plain')
+
+
+def error_404(request, exception):
+    return render(request, '404.html', status=404)
+
+
+def error_500(request):
+    return render(request, '500.html', status=500)
+
+
+def error_403(request, exception):
+    return render(request, '403.html', status=403)

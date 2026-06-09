@@ -61,6 +61,11 @@ RUN SECRET_KEY=build-time-dummy-key DEBUG=True \
 # Dá permissão de execução para o script de inicialização
 RUN chmod +x /app/entrypoint.sh
 
+# Non-root user for security
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser \
+    && chown -R appuser:appgroup /app
+USER appuser
+
 # Expõe a porta padrão que configuramos no Gunicorn
 EXPOSE 8000
 

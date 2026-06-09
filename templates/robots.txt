@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /ws/
+Disallow: /workspace/audit/
+Allow: /

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 16:52-0300\n"
+"POT-Creation-Date: 2026-06-09 08:58-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -16,42 +16,154 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: Ready11/settings.py:251
+#: Ready11/settings.py:264
 msgid "English"
 msgstr "Inglês"
 
-#: Ready11/settings.py:252
+#: Ready11/settings.py:265
 msgid "Portuguese (Brazil)"
 msgstr "Português (Brasil)"
 
-#: notifications/models.py:8
+#: audit/models.py:13 templates/audit/log_list.html:19
+msgid "User"
+msgstr "Usuário"
+
+#: audit/models.py:16
+msgid "Workspace schema"
+msgstr "Schema do workspace"
+
+#: audit/models.py:17
+msgid "Workspace name"
+msgstr "Nome do workspace"
+
+#: audit/models.py:19 templates/audit/log_list.html:20
+msgid "Action"
+msgstr "Ação"
+
+#: audit/models.py:20
+msgid "Resource type"
+msgstr "Tipo de recurso"
+
+#: audit/models.py:21
+msgid "Resource ID"
+msgstr "ID do recurso"
+
+#: audit/models.py:22 templates/audit/log_list.html:22
+msgid "Detail"
+msgstr "Detalhe"
+
+#: audit/models.py:24
+msgid "IP address"
+msgstr "Endereço IP"
+
+#: audit/models.py:25
+msgid "Created at"
+msgstr "Criado em"
+
+#: audit/models.py:29
+msgid "Audit log"
+msgstr "Log de auditoria"
+
+#: audit/models.py:30
+msgid "Audit logs"
+msgstr "Logs de auditoria"
+
+#: notifications/models.py:16
 msgid "Invitation"
 msgstr "Convite"
 
-#: notifications/models.py:9
+#: notifications/models.py:17
 msgid "Global"
 msgstr "Global"
 
-#: notifications/models.py:10 tenants/models.py:37
+#: notifications/models.py:18 tenants/models.py:37
 msgid "Workspace"
 msgstr "Workspace"
 
-#: notifications/models.py:11
+#: notifications/models.py:19
 msgid "Personal"
 msgstr "Pessoal"
 
-#: notifications/views.py:97
+#: notifications/views.py:99
 msgid "This invitation is no longer available."
 msgstr "Este convite não está mais disponível."
 
-#: notifications/views.py:114 tenants/views.py:368
+#: notifications/views.py:116 tenants/views.py:387
 #, python-format
 msgid "You have joined %(workspace)s."
 msgstr "Você entrou em %(workspace)s."
 
-#: notifications/views.py:136
+#: notifications/views.py:138
 msgid "Invitation declined."
 msgstr "Convite recusado."
+
+#: templates/403.html:4 templates/403.html:9
+msgid "Access denied"
+msgstr "Acesso negado"
+
+#: templates/403.html:10
+msgid ""
+"You don't have permission to access this page. Contact your workspace owner "
+"if you think this is a mistake."
+msgstr ""
+"Você não tem permissão para acessar esta página. Fale com o dono do "
+"workspace se achar que isso é um engano."
+
+#: templates/403.html:13 templates/404.html:13
+msgid "Go home"
+msgstr "Ir para o início"
+
+#: templates/404.html:4 templates/404.html:9
+msgid "Page not found"
+msgstr "Página não encontrada"
+
+#: templates/404.html:10
+msgid "The page you're looking for doesn't exist or has been moved."
+msgstr "A página que você está procurando não existe ou foi movida."
+
+#: templates/404.html:16
+msgid "Go back"
+msgstr "Voltar"
+
+#: templates/audit/log_list.html:4 templates/audit/log_list.html:9
+#: templates/partials/sidebar.html:31 templates/partials/sidebar.html:34
+msgid "Audit Log"
+msgstr "Log de Auditoria"
+
+#: templates/audit/log_list.html:10
+msgid "A record of all significant actions taken in this workspace."
+msgstr "Um registro de todas as ações significativas realizadas neste workspace."
+
+#: templates/audit/log_list.html:18
+msgid "Date"
+msgstr "Data"
+
+#: templates/audit/log_list.html:21
+msgid "Resource"
+msgstr "Recurso"
+
+#: templates/audit/log_list.html:50
+#, python-format
+msgid ""
+"\n"
+"            Showing %(start)s–%(end)s of %(total)s\n"
+"            "
+msgstr ""
+"\n"
+"            Exibindo %(start)s–%(end)s de %(total)s\n"
+"            "
+
+#: templates/audit/log_list.html:56
+msgid "Previous"
+msgstr "Anterior"
+
+#: templates/audit/log_list.html:59
+msgid "Next"
+msgstr "Próxima"
+
+#: templates/audit/log_list.html:67
+msgid "No audit log entries yet."
+msgstr "Nenhum registro de auditoria ainda."
 
 #: templates/base.html:33
 msgid "Ready11 — base project for B2B SaaS systems."
@@ -79,10 +191,9 @@ msgid ""
 "accounts, role-based access control and an invite-only onboarding flow — so "
 "you can start building your product instead of the plumbing."
 msgstr ""
-"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema,"
-" contas globais, controle de acesso por cargos e onboarding apenas por "
-"convite — para você começar a construir seu produto em vez da "
-"infraestrutura."
+"O Ready11 é uma base de código inicial com multi-tenancy isolado por schema, "
+"contas globais, controle de acesso por cargos e onboarding apenas por "
+"convite — para você começar a construir seu produto em vez da infraestrutura."
 
 #: templates/core/landing.html:24 templates/tenants/genesis_success.html:21
 msgid "Go to my workspace"
@@ -177,23 +288,23 @@ msgid "How it works"
 msgstr "Como funciona"
 
 #: templates/core/landing.html:78
-msgid "A super admin sends a \"genesis\" invitation to a future workspace owner."
+msgid ""
+"A super admin sends a \"genesis\" invitation to a future workspace owner."
 msgstr ""
-"Um super admin envia um convite \"gênesis\" para um futuro dono de "
-"workspace."
+"Um super admin envia um convite \"gênesis\" para um futuro dono de workspace."
 
 #: templates/core/landing.html:82
 msgid ""
 "The owner sets their name and company. The backend creates an isolated "
 "database schema on demand."
 msgstr ""
-"O dono informa seu nome e empresa. O backend cria um schema de banco isolado"
-" sob demanda."
+"O dono informa seu nome e empresa. O backend cria um schema de banco isolado "
+"sob demanda."
 
 #: templates/core/landing.html:86
 msgid ""
-"The owner invites their team and assigns roles. Members access the workspace"
-" on its own subdomain."
+"The owner invites their team and assigns roles. Members access the workspace "
+"on its own subdomain."
 msgstr ""
 "O dono convida sua equipe e atribui cargos. Os membros acessam o workspace "
 "em seu próprio subdomínio."
@@ -236,7 +347,6 @@ msgstr ""
 "gênesis pelo admin do Django."
 
 #: templates/notifications/detail.html:10
-#| msgid "No notifications."
 msgid "Back to notifications"
 msgstr "Voltar para notificações"
 
@@ -253,8 +363,8 @@ msgstr "Marcar todas como lidas"
 
 #: templates/notifications/list.html:31
 msgid ""
-"You're not part of any workspace yet. Accept an invitation below, or wait to"
-" be invited."
+"You're not part of any workspace yet. Accept an invitation below, or wait to "
+"be invited."
 msgstr ""
 "Você ainda não faz parte de nenhum workspace. Aceite um convite abaixo, ou "
 "aguarde ser convidado."
@@ -329,7 +439,9 @@ msgid "Roles"
 msgstr "Cargos"
 
 #: templates/partials/topbar_nav.html:8 templates/users/login.html:4
-#: templates/users/login.html:39 templates/users/register.html:58
+#: templates/users/login.html:39
+#: templates/users/password_reset_complete.html:16
+#: templates/users/register.html:58
 msgid "Sign in"
 msgstr "Entrar"
 
@@ -377,6 +489,7 @@ msgid "Accept invitation and enter"
 msgstr "Aceitar convite e entrar"
 
 #: templates/tenants/accept_invite.html:51 templates/users/login.html:26
+#: templates/users/password_reset_request.html:16
 #: templates/users/register.html:30
 msgid "Work email"
 msgstr "E-mail corporativo"
@@ -502,8 +615,8 @@ msgid ""
 "The link may have expired, been cancelled or already been used. Please ask "
 "the person who invited you to send a new invitation."
 msgstr ""
-"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa"
-" que convidou você para enviar um novo convite."
+"O link pode ter expirado, sido cancelado ou já ter sido usado. Peça à pessoa "
+"que convidou você para enviar um novo convite."
 
 #: templates/tenants/invite_unavailable.html:18
 #: templates/users/register_success.html:20
@@ -662,8 +775,8 @@ msgid ""
 "roles. Ask an administrator to grant it (or to send the invite)."
 msgstr ""
 "Convidar exige escolher um cargo, mas você não tem permissão para ver os "
-"cargos. Peça a um administrador para conceder essa permissão (ou para enviar"
-" o convite)."
+"cargos. Peça a um administrador para conceder essa permissão (ou para enviar "
+"o convite)."
 
 #: templates/tenants/team_list.html:106
 msgid "Send invitation"
@@ -675,8 +788,7 @@ msgstr "É necessário um cargo para convidar pessoas."
 
 #: templates/tenants/team_list.html:113
 msgid "Create a role first, then you can assign it to new members."
-msgstr ""
-"Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
+msgstr "Crie um cargo primeiro; depois você poderá atribuí-lo a novos membros."
 
 #: templates/tenants/team_list.html:114
 msgid "Create a role"
@@ -711,6 +823,89 @@ msgstr "Ainda não tem uma conta?"
 #: templates/users/login.html:45
 msgid "Sign up"
 msgstr "Cadastre-se"
+
+#: templates/users/password_reset_complete.html:4
+msgid "Password changed"
+msgstr "Senha alterada"
+
+#: templates/users/password_reset_complete.html:13
+msgid "Password changed!"
+msgstr "Senha alterada!"
+
+#: templates/users/password_reset_complete.html:14
+msgid ""
+"Your password has been updated successfully. You can now sign in with your "
+"new password."
+msgstr ""
+"Sua senha foi atualizada com sucesso. Você já pode entrar com a nova senha."
+
+#: templates/users/password_reset_confirm.html:4
+#: templates/users/password_reset_confirm.html:24
+#: templates/users/password_reset_confirm.html:52
+msgid "Set new password"
+msgstr "Definir nova senha"
+
+#: templates/users/password_reset_confirm.html:16
+msgid "Invalid or expired link"
+msgstr "Link inválido ou expirado"
+
+#: templates/users/password_reset_confirm.html:17
+msgid ""
+"This password reset link has already been used or has expired. Request a new "
+"one."
+msgstr ""
+"Este link de redefinição de senha já foi usado ou expirou. Solicite um novo."
+
+#: templates/users/password_reset_confirm.html:19
+msgid "Request new link"
+msgstr "Solicitar novo link"
+
+#: templates/users/password_reset_confirm.html:25
+msgid "Choose a strong password for your account."
+msgstr "Escolha uma senha forte para a sua conta."
+
+#: templates/users/password_reset_confirm.html:32
+msgid "New password"
+msgstr "Nova senha"
+
+#: templates/users/password_reset_confirm.html:42
+msgid "Confirm new password"
+msgstr "Confirmar nova senha"
+
+#: templates/users/password_reset_done.html:4
+#: templates/users/password_reset_done.html:13
+#: templates/users/register_success.html:15
+msgid "Check your email"
+msgstr "Verifique seu e-mail"
+
+#: templates/users/password_reset_done.html:15
+msgid ""
+"If an account with that email exists, we've sent a password reset link. "
+"Check your inbox (and spam folder)."
+msgstr ""
+"Se existir uma conta com esse e-mail, enviamos um link de redefinição de "
+"senha. Verifique sua caixa de entrada (e a pasta de spam)."
+
+#: templates/users/password_reset_done.html:18
+#: templates/users/password_reset_request.html:26
+msgid "Back to sign in"
+msgstr "Voltar para o login"
+
+#: templates/users/password_reset_request.html:4
+msgid "Forgot password"
+msgstr "Esqueci a senha"
+
+#: templates/users/password_reset_request.html:9
+msgid "Forgot your password?"
+msgstr "Esqueceu sua senha?"
+
+#: templates/users/password_reset_request.html:10
+msgid "Enter your email and we'll send you a reset link."
+msgstr "Informe seu e-mail e enviaremos um link de redefinição."
+
+#: templates/users/password_reset_request.html:21
+msgid "Send reset link"
+msgstr "Enviar link de redefinição"
 
 #: templates/users/profile.html:4 templates/users/profile.html:10
 msgid "Your profile"
@@ -786,10 +981,6 @@ msgstr "Já tem uma conta?"
 #: templates/users/register_success.html:4
 msgid "Email sent"
 msgstr "E-mail enviado"
-
-#: templates/users/register_success.html:15
-msgid "Check your email"
-msgstr "Verifique seu e-mail"
 
 #: templates/users/register_success.html:17
 msgid ""
@@ -939,17 +1130,18 @@ msgstr "Recusado"
 msgid "Invited email"
 msgstr "E-mail convidado"
 
-#: tenants/views.py:46
+#: tenants/views.py:48
 #, python-format
 msgid "Invitation to join %(workspace)s"
 msgstr "Convite para entrar em %(workspace)s"
 
-#: tenants/views.py:48
+#: tenants/views.py:50
 #, python-format
 msgid ""
 "Hi!\n"
 "\n"
-"You were invited by %(inviter)s to join the %(workspace)s workspace as %(role)s.\n"
+"You were invited by %(inviter)s to join the %(workspace)s workspace as "
+"%(role)s.\n"
 "\n"
 "Click the link to accept (valid for 24 hours):\n"
 "\n"
@@ -957,110 +1149,111 @@ msgid ""
 msgstr ""
 "Olá!\n"
 "\n"
-"Você foi convidado(a) por %(inviter)s para participar do workspace %(workspace)s como %(role)s.\n"
+"Você foi convidado(a) por %(inviter)s para participar do workspace "
+"%(workspace)s como %(role)s.\n"
 "\n"
 "Clique no link para aceitar (válido por 24 horas):\n"
 "\n"
 "%(link)s"
 
-#: tenants/views.py:144
+#: tenants/views.py:149
 msgid ""
 "Something went wrong while provisioning your workspace. Please try again."
 msgstr "Algo deu errado ao provisionar seu workspace. Tente novamente."
 
-#: tenants/views.py:207
+#: tenants/views.py:212
 msgid ""
 "You need permission to view roles before you can assign one. Ask an "
 "administrator."
 msgstr ""
-"Você precisa de permissão para ver os cargos antes de atribuir um. Peça a um"
-" administrador."
+"Você precisa de permissão para ver os cargos antes de atribuir um. Peça a um "
+"administrador."
 
-#: tenants/views.py:219
+#: tenants/views.py:226
 #, python-format
 msgid "Invitation sent to %(email)s."
 msgstr "Convite enviado para %(email)s."
 
-#: tenants/views.py:221
+#: tenants/views.py:228
 msgid "Could not send the invitation. Please check the data."
 msgstr "Não foi possível enviar o convite. Verifique os dados."
 
-#: tenants/views.py:242
+#: tenants/views.py:249
 msgid "The workspace owner cannot be removed."
 msgstr "O dono do workspace não pode ser removido."
 
-#: tenants/views.py:246
+#: tenants/views.py:253
 msgid "You cannot remove yourself."
 msgstr "Você não pode remover a si mesmo."
 
-#: tenants/views.py:259
+#: tenants/views.py:268
 #, python-format
 msgid "%(email)s was removed from the workspace."
 msgstr "%(email)s foi removido(a) do workspace."
 
-#: tenants/views.py:274
+#: tenants/views.py:283
 msgid "The owner can't leave the workspace. Transfer ownership first."
 msgstr "O dono não pode sair do workspace. Transfira a posse primeiro."
 
-#: tenants/views.py:283
+#: tenants/views.py:294
 #, python-format
 msgid "You left %(workspace)s."
 msgstr "Você saiu de %(workspace)s."
 
-#: tenants/views.py:300
+#: tenants/views.py:315
 #, python-format
 msgid "Invitation to %(email)s cancelled."
 msgstr "Convite para %(email)s cancelado."
 
-#: tenants/views.py:302
+#: tenants/views.py:317
 msgid "This invitation cannot be cancelled."
 msgstr "Este convite não pode ser cancelado."
 
-#: tenants/views.py:315
+#: tenants/views.py:330
 msgid "This invitation cannot be resent."
 msgstr "Este convite não pode ser reenviado."
 
-#: tenants/views.py:325
+#: tenants/views.py:342
 #, python-format
 msgid "Invitation resent to %(email)s."
 msgstr "Convite reenviado para %(email)s."
 
-#: tenants/views.py:347
+#: tenants/views.py:364
 msgid "Please log in to accept this invitation."
 msgstr "Faça login para aceitar este convite."
 
-#: tenants/views.py:351
+#: tenants/views.py:368
 msgid "This invitation was sent to a different account."
 msgstr "Este convite foi enviado para outra conta."
 
-#: tenants/views.py:402
+#: tenants/views.py:423
 msgid ""
 "Something went wrong while processing your invitation. Please try again."
 msgstr "Algo deu errado ao processar seu convite. Tente novamente."
 
-#: tenants/views.py:444
+#: tenants/views.py:467
 #, python-format
 msgid "Role '%(name)s' created."
 msgstr "Cargo '%(name)s' criado."
 
-#: tenants/views.py:463
+#: tenants/views.py:486
 msgid "The owner role cannot be edited."
 msgstr "O cargo de dono não pode ser editado."
 
-#: tenants/views.py:477
+#: tenants/views.py:502
 #, python-format
 msgid "Role '%(name)s' updated."
 msgstr "Cargo '%(name)s' atualizado."
 
-#: tenants/views.py:500
+#: tenants/views.py:525
 msgid "The owner role cannot be deleted."
 msgstr "O cargo de dono não pode ser excluído."
 
-#: tenants/views.py:504
+#: tenants/views.py:529
 msgid "This role can't be deleted while members are using it."
 msgstr "Este cargo não pode ser excluído enquanto houver membros usando ele."
 
-#: tenants/views.py:509
+#: tenants/views.py:536
 #, python-format
 msgid "Role '%(name)s' deleted."
 msgstr "Cargo '%(name)s' excluído."
@@ -1101,11 +1294,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: users/views.py:57
+#: users/views.py:58
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: users/views.py:58
+#: users/views.py:59
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -1120,43 +1313,43 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: users/views.py:91
+#: users/views.py:92
 msgid "Email verified successfully!"
 msgstr "E-mail verificado com sucesso!"
 
-#: users/views.py:92
+#: users/views.py:93
 msgid "You can now log in."
 msgstr "Você já pode fazer login."
 
-#: users/views.py:95
+#: users/views.py:96
 msgid "Invalid or expired link."
 msgstr "Link inválido ou expirado."
 
-#: users/views.py:114
+#: users/views.py:115
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: users/views.py:119
+#: users/views.py:120
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: users/views.py:139
+#: users/views.py:140
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
-#: users/views.py:170
+#: users/views.py:171
 msgid "Profile updated."
 msgstr "Perfil atualizado."
 
-#: users/views.py:179
+#: users/views.py:180
 msgid "Password changed."
 msgstr "Senha alterada."
 
-#: users/views.py:208
+#: users/views.py:209
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: users/views.py:210
+#: users/views.py:211
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
 

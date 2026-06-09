@@ -30,7 +30,7 @@
         <div>
             <div class="flex items-center justify-between mb-1">
                 <label class="block text-sm font-medium text-gray-700">{% trans "Password" %}</label>
-                <a href="#" class="text-xs font-medium text-black hover:underline">{% trans "Forgot password?" %}</a>
+                <a href="{% url 'password_reset_request' %}" class="text-xs font-medium text-black hover:underline">{% trans "Forgot password?" %}</a>
             </div>
             {% render_field form.password class="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm px-3 py-2 border" placeholder="••••••••" %}
         </div>

@@ -18,6 +18,8 @@ from .forms import GenesisSetupForm, TeamInviteForm, EmployeeSetupForm, RoleForm
 from .services import provision_workspace_defaults
 from .utils import workspace_home_url, tenant_permission_set
 from notifications.services import create_invite_notification, delete_invite_notifications
+from audit.services import log_action
+import audit.actions as audit_actions
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -133,6 +135,9 @@ def genesis_setup_view(request, token):
                     invite.status = InviteStatus.ACCEPTED
                     invite.save()
 
+                    log_action(user, audit_actions.WORKSPACE_CREATED, resource=workspace,
+                               detail={'workspace_name': workspace.name}, request=request)
+
                     login(request, user)
                     return render(request, 'tenants/genesis_success.html', {
                         'workspace': workspace,
@@ -216,6 +221,8 @@ def team_invite_view(request):
             invite.save()
 
             _send_invite_email(request, invite)
+            log_action(request.user, audit_actions.MEMBER_INVITED, resource=invite,
+                       detail={'email': invite.email, 'role': invite.role.name}, request=request)
             messages.success(request, _("Invitation sent to %(email)s.") % {'email': invite.email})
         else:
             messages.error(request, _("Could not send the invitation. Please check the data."))
@@ -256,6 +263,8 @@ def member_remove_view(request, membership_id):
             removed_user.save(update_fields=['default_workspace'])
         membership.delete()
 
+    log_action(request.user, audit_actions.MEMBER_REMOVED,
+               detail={'email': email}, request=request)
     messages.success(request, _("%(email)s was removed from the workspace.") % {'email': email})
     return redirect('team_list')
 
@@ -280,6 +289,8 @@ def workspace_leave_view(request):
             user.save(update_fields=['default_workspace'])
         WorkspaceMembership.objects.filter(workspace=workspace, user=user).delete()
 
+    log_action(user, audit_actions.MEMBER_LEFT,
+               detail={'email': user.email, 'workspace': workspace.name}, request=request)
     messages.success(request, _("You left %(workspace)s.") % {'workspace': workspace.name})
 
     # Send them back to the public landing (they no longer belong here).
@@ -299,6 +310,8 @@ def invite_cancel_view(request, invite_id):
         invite.cancel()
         # Remove the invite notification from the invited person right away.
         delete_invite_notifications(invite)
+        log_action(request.user, audit_actions.INVITE_CANCELLED, resource=invite,
+                   detail={'email': invite.email}, request=request)
         messages.success(request, _("Invitation to %(email)s cancelled.") % {'email': invite.email})
     else:
         messages.error(request, _("This invitation cannot be cancelled."))
@@ -324,6 +337,8 @@ def invite_resend_view(request, invite_id):
     invite.save(update_fields=['token', 'status', 'expires_at'])
 
     _send_invite_email(request, invite)
+    log_action(request.user, audit_actions.INVITE_RESENT, resource=invite,
+               detail={'email': invite.email}, request=request)
     messages.success(request, _("Invitation resent to %(email)s.") % {'email': invite.email})
     return redirect('team_list')
 
@@ -367,6 +382,8 @@ def accept_invite_view(request, token):
             invite.status = InviteStatus.ACCEPTED
             invite.save()
 
+            log_action(user, audit_actions.MEMBER_JOINED, resource=invite,
+                       detail={'email': user.email, 'role': invite.role.name}, request=request)
             messages.success(request, _("You have joined %(workspace)s.") % {'workspace': workspace.name})
             return redirect('tenant_home')
 
@@ -396,6 +413,8 @@ def accept_invite_view(request, token):
                         invite.status = InviteStatus.ACCEPTED
                         invite.save()
 
+                        log_action(user, audit_actions.MEMBER_JOINED, resource=invite,
+                                   detail={'email': user.email, 'role': invite.role.name}, request=request)
                         login(request, user)
                         return redirect('tenant_home')
 
@@ -443,6 +462,8 @@ def role_create_view(request):
             role.permissions = form.cleaned_data['permissions']
             role.save()
 
+            log_action(request.user, audit_actions.ROLE_CREATED, resource=role,
+                       detail={'name': role.name}, request=request)
             messages.success(request, _("Role '%(name)s' created.") % {'name': role.name})
             return redirect('role_list')
     else:
@@ -476,6 +497,8 @@ def role_update_view(request, role_id):
             role.permissions = form.cleaned_data['permissions']
             role.save()
 
+            log_action(request.user, audit_actions.ROLE_UPDATED, resource=role,
+                       detail={'name': role.name}, request=request)
             messages.success(request, _("Role '%(name)s' updated.") % {'name': role.name})
             return redirect('role_list')
     else:
@@ -508,5 +531,7 @@ def role_delete_view(request, role_id):
 
     name = role.name
     role.delete()
+    log_action(request.user, audit_actions.ROLE_DELETED,
+               detail={'name': name}, request=request)
     messages.success(request, _("Role '%(name)s' deleted.") % {'name': name})
     return redirect('role_list')
