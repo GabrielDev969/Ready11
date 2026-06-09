@@ -338,6 +338,8 @@ if not DEBUG:
     # gets a 301 and never actually checks the DB).
     SECURE_REDIRECT_EXEMPT = [r'^healthz/?$']
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE', str(60 * 60 * 24 * 14)))  # 2 weeks
     CSRF_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = 'same-origin'
