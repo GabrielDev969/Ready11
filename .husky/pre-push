@@ -1,0 +1,14 @@
+while IFS=' ' read -r _local_ref _local_sha remote_ref _remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo ""
+    echo "  Direct push to 'main' is not allowed."
+    echo "  Create a branch and open a Pull Request instead:"
+    echo ""
+    echo "    git checkout -b my-feature"
+    echo "    git push -u origin my-feature"
+    echo ""
+    exit 1
+  fi
+done
+
+exit 0
