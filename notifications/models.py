@@ -24,17 +24,31 @@ class NotificationQuerySet(models.QuerySet):
         """
         Notifications a user can see:
         - targeted directly at them (recipient == user), or
-        - global broadcasts (no recipient), or
-        - workspace broadcasts for a workspace they belong to.
+        - global broadcasts created after the user registered, or
+        - workspace broadcasts created after the user joined that workspace.
+
+        The date guards prevent newly joined users from seeing a backlog of
+        announcements that predate their membership.
         """
         from tenants.models import WorkspaceMembership
-        workspace_ids = list(
-            WorkspaceMembership.objects.filter(user=user).values_list('workspace_id', flat=True)
+        memberships = list(
+            WorkspaceMembership.objects.filter(user=user).values('workspace_id', 'joined_at')
         )
+
+        # One Q clause per workspace so we can gate on the exact join date.
+        tenant_q = Q()
+        for m in memberships:
+            tenant_q |= Q(
+                notification_type=NotificationType.TENANT,
+                recipient__isnull=True,
+                workspace_id=m['workspace_id'],
+                created_at__gte=m['joined_at'],
+            )
+
         return self.filter(
             Q(recipient=user)
-            | Q(notification_type=NotificationType.GLOBAL, recipient__isnull=True)
-            | Q(notification_type=NotificationType.TENANT, recipient__isnull=True, workspace_id__in=workspace_ids)
+            | Q(notification_type=NotificationType.GLOBAL, recipient__isnull=True, created_at__gte=user.created_at)
+            | tenant_q
         )
 
     def unread_for(self, user):

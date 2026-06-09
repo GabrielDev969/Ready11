@@ -1,6 +1,7 @@
 # users/models.py
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .managers import CustomUserManager
@@ -10,6 +11,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, verbose_name=_("Email"))
     first_name = models.CharField(max_length=50, verbose_name=_("First name"))
     last_name = models.CharField(max_length=50, verbose_name=_("Last name"))
+
+    created_at = models.DateTimeField(default=timezone.now)
 
     # Access control and status
     is_staff = models.BooleanField(default=False)

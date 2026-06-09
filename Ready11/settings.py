@@ -140,6 +140,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'core.middleware.RequestLoggingMiddleware',
+    'core.middleware.PublicOnlyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',            # i18n: detects language
     'django.middleware.common.CommonMiddleware',
