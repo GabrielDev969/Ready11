@@ -2,11 +2,9 @@
 
 📖 Também disponível em [Português](README.pt-br.md)
 
-A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-isolated multi-tenancy** (`django-tenants`), global accounts, role-based access control (RBAC), invite-only onboarding, brute-force protection (`django-axes`) and **internationalization** (English + Brazilian Portuguese, auto-detected). Runs locally (PostgreSQL via Docker) or fully in containers.
+A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-isolated multi-tenancy** (`django-tenants`), global accounts, role-based access control (RBAC), invite-only onboarding, real-time notifications (WebSocket), audit log, brute-force protection and **i18n** (English + Brazilian Portuguese). CI/CD with GitHub Actions included.
 
-This guide is written for someone who **just cloned the repository** and has never run the project before. There are separate instructions for **Windows** and **macOS**.
-
-> The home page (`/`) is a presentation landing page that also summarizes installation.
+> This guide is for someone who **just cloned the repository** and has never run the project before.
 
 ---
 
@@ -14,217 +12,186 @@ This guide is written for someone who **just cloned the repository** and has nev
 
 - [Stack](#stack)
 - [Prerequisites](#prerequisites)
+- [Quick start (Makefile)](#quick-start-makefile)
 - [Environment variables](#environment-variables)
-- [Option A — Run locally (recommended for development)](#option-a--run-locally-recommended-for-development)
-  - [macOS](#macos)
-  - [Windows](#windows)
+- [Option A — Run locally](#option-a--run-locally-recommended-for-development)
 - [Option B — Run everything in Docker](#option-b--run-everything-in-docker)
-- [Multi-tenancy: creating the first workspace](#multi-tenancy-creating-the-first-workspace)
-- [Useful Django commands](#useful-django-commands)
+- [First workspace (multi-tenancy)](#first-workspace-multi-tenancy)
+- [Day-to-day workflow](#day-to-day-workflow)
+- [When you make changes](#when-you-make-changes)
+- [Commands reference](#commands-reference)
 - [Project structure](#project-structure)
-- [Troubleshooting (FAQ)](#troubleshooting-faq)
+- [CI/CD](#cicd)
+- [Production checklist](#production-checklist)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Stack
 
-| Component          | Version / Technology                |
-|--------------------|-------------------------------------|
-| Language           | Python 3.12                         |
-| Framework          | Django 6.0                          |
-| Multi-tenancy      | django-tenants (schema per tenant)  |
-| Database           | PostgreSQL 17                       |
-| Security           | django-axes (brute-force protection)|
-| Front-end          | Django Templates + Tailwind CSS v3  |
-| i18n               | en + pt-BR (auto-detected)          |
-| Server (prod)      | Gunicorn                            |
-| Static files       | WhiteNoise (manifest)               |
-| Container          | Docker / Docker Compose             |
-
-Full Python dependencies in [`requirements.txt`](requirements.txt); front-end dependencies in [`package.json`](package.json).
+| Component           | Technology                                      |
+|---------------------|-------------------------------------------------|
+| Language            | Python 3.12                                     |
+| Framework           | Django 6.0                                      |
+| Multi-tenancy       | django-tenants (schema per tenant)              |
+| Database            | PostgreSQL 17                                   |
+| Real-time           | Django Channels + Redis (WebSocket)             |
+| Security            | django-axes (brute-force) + HSTS + CSRF         |
+| Error monitoring    | Sentry (optional, via `SENTRY_DSN`)             |
+| Front-end           | Django Templates + Tailwind CSS v3              |
+| i18n                | English (source) + pt-BR (auto-detected)        |
+| Server (prod)       | Daphne (ASGI) / Gunicorn                        |
+| Static files        | WhiteNoise (compressed + manifest in prod)      |
+| Cache               | Redis (`django.core.cache.backends.redis`)      |
+| Audit log           | Custom `audit` app (shared schema)              |
+| Linting             | Ruff                                            |
+| Commit convention   | Conventional Commits (commitlint)               |
+| CI/CD               | GitHub Actions (lint, test, security, coverage) |
+| Container           | Docker / Docker Compose                         |
 
 ---
 
 ## Prerequisites
 
-Before you start, install:
-
 ### For everyone
 - **Git** — https://git-scm.com/downloads
-- **Docker Desktop** (needed to run the PostgreSQL database) — https://www.docker.com/products/docker-desktop/
+- **Docker Desktop** (runs PostgreSQL + Redis) — https://www.docker.com/products/docker-desktop/
 
 ### To run locally (Option A)
 - **Python 3.12** — https://www.python.org/downloads/
-  - **Windows:** during installation, check **"Add Python to PATH"**.
-  - **macOS:** recommended via [Homebrew](https://brew.sh): `brew install python@3.12`
-- **Node.js 18+** (to compile the CSS with Tailwind) — https://nodejs.org/
-- **GNU gettext** (to compile the i18n translations)
-  - **macOS:** `brew install gettext`
-  - **Windows:** bundled with Git for Windows, or install the gettext package.
+  - Windows: check **"Add Python to PATH"** during install
+  - macOS: `brew install python@3.12`
+- **Node.js 18+** (Tailwind CSS) — https://nodejs.org/
+- **GNU gettext** (i18n translations)
+  - macOS: `brew install gettext`
+  - Windows: bundled with Git for Windows
 
-> To check what's already installed:
+---
+
+## Quick start (Makefile)
+
+The fastest way to get running after cloning:
+
+```bash
+# 1. Start the database + Redis
+make docker-up
+
+# 2. Create venv and install all dependencies
+python3 -m venv venv
+source venv/bin/activate        # Windows: .\venv\Scripts\Activate.ps1
+make setup                      # pip install + npm install + build CSS
+
+# 3. Copy the environment file
+cp .env.example .env            # Windows: Copy-Item .env.example .env
+# Edit .env and set at least: DEBUG=True (other defaults work out of the box)
+
+# 4. Apply migrations and create the public tenant
+make migrate
+
+# 5. Create a dev superuser (admin@example.com / Admin1234!)
+make seed
+
+# 6. Start the server
+make run
+```
+
+Open: **http://127.0.0.1:8000**
+
+> **Install pre-commit hooks** (catches lint + commit format issues before push):
 > ```bash
-> git --version
-> docker --version
-> python --version   # on Windows usually: python
-> python3 --version  # on macOS/Linux usually: python3
+> pip install pre-commit
+> pre-commit install
 > ```
 
 ---
 
 ## Environment variables
 
-The project reads its configuration from **environment variables**. There's an example file: [`.env.example`](.env.example).
+The project reads all configuration from environment variables and loads `.env` automatically via `python-dotenv`.
 
-> The project loads the `.env` file automatically (via `python-dotenv`), so for local development you only need to copy the example — no need to export variables by hand.
-
-Create your own `.env` from the example:
-
-**macOS / Linux:**
 ```bash
 cp .env.example .env
 ```
 
-**Windows (PowerShell):**
-```powershell
-Copy-Item .env.example .env
-```
+Most important variables:
 
-Most relevant variables (see `.env.example` for the full list):
+| Variable          | Description                                                | Default / Example                              |
+|-------------------|------------------------------------------------------------|------------------------------------------------|
+| `DEBUG`           | Django debug mode. Never `True` in production.             | `True` (dev)                                   |
+| `SECRET_KEY`      | Required when `DEBUG=False`. Generate with `python manage.py generate_secret_key`. | *(must set in prod)* |
+| `DATABASE_URL`    | PostgreSQL URL. Empty in dev falls back to the docker-compose DB. | `postgres://postgres:postgres@127.0.0.1:5432/ready_db` |
+| `REDIS_URL`       | Redis URL for Channels + cache. Optional in single-process dev. | `redis://localhost:6379/0` |
+| `PUBLIC_DOMAIN`   | Base domain for tenant subdomains.                         | `localhost`                                    |
+| `SENTRY_DSN`      | Sentry project DSN. Leave empty to disable.                | *(optional)*                                   |
+| `LOG_FORMAT`      | `text` (dev) or `json` (production/CloudWatch/Loki).       | `text`                                         |
 
-| Variable        | Description                                                       | Example                                                |
-|-----------------|-------------------------------------------------------------------|--------------------------------------------------------|
-| `DATABASE_URL`  | PostgreSQL connection URL. If empty in dev, uses the local fallback. Required in production. | `postgres://postgres:postgres@127.0.0.1:5432/ready_db` |
-| `DEBUG`         | Django debug mode. Defaults to `False` (production-safe).         | `True`                                                 |
-| `SECRET_KEY`    | Django secret key. Required when `DEBUG=False`.                   | `change-me`                                            |
-| `ALLOWED_HOSTS` | Allowed hosts, comma-separated.                                   | `127.0.0.1,localhost,.localhost`                       |
-| `PUBLIC_DOMAIN` | Base domain used to build tenant subdomains.                      | `localhost`                                            |
-
-> ⚠️ In production (`DEBUG=False`), `SECRET_KEY` and `DATABASE_URL` are **mandatory** — the app refuses to boot without them.
->
-> 💡 `docker-compose.yml` creates the database named **`ready_db`** with user/password **`postgres`/`postgres`**. The default `.env.example` already matches this.
+> In production (`DEBUG=False`), `SECRET_KEY` and `DATABASE_URL` are **mandatory** — the app refuses to boot without them.
 
 ---
 
 ## Option A — Run locally (recommended for development)
 
-Here **PostgreSQL runs in Docker** and the **Django app runs on your machine** (faster to develop, with auto-reload).
+PostgreSQL + Redis run in Docker; Django runs on your machine (fast, auto-reload).
 
-### macOS
+### macOS / Linux
 
 ```bash
-# 1. Enter the project folder (after cloning)
 cd Ready11
+make docker-up
 
-# 2. Start the PostgreSQL database in the background
-docker compose up -d
-
-# 3. Create and activate a Python virtual environment
 python3 -m venv venv
 source venv/bin/activate
-
-# 4. Install the Python dependencies
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Create your .env (loaded automatically by Django)
 cp .env.example .env
-# For local dev the defaults work out of the box (DEBUG=True uses the docker-compose Postgres).
+# Open .env and set DEBUG=True — the other defaults work out of the box.
 
-# 6. Build the Tailwind CSS
 npm install
 npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. Compile the translations (en + pt-BR)
 python manage.py compilemessages
-
-# 8. Apply the shared-schema migrations and create the public tenant
 python manage.py migrate_schemas --shared
 python manage.py setup_public_tenant
+python manage.py seed           # creates admin@example.com / Admin1234!
 
-# 9. (Optional) Create a superuser for /admin
-python manage.py createsuperuser
-
-# 10. Start the development server
 python manage.py runserver
 ```
 
-Open: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
-
-> To re-activate the virtualenv in a new session: `source venv/bin/activate`
-> The `.env` file is loaded automatically — no need to export variables manually.
-
----
-
-### Windows
-
-Use **PowerShell** (recommended).
+### Windows (PowerShell)
 
 ```powershell
-# 1. Enter the project folder (after cloning)
 cd Ready11
+make docker-up
 
-# 2. Start the PostgreSQL database in the background
-docker compose up -d
-
-# 3. Create and activate a Python virtual environment
 python -m venv venv
 .\venv\Scripts\Activate.ps1
-
-# 4. Install the Python dependencies
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 
-# 5. Create your .env (loaded automatically by Django)
 Copy-Item .env.example .env
-# For local dev the defaults work out of the box (DEBUG=True uses the docker-compose Postgres).
+# Open .env and set DEBUG=True
 
-# 6. Build the Tailwind CSS
 npm install
 npx tailwindcss -i input.css -o static/css/output.css --minify
 
-# 7. Compile the translations (en + pt-BR)
 python manage.py compilemessages
-
-# 8. Apply the shared-schema migrations and create the public tenant
 python manage.py migrate_schemas --shared
 python manage.py setup_public_tenant
+python manage.py seed
 
-# 9. (Optional) Create a superuser for /admin
-python manage.py createsuperuser
-
-# 10. Start the development server
 python manage.py runserver
 ```
 
-Open: **http://127.0.0.1:8000** (landing) • Admin: **http://127.0.0.1:8000/admin**
-
-> **If PowerShell blocks the venv activation** with *"execution of scripts is disabled"*, run once:
-> ```powershell
-> Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-> ```
-> Then activate again.
-
-> **Using Command Prompt (CMD) instead of PowerShell?** The commands differ:
-> - Activate venv: `venv\Scripts\activate.bat`
+> If PowerShell blocks venv activation: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`
 
 ---
 
 ## Option B — Run everything in Docker
 
-Here you start the database with Docker Compose and run the app from the Docker image (using Gunicorn, like production).
-
-> This project's `docker-compose.yml` only brings up the **database**. For the app we build the image from the [`Dockerfile`](Dockerfile) and connect it to the same network as the database.
-
 ```bash
-# 1. Start the database
-docker compose up -d
-
-# 2. Build the application image
+make docker-up
 docker build -t ready11-app .
-
-# 3. Run the app container connected to the compose network
-#    (find the network name with: docker network ls | grep ready)
 docker run --rm -p 8000:8000 \
   --network ready11_default \
   -e DATABASE_URL="postgres://postgres:postgres@django_postgres_db:5432/ready_db" \
@@ -234,64 +201,191 @@ docker run --rm -p 8000:8000 \
   ready11-app
 ```
 
-> **Why `django_postgres_db` as the host?** Inside the Docker network, containers reach each other by name. The database container is named `django_postgres_db` (defined in `docker-compose.yml`).
->
-> [`entrypoint.sh`](entrypoint.sh) automatically runs the migrations (`migrate_schemas --shared`), ensures the public tenant, collects static files and starts **Gunicorn**. The `Dockerfile` compiles the CSS (Tailwind) and the translations (`compilemessages`) at build time.
-
-Open: **http://127.0.0.1:8000**
+`entrypoint.sh` runs migrations, collects static files and starts Gunicorn automatically.
 
 ---
 
-## Multi-tenancy: creating the first workspace
+## First workspace (multi-tenancy)
 
-Entry is **invite-only**. To create the first company (workspace):
+Entry is **invite-only**. To create the first company workspace:
 
-1. Create a superuser and open `/admin`.
+1. Log in to `/admin` with your superuser (`make seed` creates one).
 2. Under **Workspace invites**, create an invite **with no workspace** (a "genesis" invite). The link is printed to the server console.
-3. Open the link, fill in your name and **Company name** — the backend creates an **isolated schema** in PostgreSQL and a subdomain (`company.localhost`).
-4. The owner accesses the workspace on the subdomain and invites the team under **/team/**.
+3. Open the link, fill in your name and **company name** — the backend creates an **isolated PostgreSQL schema** and a subdomain (`company.localhost`).
+4. The workspace owner invites the team via **/team/**.
 
-> **Subdomains in dev:** browsers resolve `*.localhost` to `127.0.0.1` automatically (e.g. `http://mycompany.localhost:8000/home/`). `ALLOWED_HOSTS` already includes `.localhost`.
+> **Subdomains in dev:** browsers resolve `*.localhost` to `127.0.0.1` automatically, e.g. `http://acme.localhost:8000/home/`. `ALLOWED_HOSTS` already includes `.localhost`.
 
-> **Language:** the site detects the browser language (English or Portuguese) and has a switcher in the header. Source strings are in English; pt-BR comes from the translations in `locale/`.
+---
 
-Create a superuser with the app running in Docker:
+## Day-to-day workflow
+
+### Pre-commit hooks
+
+After running `pre-commit install`, every `git commit` automatically:
+- Runs Ruff (lints + auto-fixes)
+- Checks trailing whitespace and missing newlines at EOF
+- Checks for merge conflicts in staged files
+- Validates YAML files
+
+To run all hooks manually on all files:
 ```bash
-docker run --rm -it \
-  --network ready11_default \
-  -e DATABASE_URL="postgres://postgres:postgres@django_postgres_db:5432/ready_db" \
-  -e SECRET_KEY="anything" \
-  ready11-app python manage.py createsuperuser
+pre-commit run --all-files
+```
+
+### Running tests
+
+```bash
+make test           # run the full test suite
+make coverage       # run tests + show coverage report
+```
+
+Tests use Django's built-in `TestCase`. They connect to a real PostgreSQL test database (created and destroyed automatically). Make sure `make docker-up` is running first.
+
+### Viewing emails in dev
+
+Start Mailpit (included in `docker-compose.yml`):
+```bash
+make docker-up
+```
+
+In your `.env`:
+```
+EMAIL_HOST=localhost
+EMAIL_PORT=1025
+```
+
+Open **http://localhost:8025** to see all emails sent by the app (invites, password resets, etc.).
+
+### Lint
+
+```bash
+make lint           # ruff check .
+```
+
+Ruff is also enforced in CI. Configure rules in `ruff.toml`.
+
+### Commit convention
+
+Commits must follow [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <description>
+
+feat: add workspace export
+fix: correct invite expiry date
+docs: update README setup steps
+refactor: extract permission check to decorator
+test: add coverage for audit log service
+chore: upgrade Django to 6.1
+```
+
+Allowed types: `feat` `fix` `docs` `style` `refactor` `test` `chore` `perf` `ci` `build` `revert`
+
+Pre-commit hooks will warn you if the format is wrong. The CI also validates commits on pull requests.
+
+---
+
+## When you make changes
+
+### Added or changed a model
+
+```bash
+python manage.py makemigrations
+make migrate        # applies to shared schema + all tenant schemas
+```
+
+> Models in `SHARED_APPS` (like `audit`, `users`, `notifications`) live in the public schema.
+> Models in `TENANT_APPS` live in each company's schema.
+
+### Added a new translatable string
+
+```bash
+make messages       # extracts new strings → locale/pt_BR/LC_MESSAGES/django.po
+```
+
+Open `locale/pt_BR/LC_MESSAGES/django.po`, find the new `msgid` entries (they have empty `msgstr`), and add the pt-BR translations. Then:
+
+```bash
+make compile        # compiles .po → .mo (required for the strings to show up)
+```
+
+> **Rule:** source strings always in English. Portuguese goes only in the `.po` file.
+
+### Added a new dependency
+
+```bash
+pip install <package>
+pip freeze | grep <package>    # copy the exact pinned version
+# Manually add it to requirements.txt (keep alphabetical order)
+```
+
+For dev-only tools (testing, linting):
+```bash
+# Add to requirements-dev.txt instead
+```
+
+### Created a new app
+
+```bash
+python manage.py startapp myapp
+```
+
+Then:
+1. Add it to `SHARED_APPS` or `TENANT_APPS` in `settings.py`
+2. Create `myapp/migrations/__init__.py` and run `makemigrations myapp`
+3. Add a URL include in `Ready11/urls.py` or the tenant urlconf
+4. Write at least basic tests in `myapp/tests.py`
+
+### After pulling changes from the team
+
+```bash
+git pull
+pip install -r requirements.txt     # install any new dependencies
+make migrate                         # apply new migrations
+make compile                         # recompile translations if .po changed
+make css                             # rebuild CSS if templates changed
 ```
 
 ---
 
-## Useful Django commands
+## Commands reference
 
-> Run with the `venv` active (the `.env` is loaded automatically).
+### Makefile shortcuts
 
-| Command                                      | What it does                                          |
-|----------------------------------------------|-------------------------------------------------------|
-| `python manage.py runserver`                 | Starts the development server.                        |
-| `python manage.py migrate_schemas --shared`  | Applies migrations to the public (shared) schema.     |
-| `python manage.py migrate_schemas --tenant`  | Applies migrations to the tenant schemas.             |
-| `python manage.py setup_public_tenant`       | Creates the public tenant/domain (idempotent).        |
-| `python manage.py makemigrations`            | Creates new migrations from model changes.            |
-| `python manage.py createsuperuser`           | Creates an admin user.                                |
-| `python manage.py makemessages -l pt_BR`     | Extracts/updates strings for translation.             |
-| `python manage.py compilemessages`           | Compiles the translations (`.po` → `.mo`).            |
-| `npx tailwindcss -i input.css -o static/css/output.css` | Rebuilds the Tailwind CSS.                 |
-| `python manage.py shell`                     | Opens a Python shell with the Django context.         |
+| Command           | What it does                                      |
+|-------------------|---------------------------------------------------|
+| `make setup`      | Install Python + Node deps and build CSS          |
+| `make run`        | Start the development server                      |
+| `make migrate`    | Apply all migrations (shared + public + tenant)   |
+| `make seed`       | Create dev superuser (`admin@example.com`)        |
+| `make test`       | Run the test suite                                |
+| `make coverage`   | Run tests and show coverage report                |
+| `make lint`       | Run Ruff linter                                   |
+| `make messages`   | Extract translatable strings (pt-BR)              |
+| `make compile`    | Compile `.po` → `.mo` translation files           |
+| `make css`        | Watch and rebuild Tailwind CSS                    |
+| `make check`      | Django deployment security check                  |
+| `make docker-up`  | Start PostgreSQL + Redis + Mailpit                |
+| `make docker-down`| Stop Docker services                              |
+| `make clean`      | Remove `.pyc`, `__pycache__`, `staticfiles/`      |
 
-Useful Docker commands:
+### Django management commands
 
-| Command                     | What it does                                       |
-|-----------------------------|----------------------------------------------------|
-| `docker compose up -d`      | Starts the database in the background.             |
-| `docker compose down`       | Stops the containers (keeps the data).             |
-| `docker compose down -v`    | Stops the containers **and deletes** the DB data.  |
-| `docker compose logs -f db` | Follows the database logs in real time.            |
-| `docker ps`                 | Lists running containers.                          |
+| Command                                          | What it does                                      |
+|--------------------------------------------------|---------------------------------------------------|
+| `python manage.py runserver`                     | Dev server                                        |
+| `python manage.py migrate_schemas --shared`      | Migrate public schema                             |
+| `python manage.py migrate_schemas --tenant`      | Migrate all tenant schemas                        |
+| `python manage.py setup_public_tenant`           | Create/update public tenant (idempotent)          |
+| `python manage.py seed`                          | Create dev superuser                              |
+| `python manage.py makemigrations`                | Create migration files from model changes         |
+| `python manage.py makemessages -l pt_BR`         | Extract strings for translation                   |
+| `python manage.py compilemessages`               | Compile `.po` → `.mo`                             |
+| `python manage.py cleanup_audit_logs`            | Delete audit logs older than 90 days              |
+| `python manage.py cleanup_notifications`         | Delete old notifications                          |
+| `python manage.py check --deploy`                | Check production configuration                    |
+| `python manage.py shell`                         | Django interactive shell                          |
 
 ---
 
@@ -299,82 +393,101 @@ Useful Docker commands:
 
 ```
 Ready11/
-├── Ready11/                 # Django configuration package (settings, urls, wsgi, asgi)
-├── core/                    # Public landing page + health check
-├── users/                   # Global custom user, auth, registration, login
-├── tenants/                 # Multi-tenancy: workspaces, domains, roles, memberships, invites
-├── templates/               # Django templates (Tailwind), organized by app
-├── locale/pt_BR/            # Brazilian Portuguese translations
-├── static/ , input.css , tailwind.config.js   # Front-end (Tailwind)
-├── manage.py                # Django admin CLI
-├── requirements.txt         # Python dependencies
-├── package.json             # Front-end dependencies
-├── Dockerfile               # App image (Node CSS build + Python/Gunicorn)
-├── docker-compose.yml       # PostgreSQL service
-├── entrypoint.sh            # migrations + Gunicorn on container start
-├── .env.example             # Environment variables template
+├── Ready11/                  # Django config package (settings, urls, asgi)
+├── core/                     # Public landing page, health check, error pages, robots.txt
+│   └── management/commands/  # seed
+├── users/                    # Global user model, auth, registration, password reset
+├── tenants/                  # Workspaces, domains, RBAC, memberships, invites
+├── notifications/            # In-app notifications (WebSocket + Redis)
+├── audit/                    # Workspace audit log (shared schema)
+│   └── management/commands/  # cleanup_audit_logs
+├── templates/                # Django templates organized by app
+│   ├── users/                # login, register, password reset, email templates
+│   ├── tenants/              # workspace, team, roles, invite
+│   ├── audit/                # audit log list
+│   ├── notifications/        # notification partials
+│   ├── partials/             # sidebar, header, nav
+│   ├── 404.html, 403.html    # custom error pages
+│   └── 500.html              # standalone error page (no DB access)
+├── locale/pt_BR/             # Brazilian Portuguese translations
+├── static/                   # Static source files
+├── input.css                 # Tailwind CSS entry point
+├── tailwind.config.js        # Tailwind configuration
+├── manage.py
+├── requirements.txt          # Production Python dependencies
+├── requirements-dev.txt      # Dev/test dependencies (ruff, coverage, bandit…)
+├── Dockerfile
+├── docker-compose.yml        # PostgreSQL + Redis + Mailpit
+├── entrypoint.sh             # Container entrypoint (migrations → Gunicorn)
+├── Makefile                  # Development shortcuts
+├── ruff.toml                 # Ruff linter configuration
+├── commitlint.config.js      # Conventional Commits rules
+├── .pre-commit-config.yaml   # Pre-commit hooks (ruff, whitespace, yaml…)
+├── .github/workflows/ci.yml  # CI: lint, commitlint, test+coverage, pip-audit, security
+├── .env.example
 ├── .dockerignore
 └── .gitignore
 ```
 
 ---
 
-## Production checklist (multi-tenant SaaS)
+## CI/CD
 
-The architecture is **schema-per-tenant** (each company gets its own PostgreSQL
-schema), suitable for dozens to thousands of companies. Before going live with real
-companies, make sure of the following:
+Every push to `main` and every pull request runs these GitHub Actions jobs:
 
-- [ ] **`DEBUG=False`** and a strong **`SECRET_KEY`** set (the app refuses to boot
-      otherwise). Run `python manage.py check --deploy` — it should report no issues.
-- [ ] **`DATABASE_URL`** points to your production PostgreSQL.
-- [ ] **`PUBLIC_DOMAIN`** set to your real domain; DNS has a **wildcard** record
-      (`*.yourdomain.com`) so each tenant subdomain resolves. `CSRF_TRUSTED_ORIGINS`
-      is auto-derived from it (or set it explicitly).
-- [ ] **`REDIS_URL` is mandatory when running more than one server replica.**
-      Real-time notifications use Channels; with the in-memory layer a toast only
-      reaches users connected to the *same* process. With multiple replicas, set
-      `REDIS_URL` so the WebSocket channel layer is shared. (Single process / dev:
-      in-memory is fine.)
-- [ ] **Email**: configure SMTP (`EMAIL_BACKEND` + `EMAIL_*`) so verification and
-      invite emails actually send (dev uses the console backend).
-- [ ] **Migrations on deploy**: `entrypoint.sh` runs both `migrate_schemas --shared`
-      and `--tenant`, so every company's schema is migrated. Note this scales linearly
-      with the number of tenants — large tenant counts mean longer deploys.
-- [ ] **Notification cleanup**: runs automatically via the in-process scheduler
-      (`NOTIFICATION_CLEANUP_ENABLED`, default on), coordinated across replicas by a
-      Redis lock. To use an external scheduler instead, set
-      `NOTIFICATION_CLEANUP_ENABLED=False` and cron `manage.py cleanup_notifications`.
-- [ ] **HTTPS** terminated by your reverse proxy (Easypanel/Nginx). The app already
-      sets HSTS, secure cookies and trusts `X-Forwarded-Proto`.
+| Job                | Triggers    | What it checks                                            |
+|--------------------|-------------|-----------------------------------------------------------|
+| `lint`             | push + PR   | Ruff (code style) + Bandit (SAST security scan)           |
+| `commitlint`       | PR only     | All commits follow Conventional Commits format            |
+| `test`             | push + PR   | Django test suite + coverage ≥ 60% + uploads `coverage.xml` |
+| `dependency-audit` | push + PR   | `pip-audit` — no known CVEs in `requirements.txt`         |
+| `security-check`   | push + PR   | `manage.py check --deploy` with `DEBUG=False`             |
 
-### Scaling notes (when volume grows)
-- **Tenant provisioning is synchronous** today: creating a company runs the schema
-  creation + tenant migrations inside the request. Fine at low signup volume; move it
-  to a background task when needed.
-- **Schema-per-tenant** is great into the low thousands of tenants. Far beyond that,
-  per-deploy migrations and `pg_dump` get heavy — revisit the tenancy strategy then.
-- For heavy HTTP load you may split HTTP (WSGI/uvicorn workers) from the WebSocket
-  process; the base ships a single `daphne` serving both.
+The test job spins up a real PostgreSQL 17 container. The coverage report is uploaded as an artifact on every run.
 
 ---
 
-## Troubleshooting (FAQ)
+## Production checklist
 
-**`django.db.utils.OperationalError: could not connect to server`**
-The database isn't up or `DATABASE_URL` is wrong. Make sure `docker compose up -d` ran and the `django_postgres_db` container is active (`docker ps`).
+Before going live with real users:
+
+- [ ] `DEBUG=False` + strong `SECRET_KEY` set. Run `make check` — no warnings.
+- [ ] `DATABASE_URL` pointing to production PostgreSQL.
+- [ ] `PUBLIC_DOMAIN` set to your real domain + DNS **wildcard** record (`*.yourdomain.com`).
+- [ ] `REDIS_URL` set — required for real-time notifications to work across multiple server replicas.
+- [ ] `EMAIL_*` SMTP configured — otherwise invites and password reset emails won't send.
+- [ ] `SENTRY_DSN` set for error monitoring.
+- [ ] `LOG_FORMAT=json` for structured logs (CloudWatch, Grafana Loki, Datadog).
+- [ ] HTTPS terminated by your reverse proxy (Nginx/Traefik/Easypanel). The app enforces HSTS and secure cookies automatically when `DEBUG=False`.
+- [ ] Schedule `python manage.py cleanup_audit_logs` and `cleanup_notifications` in cron or your task scheduler (or leave the built-in scheduler on — see `NOTIFICATION_CLEANUP_ENABLED`).
+- [ ] Migrations on deploy: `entrypoint.sh` runs `migrate_schemas --shared` + `--tenant` — every tenant schema is migrated. This scales linearly with tenant count.
+
+### Scaling notes
+- **Tenant provisioning is synchronous today** — schema creation runs in the HTTP request. Fine at low signup volume; move to a background task when volume grows.
+- **Schema-per-tenant** works well into the low thousands. Far beyond that, per-deploy migrations and `pg_dump` become heavy.
+- For high HTTP load you can split the HTTP workers from the WebSocket process; the base ships a single `daphne` serving both.
+
+---
+
+## Troubleshooting
+
+**`could not connect to server` (PostgreSQL)**
+Run `make docker-up` and confirm the `django_postgres_db` container is running (`docker ps`).
 
 **`port 5432 is already allocated`**
-There's already a PostgreSQL on port 5432 (another container or local install). Stop the conflicting service or change the port mapping in `docker-compose.yml` (e.g. `"5433:5432"`) and adjust `DATABASE_URL`.
+Stop the conflicting PostgreSQL service, or change the port mapping in `docker-compose.yml` (e.g. `"5433:5432"`) and update `DATABASE_URL`.
 
-**`docker: command not found` or Docker connection error**
-Open **Docker Desktop** and wait for it to fully start before running the commands.
+**`Missing staticfiles manifest entry for 'css/output.css'`**
+Build the CSS first: `npx tailwindcss -i input.css -o static/css/output.css --minify`. This only happens in production mode (`DEBUG=False`) — in dev and CI tests the plain static storage is used automatically.
+
+**`docker: command not found`**
+Open **Docker Desktop** and wait for it to fully start before running any `docker` commands.
 
 **`'python' is not recognized` (Windows)**
-Reinstall Python with **"Add Python to PATH"** checked, or use the `py` launcher (e.g. `py -m venv venv`).
+Reinstall Python with **"Add Python to PATH"** checked, or use the `py` launcher (`py -m venv venv`).
 
-**`docker compose` doesn't work, but `docker-compose` does**
-Older versions use the hyphen. Replace `docker compose` with `docker-compose`.
+**`ImproperlyConfigured: SECRET_KEY required when DEBUG=False`**
+Set `SECRET_KEY` and `DATABASE_URL` in `.env`, or set `DEBUG=True` for local development.
 
-**`ImproperlyConfigured: SECRET_KEY ... required when DEBUG=False`**
-You're running in production mode without the required env vars. Set `SECRET_KEY` and `DATABASE_URL`, or set `DEBUG=True` for local development.
+**`ValueError: Missing staticfiles manifest` in tests**
+Tests set `DEBUG=True` automatically; with that, the plain `StaticFilesStorage` is used (no manifest needed). If you see this error in tests, confirm `DEBUG=True` is set in the CI environment.

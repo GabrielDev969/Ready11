@@ -138,7 +138,7 @@ jobs:
       - name: Django deployment security check
         env:
           DEBUG: 'False'
-          SECRET_KEY: ci-security-check-key-not-for-production
+          SECRET_KEY: 'gH3kP9mN2xQ7vL5wR8tY4uJ6bF1cA0eD-zS-nW-iO-qE-yM-hK-pX-oV-jU-lT'
           ALLOWED_HOSTS: example.com
           PUBLIC_DOMAIN: example.com
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/ready_db_check
