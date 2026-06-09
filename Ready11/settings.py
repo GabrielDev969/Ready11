@@ -302,6 +302,11 @@ STORAGES = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Use a custom test runner that bootstraps the public tenant + 'testserver'
+# domain after the test DB is created, so TenantMainMiddleware resolves
+# requests correctly in all test cases.
+TEST_RUNNER = 'Ready11.test_runner.TenantAwareTestRunner'
+
 
 # ==========================================
 # Production security hardening
