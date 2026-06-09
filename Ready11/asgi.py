@@ -8,6 +8,7 @@ import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Ready11.settings')
 
+from django.conf import settings
 from django.core.asgi import get_asgi_application
 
 # Initialize Django's ASGI app first so the app registry is ready before we
@@ -29,3 +30,9 @@ application = ProtocolTypeRouter({
         AuthMiddlewareStack(URLRouter(websocket_urlpatterns))
     ),
 })
+
+# Wrap with Sentry ASGI middleware so WebSocket errors are captured too.
+# Only activates when SENTRY_DSN is configured.
+if getattr(settings, 'SENTRY_DSN', ''):
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+    application = SentryAsgiMiddleware(application)

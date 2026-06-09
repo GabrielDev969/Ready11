@@ -4,8 +4,7 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from audit.models import AuditLog
-
-AUDIT_LOG_RETENTION_DAYS = 90
+from audit.services import AUDIT_LOG_RETENTION_DAYS, purge_old_audit_logs
 
 
 class Command(BaseCommand):
@@ -18,12 +17,11 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        cutoff = timezone.now() - timedelta(days=AUDIT_LOG_RETENTION_DAYS)
-        qs = AuditLog.objects.filter(created_at__lt=cutoff)
-
         if options['dry_run']:
-            self.stdout.write(f"[dry-run] would delete {qs.count()} audit log entries.")
+            cutoff = timezone.now() - timedelta(days=AUDIT_LOG_RETENTION_DAYS)
+            count = AuditLog.objects.filter(created_at__lt=cutoff).count()
+            self.stdout.write(f"[dry-run] would delete {count} audit log entries.")
             return
 
-        count, _ = qs.delete()
+        count = purge_old_audit_logs()
         self.stdout.write(self.style.SUCCESS(f"Deleted {count} audit log entries."))

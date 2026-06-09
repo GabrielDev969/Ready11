@@ -139,6 +139,7 @@ MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',  # MUST be first
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'core.middleware.RequestLoggingMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',            # i18n: detects language
     'django.middleware.common.CommonMiddleware',
@@ -181,6 +182,9 @@ ASGI_APPLICATION = 'Ready11.asgi.application'
 # `manage.py cleanup_notifications` externally (cron / Celery beat).
 NOTIFICATION_CLEANUP_ENABLED = env_bool('NOTIFICATION_CLEANUP_ENABLED', True)
 NOTIFICATION_CLEANUP_INTERVAL_HOURS = int(os.environ.get('NOTIFICATION_CLEANUP_INTERVAL_HOURS', '24'))
+
+AUDIT_CLEANUP_ENABLED = env_bool('AUDIT_CLEANUP_ENABLED', True)
+AUDIT_CLEANUP_INTERVAL_HOURS = int(os.environ.get('AUDIT_CLEANUP_INTERVAL_HOURS', '24'))
 
 REDIS_URL = os.environ.get('REDIS_URL')
 if REDIS_URL:
@@ -379,6 +383,11 @@ LOGGING = {
         'django': {
             'handlers': ['console'],
             'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        'request': {
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': False,
         },
     },

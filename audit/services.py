@@ -1,4 +1,7 @@
 import logging
+from datetime import timedelta
+
+from django.utils import timezone
 
 from .models import AuditLog
 
@@ -48,3 +51,13 @@ def log_action(user, action, resource=None, detail=None, request=None):
         )
     except Exception:
         logger.exception("Failed to write audit log for action %s", action)
+
+
+AUDIT_LOG_RETENTION_DAYS = 90
+
+
+def purge_old_audit_logs(retention_days=AUDIT_LOG_RETENTION_DAYS):
+    """Delete audit log entries older than ``retention_days``. Returns count deleted."""
+    cutoff = timezone.now() - timedelta(days=retention_days)
+    count, _ = AuditLog.objects.filter(created_at__lt=cutoff).delete()
+    return count
