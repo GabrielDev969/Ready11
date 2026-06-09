@@ -97,10 +97,10 @@ make run
 
 Open: **http://127.0.0.1:8000**
 
-> **Install pre-commit hooks** (catches lint + commit format issues before push):
+> **Git hooks install automatically** when `npm install` runs. No extra step needed.
+> To also enable the deeper file-level checks (ruff, whitespace, etc.):
 > ```bash
-> pip install pre-commit
-> pre-commit install
+> make hooks    # installs pre-commit hooks
 > ```
 
 ---
@@ -220,15 +220,21 @@ Entry is **invite-only**. To create the first company workspace:
 
 ## Day-to-day workflow
 
-### Pre-commit hooks
+### Git hooks
 
-After running `pre-commit install`, every `git commit` automatically:
-- Runs Ruff (lints + auto-fixes)
-- Checks trailing whitespace and missing newlines at EOF
-- Checks for merge conflicts in staged files
-- Validates YAML files
+Hooks are managed by **husky** and install automatically when `npm install` runs. No manual step required.
 
-To run all hooks manually on all files:
+| Hook | Trigger | What it does |
+|---|---|---|
+| `pre-commit` | every `git commit` | Runs `pre-commit` checks (ruff, whitespace, etc.) if installed; falls back to `ruff check .` |
+| `commit-msg` | every `git commit` | Validates the message format with commitlint |
+
+To also enable the full pre-commit suite (ruff + whitespace + YAML checks):
+```bash
+make hooks    # runs: pre-commit install
+```
+
+To run all file checks manually without committing:
 ```bash
 pre-commit run --all-files
 ```

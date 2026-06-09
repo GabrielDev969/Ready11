@@ -97,10 +97,10 @@ make run
 
 Acesse: **http://127.0.0.1:8000**
 
-> **Instale os pre-commit hooks** (pega problemas de lint e formato de commit antes do push):
+> **Os hooks Git são instalados automaticamente** quando o `npm install` roda. Nenhum passo extra necessário.
+> Para habilitar também as verificações de arquivo mais profundas (ruff, whitespace, etc.):
 > ```bash
-> pip install pre-commit
-> pre-commit install
+> make hooks    # instala os pre-commit hooks
 > ```
 
 ---
@@ -220,15 +220,21 @@ A entrada é **apenas por convite**. Para criar o primeiro workspace:
 
 ## Fluxo de desenvolvimento do dia-a-dia
 
-### Pre-commit hooks
+### Git hooks
 
-Depois de rodar `pre-commit install`, todo `git commit` executa automaticamente:
-- Ruff (lint + auto-fix)
-- Verifica trailing whitespace e newline no final do arquivo
-- Detecta marcadores de conflito de merge em arquivos staged
-- Valida arquivos YAML
+Os hooks são gerenciados pelo **husky** e instalados automaticamente quando o `npm install` roda. Nenhum passo manual necessário.
 
-Para rodar todos os hooks manualmente em todos os arquivos:
+| Hook | Quando roda | O que faz |
+|---|---|---|
+| `pre-commit` | todo `git commit` | Roda os checks do `pre-commit` (ruff, whitespace, etc.) se instalado; cai no `ruff check .` diretamente se não |
+| `commit-msg` | todo `git commit` | Valida o formato da mensagem com commitlint |
+
+Para habilitar também o suite completo de pre-commit (ruff + whitespace + YAML):
+```bash
+make hooks    # roda: pre-commit install
+```
+
+Para rodar todos os checks de arquivo manualmente sem commitar:
 ```bash
 pre-commit run --all-files
 ```

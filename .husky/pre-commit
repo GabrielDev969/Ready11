@@ -1,0 +1,7 @@
+# Run pre-commit hooks if installed (ruff, whitespace checks, etc.)
+# Install with: pip install pre-commit && pre-commit install
+if command -v pre-commit >/dev/null 2>&1; then
+  pre-commit run --hook-stage pre-commit
+elif command -v ruff >/dev/null 2>&1; then
+  ruff check .
+fi

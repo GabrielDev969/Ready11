@@ -1,4 +1,4 @@
-.PHONY: help setup run migrate css test coverage lint seed messages compile check docker-up docker-down clean
+.PHONY: help setup hooks run migrate css test coverage lint seed messages compile check docker-up docker-down clean
 
 PYTHON := python
 MANAGE := $(PYTHON) manage.py
@@ -6,6 +6,7 @@ MANAGE := $(PYTHON) manage.py
 help:
 	@echo "Ready11 development commands:"
 	@echo "  make setup        Install dependencies and build CSS"
+	@echo "  make hooks        Install pre-commit file hooks (optional, for ruff etc.)"
 	@echo "  make run          Start the development server"
 	@echo "  make migrate      Apply all schema migrations (shared + tenant)"
 	@echo "  make css          Watch and rebuild Tailwind CSS"
@@ -24,6 +25,9 @@ setup:
 	pip install -r requirements.txt
 	npm install
 	npm run build
+
+hooks:
+	pre-commit install
 
 run:
 	$(MANAGE) runserver
