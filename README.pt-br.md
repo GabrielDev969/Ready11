@@ -44,6 +44,7 @@ Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenan
 | Arquivos estáticos  | WhiteNoise (comprimido + manifest em prod)        |
 | Cache               | Redis (`django.core.cache.backends.redis`)        |
 | Log de auditoria    | App `audit` customizado (schema público)          |
+| Design system       | GSS Design System (classes de componentes Tailwind)|
 | Lint                | Ruff                                              |
 | Convenção de commit | Conventional Commits (commitlint)                 |
 | CI/CD               | GitHub Actions (lint, testes, segurança, coverage)|
@@ -65,6 +66,18 @@ Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenan
 - **GNU gettext** (compilar traduções i18n)
   - macOS: `brew install gettext`
   - Windows: já incluso no Git for Windows
+
+---
+
+## Conceitos-chave
+
+Três ideias que vão poupar tempo de quem está chegando agora:
+
+**Workspaces (tenants)** — toda empresa que se cadastra recebe seu próprio **schema isolado no PostgreSQL**. Os dados da empresa A e da empresa B nunca se misturam no banco. O `django-tenants` roteia cada request para o schema correto com base no subdomínio (`acme.seudominio.com` → schema `acme`). O schema `public` guarda os dados compartilhados: usuários, logs de auditoria, notificações.
+
+**Cargos e permissões (RBAC)** — cada workspace gerencia seus próprios cargos. Um cargo carrega uma lista de strings de permissão (ex.: `roles.edit`, `users.invite`). Cada membro do workspace tem exatamente um cargo. O cargo `Owner` é um cargo de sistema — não pode ser editado nem deletado. Todos os outros cargos são totalmente customizáveis.
+
+**Cadastro apenas por convite** — novos workspaces e novos membros entram por links de convite. Não existe página de auto-cadastro. Um superusuário cria um **convite gênesis** (pelo Django admin, sem workspace selecionado) para provisionar uma nova empresa. Depois de entrar, o dono do workspace convida o time em `/team/`.
 
 ---
 
@@ -124,6 +137,8 @@ Variáveis mais importantes:
 | `PUBLIC_DOMAIN`   | Domínio base para subdomínios dos tenants.                       | `localhost`                                    |
 | `SENTRY_DSN`      | DSN do projeto no Sentry. Vazio desativa.                        | *(opcional)*                                   |
 | `LOG_FORMAT`      | `text` (dev) ou `json` (prod/CloudWatch/Loki).                   | `text`                                         |
+| `AUDIT_CLEANUP_ENABLED` | Roda o scheduler embutido de limpeza do audit log. Defina `False` se agendar `cleanup_audit_logs` externamente. | `True` |
+| `NOTIFICATION_CLEANUP_ENABLED` | Roda o scheduler embutido de limpeza de notificações. | `True`                        |
 
 > Em produção (`DEBUG=False`), `SECRET_KEY` e `DATABASE_URL` são **obrigatórias** — a aplicação se recusa a subir sem elas.
 
@@ -304,6 +319,19 @@ make migrate        # aplica no schema público + todos os schemas de tenant
 > Models em `SHARED_APPS` (como `audit`, `users`, `notifications`) ficam no schema público.
 > Models em `TENANT_APPS` ficam no schema de cada empresa.
 
+### Alterou um template ou componente de UI
+
+O projeto usa o **GSS Design System** — um conjunto de classes de componentes baseadas em Tailwind (`gss-btn`, `gss-card`, `gss-pill`, `gss-input`, etc.) definidas em `input.css` sob `@layer components`. Cores e tokens de fonte ficam em `tailwind.config.js`. A documentação de referência está em `design-system/`.
+
+Após editar templates ou `input.css`, reconstrua o CSS:
+```bash
+make css          # modo watch — reconstrói a cada salvamento
+# ou uma vez:
+npx tailwindcss -i input.css -o static/css/output.css --minify
+```
+
+> **Regra para pills:** sempre use a classe base junto com a variante de cor: `gss-pill gss-pill-neutral`. A classe de cor sozinha (`gss-pill-neutral`) não produz o formato de pill.
+
 ### Adicionou uma nova string traduzível
 
 ```bash
@@ -401,6 +429,7 @@ make css                             # reconstrói o CSS se os templates mudaram
 Ready11/
 ├── Ready11/                  # Pacote de configuração (settings, urls, asgi)
 ├── core/                     # Landing pública, health check, páginas de erro, robots.txt
+│   ├── middleware.py         # RequestLoggingMiddleware (loga cada request com método/rota/status/ms)
 │   └── management/commands/  # seed
 ├── users/                    # Model de usuário global, auth, cadastro, redefinição de senha
 ├── tenants/                  # Workspaces, domínios, RBAC, membros, convites
@@ -417,8 +446,9 @@ Ready11/
 │   └── 500.html              # página de erro standalone (sem acesso ao banco)
 ├── locale/pt_BR/             # Traduções em português do Brasil
 ├── static/                   # Arquivos estáticos fonte
-├── input.css                 # Entry point do Tailwind CSS
-├── tailwind.config.js        # Configuração do Tailwind
+├── design-system/            # Referência do GSS Design System (tokens, docs dos componentes)
+├── input.css                 # Entry point do Tailwind CSS (classes de componentes em @layer components)
+├── tailwind.config.js        # Configuração do Tailwind (tokens de cor GSS, fontes, sombras)
 ├── manage.py
 ├── requirements.txt          # Dependências Python de produção
 ├── requirements-dev.txt      # Dependências de dev/testes (ruff, coverage, bandit…)
@@ -465,7 +495,7 @@ Antes de receber usuários reais:
 - [ ] `SENTRY_DSN` configurado para monitoramento de erros.
 - [ ] `LOG_FORMAT=json` para logs estruturados (CloudWatch, Grafana Loki, Datadog).
 - [ ] HTTPS terminado pelo seu proxy reverso (Nginx/Traefik/Easypanel). A aplicação já força HSTS e cookies seguros quando `DEBUG=False`.
-- [ ] Agende `python manage.py cleanup_audit_logs` e `cleanup_notifications` no cron ou no seu agendador de tasks (ou deixe o agendador embutido ligado — veja `NOTIFICATION_CLEANUP_ENABLED`).
+- [ ] Os jobs de limpeza rodam automaticamente pelos schedulers embutidos (`AUDIT_CLEANUP_ENABLED=True` e `NOTIFICATION_CLEANUP_ENABLED=True`). Para usar um cron externo, defina ambos como `False` e agende `manage.py cleanup_audit_logs` e `manage.py cleanup_notifications`.
 - [ ] Migrações no deploy: o `entrypoint.sh` roda `migrate_schemas --shared` + `--tenant` — o schema de cada empresa é migrado. Isso escala linearmente com a quantidade de tenants.
 
 ### Notas de escala

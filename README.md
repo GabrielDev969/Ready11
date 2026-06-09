@@ -44,6 +44,7 @@ A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-iso
 | Static files        | WhiteNoise (compressed + manifest in prod)      |
 | Cache               | Redis (`django.core.cache.backends.redis`)      |
 | Audit log           | Custom `audit` app (shared schema)              |
+| Design system       | GSS Design System (Tailwind component classes)  |
 | Linting             | Ruff                                            |
 | Commit convention   | Conventional Commits (commitlint)               |
 | CI/CD               | GitHub Actions (lint, test, security, coverage) |
@@ -65,6 +66,18 @@ A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-iso
 - **GNU gettext** (i18n translations)
   - macOS: `brew install gettext`
   - Windows: bundled with Git for Windows
+
+---
+
+## Key concepts
+
+Three ideas that will save you time as a newcomer:
+
+**Workspaces (tenants)** — every company that signs up gets its own **isolated PostgreSQL schema**. Data from company A and company B never mixes at the database level. `django-tenants` routes each request to the right schema based on the subdomain (`acme.yourdomain.com` → `acme` schema). The `public` schema holds shared data: users, audit logs, notifications.
+
+**Roles & permissions (RBAC)** — each workspace manages its own roles. A role carries a list of permission strings (e.g. `roles.edit`, `users.invite`). Every workspace member has exactly one role. The `Owner` role is a system role — it cannot be edited or deleted. All other roles are fully customisable.
+
+**Invite-only signup** — new workspaces and new members both enter through invite links. There is no self-service registration page. A superuser creates a **genesis invite** (from Django admin, with no workspace selected) to provision a new company. Once inside, workspace owners invite their team via `/team/`.
 
 ---
 
@@ -124,6 +137,8 @@ Most important variables:
 | `PUBLIC_DOMAIN`   | Base domain for tenant subdomains.                         | `localhost`                                    |
 | `SENTRY_DSN`      | Sentry project DSN. Leave empty to disable.                | *(optional)*                                   |
 | `LOG_FORMAT`      | `text` (dev) or `json` (production/CloudWatch/Loki).       | `text`                                         |
+| `AUDIT_CLEANUP_ENABLED` | Run the built-in audit log cleanup scheduler. Set `False` if you schedule `cleanup_audit_logs` externally. | `True` |
+| `NOTIFICATION_CLEANUP_ENABLED` | Run the built-in notification cleanup scheduler. | `True`                        |
 
 > In production (`DEBUG=False`), `SECRET_KEY` and `DATABASE_URL` are **mandatory** — the app refuses to boot without them.
 
@@ -304,6 +319,19 @@ make migrate        # applies to shared schema + all tenant schemas
 > Models in `SHARED_APPS` (like `audit`, `users`, `notifications`) live in the public schema.
 > Models in `TENANT_APPS` live in each company's schema.
 
+### Changed a template or UI component
+
+The project uses the **GSS Design System** — a set of Tailwind-based component classes (`gss-btn`, `gss-card`, `gss-pill`, `gss-input`, etc.) defined in `input.css` under `@layer components`. Colours and font tokens live in `tailwind.config.js`. The reference documentation is in `design-system/`.
+
+After editing templates or `input.css`, rebuild the CSS:
+```bash
+make css          # watch mode — rebuilds on every save
+# or once:
+npx tailwindcss -i input.css -o static/css/output.css --minify
+```
+
+> **Rule for pills:** always use both the base class and the colour variant together: `gss-pill gss-pill-neutral`. The colour-only class (`gss-pill-neutral`) does not produce the pill shape on its own.
+
 ### Added a new translatable string
 
 ```bash
@@ -401,6 +429,7 @@ make css                             # rebuild CSS if templates changed
 Ready11/
 ├── Ready11/                  # Django config package (settings, urls, asgi)
 ├── core/                     # Public landing page, health check, error pages, robots.txt
+│   ├── middleware.py         # RequestLoggingMiddleware (logs every request with method/path/status/ms)
 │   └── management/commands/  # seed
 ├── users/                    # Global user model, auth, registration, password reset
 ├── tenants/                  # Workspaces, domains, RBAC, memberships, invites
@@ -417,8 +446,9 @@ Ready11/
 │   └── 500.html              # standalone error page (no DB access)
 ├── locale/pt_BR/             # Brazilian Portuguese translations
 ├── static/                   # Static source files
-├── input.css                 # Tailwind CSS entry point
-├── tailwind.config.js        # Tailwind configuration
+├── design-system/            # GSS Design System reference (tokens, component docs)
+├── input.css                 # Tailwind CSS entry point (component classes under @layer components)
+├── tailwind.config.js        # Tailwind configuration (GSS colour tokens, fonts, shadows)
 ├── manage.py
 ├── requirements.txt          # Production Python dependencies
 ├── requirements-dev.txt      # Dev/test dependencies (ruff, coverage, bandit…)
@@ -465,7 +495,7 @@ Before going live with real users:
 - [ ] `SENTRY_DSN` set for error monitoring.
 - [ ] `LOG_FORMAT=json` for structured logs (CloudWatch, Grafana Loki, Datadog).
 - [ ] HTTPS terminated by your reverse proxy (Nginx/Traefik/Easypanel). The app enforces HSTS and secure cookies automatically when `DEBUG=False`.
-- [ ] Schedule `python manage.py cleanup_audit_logs` and `cleanup_notifications` in cron or your task scheduler (or leave the built-in scheduler on — see `NOTIFICATION_CLEANUP_ENABLED`).
+- [ ] Cleanup jobs run automatically via built-in schedulers (`AUDIT_CLEANUP_ENABLED=True` and `NOTIFICATION_CLEANUP_ENABLED=True`). To hand off to an external cron instead, set both to `False` and schedule `manage.py cleanup_audit_logs` and `manage.py cleanup_notifications`.
 - [ ] Migrations on deploy: `entrypoint.sh` runs `migrate_schemas --shared` + `--tenant` — every tenant schema is migrated. This scales linearly with tenant count.
 
 ### Scaling notes
