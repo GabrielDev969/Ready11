@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ready11 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-11 16:01-0300\n"
+"POT-Creation-Date: 2026-06-11 16:04-0300\n"
 "PO-Revision-Date: 2026-06-05 09:20-0300\n"
 "Last-Translator: Ready11 <no-reply@example.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -461,11 +461,11 @@ msgstr ""
 "Sua senha deve ter no mínimo 8 caracteres e incluir maiúsculas, minúsculas, "
 "números e símbolos."
 
-#: apps/users/views.py:71
+#: apps/users/views.py:70
 msgid "Verify your email to access your workspace"
 msgstr "Verifique seu e-mail para acessar seu workspace"
 
-#: apps/users/views.py:72
+#: apps/users/views.py:71
 #, python-format
 msgid ""
 "Hi %(name)s,\n"
@@ -480,69 +480,57 @@ msgstr ""
 "\n"
 "%(link)s"
 
-#: apps/users/views.py:105
-msgid "Email verified successfully!"
-msgstr "E-mail verificado com sucesso!"
-
-#: apps/users/views.py:106
-msgid "You can now log in."
-msgstr "Você já pode fazer login."
-
-#: apps/users/views.py:109
-msgid "Invalid or expired link."
-msgstr "Link inválido ou expirado."
-
-#: apps/users/views.py:128
+#: apps/users/views.py:122
 msgid "Please verify your email before accessing the system."
 msgstr "Verifique seu e-mail antes de acessar o sistema."
 
-#: apps/users/views.py:133
+#: apps/users/views.py:127
 msgid "Your account has been disabled by an administrator."
 msgstr "Sua conta foi desativada por um administrador."
 
-#: apps/users/views.py:166
+#: apps/users/views.py:160
 msgid "Invalid email or password."
 msgstr "E-mail ou senha incorretos."
 
-#: apps/users/views.py:204
+#: apps/users/views.py:198
 msgid "Profile updated."
 msgstr "Perfil atualizado."
 
-#: apps/users/views.py:230
+#: apps/users/views.py:224
 msgid "Language preference saved."
 msgstr "Preferência de idioma salva."
 
-#: apps/users/views.py:239
+#: apps/users/views.py:233
 msgid "Password changed."
 msgstr "Senha alterada."
 
-#: apps/users/views.py:266
+#: apps/users/views.py:260
 msgid "Default workspace updated."
 msgstr "Workspace padrão atualizado."
 
-#: apps/users/views.py:268
+#: apps/users/views.py:262
 msgid "You don't have access to that workspace."
 msgstr "Você não tem acesso a esse workspace."
 
-#: apps/users/views.py:373
+#: apps/users/views.py:367
 msgid "Invalid code. Please try again."
 msgstr "Código inválido. Tente novamente."
 
-#: apps/users/views.py:411
+#: apps/users/views.py:405
 msgid "Two-factor authentication enabled."
 msgstr "Autenticação em dois fatores ativada."
 
-#: apps/users/views.py:414
+#: apps/users/views.py:408
 msgid "Invalid code. Make sure your device clock is correct and try again."
 msgstr ""
 "Código inválido. Verifique se o relógio do seu dispositivo está correto e "
 "tente novamente."
 
-#: apps/users/views.py:473
+#: apps/users/views.py:467
 msgid "Two-factor authentication disabled."
 msgstr "Autenticação em dois fatores desativada."
 
-#: apps/users/views.py:475
+#: apps/users/views.py:469
 msgid "Incorrect password."
 msgstr "Senha incorreta."
 
@@ -663,6 +651,7 @@ msgstr "Começar"
 #: templates/users/login.html:4 templates/users/login.html:33
 #: templates/users/password_reset_complete.html:16
 #: templates/users/register.html:59
+#: templates/users/verify_email_result.html:17
 msgid "Sign in"
 msgstr "Entrar"
 
@@ -1903,3 +1892,30 @@ msgstr "Use uma senha forte que você não usa em outros lugares."
 #: templates/users/settings.html:108
 msgid "Update password"
 msgstr "Atualizar senha"
+
+#: templates/users/verify_email_result.html:4
+msgid "Email verification"
+msgstr "Verificação de e-mail"
+
+#: templates/users/verify_email_result.html:14
+msgid "Email verified successfully!"
+msgstr "E-mail verificado com sucesso!"
+
+#: templates/users/verify_email_result.html:15
+msgid "Your account is ready. You can now sign in."
+msgstr "Sua conta está pronta. Você já pode entrar."
+
+#: templates/users/verify_email_result.html:23
+msgid "Invalid or expired link."
+msgstr "Link inválido ou expirado."
+
+#: templates/users/verify_email_result.html:24
+msgid ""
+"Request a new verification email by registering again, or contact support."
+msgstr ""
+"Solicite um novo e-mail de verificação cadastrando-se novamente ou fale com "
+"o suporte."
+
+#: templates/users/verify_email_result.html:26
+msgid "Back to registration"
+msgstr "Voltar para o cadastro"

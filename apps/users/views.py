@@ -12,7 +12,6 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.forms import PasswordResetForm as DjangoPasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
@@ -100,13 +99,8 @@ def verify_email_view(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.email_verified = True
         user.save()
-        return HttpResponse(
-            "<h1>{}</h1><p>{}</p>".format(
-                _("Email verified successfully!"),
-                _("You can now log in."),
-            )
-        )
-    return HttpResponse("<h1>{}</h1>".format(_("Invalid or expired link.")), status=400)
+        return render(request, 'users/verify_email_result.html', {'success': True})
+    return render(request, 'users/verify_email_result.html', {'success': False}, status=400)
 
 
 def login_view(request):
