@@ -1,4 +1,4 @@
-.PHONY: help setup hooks run migrate css test coverage lint seed messages compile check docker-up docker-down clean
+.PHONY: help setup hooks run migrate css test coverage lint seed messages compile check docker-up docker-down clean rename
 
 PYTHON := python
 MANAGE := $(PYTHON) manage.py
@@ -20,6 +20,7 @@ help:
 	@echo "  make docker-up    Start PostgreSQL + Redis services"
 	@echo "  make docker-down  Stop Docker services"
 	@echo "  make clean        Remove compiled/generated files"
+	@echo "  make rename       Rename the template into a new project (name=MyProject)"
 
 setup:
 	pip install -r requirements.txt
@@ -72,3 +73,6 @@ clean:
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -delete
 	rm -rf staticfiles/
+
+rename:
+	$(PYTHON) scripts/bootstrap.py $(name)
