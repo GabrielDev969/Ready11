@@ -504,6 +504,8 @@ The test job spins up a real PostgreSQL 17 container. The coverage report is upl
 
 ## Production checklist
 
+> 📦 Deploying on **Easypanel**? Follow the dedicated guide: [docs/DEPLOY_EASYPANEL.md](docs/DEPLOY_EASYPANEL.md).
+
 Before going live with real users:
 
 - [ ] `DEBUG=False` + strong `SECRET_KEY` set. Run `make check` — no warnings.

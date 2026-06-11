@@ -504,6 +504,8 @@ O job de testes sobe um container real de PostgreSQL 17. O relatório de cobertu
 
 ## Checklist de produção
 
+> 📦 Fazendo deploy no **Easypanel**? Siga o guia dedicado: [docs/DEPLOY_EASYPANEL.md](docs/DEPLOY_EASYPANEL.md).
+
 Antes de receber usuários reais:
 
 - [ ] `DEBUG=False` + `SECRET_KEY` forte definida. Rode `make check` — sem avisos.
