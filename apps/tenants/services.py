@@ -1,6 +1,28 @@
 from django.conf import settings
+from django.utils import timezone
+from django.utils.text import slugify
 
-from .models import Domain, Role, WorkspaceMembership
+import apps.audit.actions as audit_actions
+from apps.audit.services import log_action
+
+from .models import Domain, InviteStatus, Role, Workspace, WorkspaceInvite, WorkspaceMembership
+
+# PostgreSQL identifiers (schema names) are limited to 63 bytes.
+MAX_SCHEMA_LENGTH = 63
+RESERVED_SCHEMA_NAMES = {'public', 'pg_catalog', 'information_schema'}
+
+
+def build_schema_name(company_name):
+    """
+    Derive a safe PostgreSQL schema name from a company name.
+
+    Returns a slug (underscores, <=63 chars) or 'workspace' as a safe fallback
+    when the name produces an empty/reserved identifier.
+    """
+    schema = slugify(company_name).replace('-', '_')[:MAX_SCHEMA_LENGTH].strip('_')
+    if not schema or schema in RESERVED_SCHEMA_NAMES or schema.startswith('pg_'):
+        schema = 'workspace'
+    return schema
 
 
 def provision_workspace_defaults(workspace, owner=None):
@@ -47,3 +69,56 @@ def provision_workspace_defaults(workspace, owner=None):
         )
 
     return owner_role
+
+
+def create_workspace(name, owner, request=None):
+    """
+    Create a fully provisioned workspace: unique schema name, primary domain,
+    default roles, owner membership, the owner's default_workspace and an
+    audit log entry. Returns the new Workspace.
+
+    Creating the Workspace row also creates its PostgreSQL schema
+    (django-tenants ``auto_create_schema``), so callers should wrap this in
+    ``transaction.atomic()`` together with any related writes.
+    """
+    schema_name = build_schema_name(name)
+    base_schema_name = schema_name
+    counter = 1
+
+    while Workspace.objects.filter(schema_name=schema_name).exists():
+        suffix = f"_{counter}"
+        schema_name = f"{base_schema_name[:MAX_SCHEMA_LENGTH - len(suffix)]}{suffix}"
+        counter += 1
+
+    workspace = Workspace.objects.create(
+        name=name,
+        schema_name=schema_name,
+    )
+
+    workspace.owner = owner
+    workspace.save()
+
+    # Creates the default roles, the primary domain (derived from the final
+    # schema name) and the owner's membership.
+    provision_workspace_defaults(workspace, owner=owner)
+
+    owner.default_workspace = workspace
+    owner.save(update_fields=['default_workspace'])
+
+    log_action(owner, audit_actions.WORKSPACE_CREATED, resource=workspace,
+               detail={'workspace_name': workspace.name}, request=request)
+
+    return workspace
+
+
+def expire_stale_invites():
+    """
+    Bulk-mark pending invites past their expiration date as expired.
+
+    Idempotent; complements the lazy per-invite expiration done when an invite
+    link is opened. Returns the number of invites updated.
+    """
+    return WorkspaceInvite.objects.filter(
+        status=InviteStatus.PENDING,
+        expires_at__lt=timezone.now(),
+    ).update(status=InviteStatus.EXPIRED)
