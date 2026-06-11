@@ -216,7 +216,18 @@ details.ui-dropdown > summary { list-style: none; }
     cursor: pointer;
 }
 .toast-close:hover { color: var(--gss-fg-2, #3D3D42); }
+
+/* Status accent for flash-message toasts (success/warning/error). */
+.toast-success { @apply border-l-4 border-l-good-fg; }
+.toast-warning { @apply border-l-4 border-l-warning-fg; }
+.toast-error   { @apply border-l-4 border-l-critical-fg; }
+
+.toast-out { animation: toast-out 0.2s ease forwards; }
+
 @keyframes toast-in {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-out {
+    to { opacity: 0; transform: translateY(-8px); }
 }
