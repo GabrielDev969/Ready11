@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django_otp.oath import totp
+from django_otp.plugins.otp_static.models import StaticDevice
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 User = get_user_model()
 
@@ -116,6 +119,43 @@ class LanguagePreferenceTest(TestCase):
     def test_profile_and_settings_pages_load(self):
         self.assertEqual(self.client.get(reverse('profile')).status_code, 200)
         self.assertEqual(self.client.get(reverse('settings')).status_code, 200)
+
+
+@override_settings(AXES_ENABLED=False)
+class TwoFactorSetupTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='2fa@example.com',
+            password='SecurePass1!',
+            first_name='Two',
+            last_name='Factor',
+            is_active=True,
+            email_verified=True,
+        )
+        self.client.force_login(self.user)
+
+    def test_full_setup_flow_confirms_device_and_creates_backup_codes(self):
+        # GET creates the unconfirmed TOTP device and shows the QR code.
+        response = self.client.get(reverse('2fa_setup'))
+        self.assertEqual(response.status_code, 200)
+        device = TOTPDevice.objects.get(user=self.user, confirmed=False)
+
+        # POST with a valid current token confirms the device.
+        token = f'{totp(device.bin_key):06d}'
+        response = self.client.post(reverse('2fa_setup'), {'token': token})
+        self.assertRedirects(response, reverse('2fa_backup_codes'))
+
+        device.refresh_from_db()
+        self.assertTrue(device.confirmed)
+
+        static_device = StaticDevice.objects.get(user=self.user, confirmed=True)
+        self.assertEqual(static_device.token_set.count(), 8)
+
+    def test_invalid_token_does_not_confirm(self):
+        self.client.get(reverse('2fa_setup'))
+        response = self.client.post(reverse('2fa_setup'), {'token': '000000'})
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(TOTPDevice.objects.filter(user=self.user, confirmed=True).exists())
 
 
 @override_settings(AXES_ENABLED=False)

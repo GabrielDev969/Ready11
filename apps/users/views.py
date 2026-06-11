@@ -395,7 +395,8 @@ def setup_2fa_view(request):
             StaticDevice.objects.filter(user=user).delete()
             static_device = StaticDevice.objects.create(user=user, name='Backup codes', confirmed=True)
             backup_codes = []
-            for _ in range(8):
+            # NOTE: don't name the loop variable `_` — it would shadow gettext.
+            for _i in range(8):
                 raw = secrets.token_hex(4).upper()
                 code = f'{raw[:4]}-{raw[4:]}'
                 StaticToken.objects.create(device=static_device, token=code)
