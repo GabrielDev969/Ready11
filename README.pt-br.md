@@ -41,6 +41,7 @@ Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenan
 | Tempo real          | Django Channels + Redis (WebSocket)               |
 | Segurança           | django-axes (força bruta) + HSTS + CSRF           |
 | Monitoramento       | Sentry (opcional, via `SENTRY_DSN`)               |
+| Métricas            | Prometheus + Grafana ([docs](docs/OBSERVABILITY.md)) |
 | Front-end           | Django Templates + Tailwind CSS v3                |
 | i18n                | Inglês (fonte) + pt-BR (auto-detecção)            |
 | Servidor (prod)     | Daphne (ASGI) / Gunicorn                          |
@@ -419,7 +420,7 @@ make css                             # reconstrói o CSS se os templates mudaram
 | `make compile`     | Compila arquivos `.po` → `.mo`                            |
 | `make css`         | Observa e reconstrói o Tailwind CSS                       |
 | `make check`       | Verificação de segurança do Django para deploy            |
-| `make docker-up`   | Sobe PostgreSQL + Redis + Mailpit                         |
+| `make docker-up`   | Sobe PostgreSQL, Redis, Mailpit, Prometheus e Grafana     |
 | `make docker-down` | Para os serviços Docker                                   |
 | `make clean`       | Remove `.pyc`, `__pycache__`, `staticfiles/`              |
 

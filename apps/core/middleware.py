@@ -21,7 +21,7 @@ _PUBLIC_ONLY_PREFIXES = (
 )
 
 _SKIP_PREFIXES = ('/static/', '/ws/')
-_SKIP_EXACT = frozenset(['/healthz/', '/healthz', '/robots.txt', '/favicon.ico'])
+_SKIP_EXACT = frozenset(['/healthz/', '/healthz', '/metrics', '/robots.txt', '/favicon.ico'])
 
 
 class CanonicalHostMiddleware:

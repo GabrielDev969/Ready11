@@ -43,6 +43,11 @@ ALLOWED_HOSTS = [
     h.strip() for h in os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',') if h.strip()
 ]
 
+# In dev, the Prometheus container scrapes the host's runserver through
+# Docker's gateway alias.
+if DEBUG and 'host.docker.internal' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('host.docker.internal')
+
 # Base domain used to build tenant subdomains (e.g. acme.yourcompany.com).
 # In production set PUBLIC_DOMAIN to your real domain.
 TENANT_BASE_DOMAIN = os.environ.get('PUBLIC_DOMAIN', 'localhost')
@@ -77,6 +82,7 @@ SHARED_APPS = (
     'django_tenants',  # tenant routing
     'widget_tweaks',
     'axes',            # brute-force protection (global access-attempt log)
+    'django_prometheus',    # /metrics endpoint (request latency, errors, runtime)
     'apps.core',            # landing page + healthcheck (public)
     'apps.notifications',   # in-app notifications (global)
     'apps.audit',           # workspace audit log
@@ -140,6 +146,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'no-reply@example.com'
 # ==========================================
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',  # MUST be first
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',  # latency timer starts here
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'apps.core.middleware.RequestLoggingMiddleware',
@@ -155,8 +162,13 @@ MIDDLEWARE = [
     'django_otp.middleware.OTPMiddleware',                    # must follow AuthenticationMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'axes.middleware.AxesMiddleware',                       # MUST be last
+    'axes.middleware.AxesMiddleware',                       # MUST be the last "functional" middleware
+    'django_prometheus.middleware.PrometheusAfterMiddleware',   # latency timer stops here
 ]
+
+# Optional bearer token protecting GET /metrics (recommended in production).
+# When set, Prometheus must scrape with `authorization: credentials: <token>`.
+METRICS_TOKEN = os.environ.get('METRICS_TOKEN', '')
 
 ROOT_URLCONF = 'Ready11.urls'
 
@@ -217,6 +229,11 @@ else:
 # ==========================================
 # Database
 # ==========================================
+# django-tenants wraps this backend; pointing it at django-prometheus's
+# instrumented postgres backend adds django_db_* metrics (query duration,
+# errors, connections) on top of tenant routing.
+ORIGINAL_BACKEND = 'django_prometheus.db.backends.postgresql'
+
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:

@@ -41,6 +41,7 @@ A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-iso
 | Real-time           | Django Channels + Redis (WebSocket)             |
 | Security            | django-axes (brute-force) + HSTS + CSRF         |
 | Error monitoring    | Sentry (optional, via `SENTRY_DSN`)             |
+| Metrics             | Prometheus + Grafana ([docs](docs/OBSERVABILITY.md)) |
 | Front-end           | Django Templates + Tailwind CSS v3              |
 | i18n                | English (source) + pt-BR (auto-detected)        |
 | Server (prod)       | Daphne (ASGI) / Gunicorn                        |

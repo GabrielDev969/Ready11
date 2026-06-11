@@ -67,6 +67,28 @@ class HealthCheckTest(TestCase):
         self.assertEqual(response.json()['status'], 'ok')
 
 
+class MetricsEndpointTest(TestCase):
+    def test_metrics_open_without_token(self):
+        response = self.client.get(reverse('metrics'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'django_http_requests_total_by_method_total', response.content)
+
+    def test_metrics_includes_db_instrumentation(self):
+        response = self.client.get(reverse('metrics'))
+        self.assertIn(b'django_db_query_duration_seconds', response.content)
+
+    @override_settings(METRICS_TOKEN='sekret')
+    def test_metrics_rejects_missing_or_wrong_token(self):
+        self.assertEqual(self.client.get(reverse('metrics')).status_code, 401)
+        response = self.client.get(reverse('metrics'), headers={'Authorization': 'Bearer wrong'})
+        self.assertEqual(response.status_code, 401)
+
+    @override_settings(METRICS_TOKEN='sekret')
+    def test_metrics_accepts_valid_token(self):
+        response = self.client.get(reverse('metrics'), headers={'Authorization': 'Bearer sekret'})
+        self.assertEqual(response.status_code, 200)
+
+
 class RobotsTxtTest(TestCase):
     def test_robots_txt_accessible(self):
         response = self.client.get(reverse('robots_txt'))

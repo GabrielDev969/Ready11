@@ -7,6 +7,7 @@ daphne==4.2.2
 dj-database-url==3.1.2
 Django==6.0.6
 django-axes==8.3.1
+django-prometheus==2.5.0
 django-tenants==3.10.1
 django-widget-tweaks==1.5.1
 packaging==26.2

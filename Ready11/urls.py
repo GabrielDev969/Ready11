@@ -14,6 +14,7 @@ urlpatterns = [
     # persisted on the user's profile (which overrides the cookie otherwise).
     path('i18n/setlang/', users_views.set_language_view, name='set_language'),
     path('healthz/', core_views.healthz, name='healthz'),
+    path('metrics', core_views.metrics, name='metrics'),  # Prometheus scrape (no trailing slash: Prometheus default)
     path('robots.txt', core_views.robots_txt, name='robots_txt'),
     path('', core_views.landing, name='landing'),
     path('', include('apps.users.urls')),
