@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.db import connection
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from django_prometheus.exports import ExportToDjangoView
 
 from apps.tenants.utils import effective_workspace, workspace_home_url
 
@@ -37,6 +39,19 @@ def healthz(request):
         return JsonResponse({'status': 'ok'})
     except Exception:
         return JsonResponse({'status': 'error'}, status=503)
+
+
+def metrics(request):
+    """
+    Prometheus scrape endpoint. Open in development; in production set
+    METRICS_TOKEN and configure the scraper with the matching bearer token
+    (or keep the endpoint reachable only from the internal network).
+    """
+    if settings.METRICS_TOKEN:
+        auth = request.headers.get('Authorization', '')
+        if auth != f'Bearer {settings.METRICS_TOKEN}':
+            return HttpResponse(status=401)
+    return ExportToDjangoView(request)
 
 
 def robots_txt(request):
