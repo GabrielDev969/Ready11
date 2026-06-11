@@ -8,7 +8,7 @@
 <div class="mx-auto w-full max-w-md px-6 py-10">
     <div class="mb-8">
         <a href="{% url 'settings' %}" class="inline-flex items-center gap-1.5 text-xs text-fg3 hover:text-fg transition-colors mb-4">
-            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
             {% trans "Back to settings" %}
         </a>
         <h1 class="text-h1 font-semibold tracking-tight text-fg">{% trans "Disable two-factor authentication" %}</h1>
@@ -17,7 +17,7 @@
 
     <div class="gss-card gss-card-pad space-y-5">
         <div class="flex items-start gap-3 p-3 rounded-md bg-critical-bg border border-critical-fg/20">
-            <svg class="h-4 w-4 shrink-0 mt-0.5 text-critical-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
+            <svg class="h-4 w-4 shrink-0 mt-0.5 text-critical-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg>
             <p class="text-xs text-critical-fg">{% trans "Disabling 2FA reduces your account security. All backup codes will also be deleted." %}</p>
         </div>
 
@@ -40,7 +40,7 @@
                     {% trans "Cancel" %}
                 </a>
                 <button type="submit" class="gss-btn gss-btn-danger flex-1 justify-center">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
                     {% trans "Disable 2FA" %}
                 </button>
             </div>
