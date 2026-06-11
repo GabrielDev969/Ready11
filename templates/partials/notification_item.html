@@ -26,7 +26,7 @@
         {% else %}
         <p class="mt-1 text-xs text-fg4">{{ n.invite.get_status_display }}</p>
         {% endif %}
-        <p class="mt-1 text-xs text-fg4 font-mono">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+        <p class="mt-1 text-xs text-fg4">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
     </div>
 </div>
 {% else %}
@@ -36,7 +36,7 @@
         <p class="text-body font-medium text-fg">{{ n.title }}</p>
         {% if n.body %}<p class="mt-0.5 truncate text-body text-fg2">{{ n.body|truncatechars:20 }}</p>{% endif %}
         {% if n.workspace %}<p class="mt-0.5 text-xs text-fg4">{{ n.workspace.name }}</p>{% endif %}
-        <p class="mt-1 text-xs text-fg4 font-mono">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+        <p class="mt-1 text-xs text-fg4">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
     </div>
 </a>
 {% endif %}

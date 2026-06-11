@@ -22,8 +22,8 @@
   --gss-line-2:      #DAD7CE;
   --gss-line-strong: #C5C2B7;
 
-  --gss-font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --gss-font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --gss-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --gss-font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --gss-r-sm: 6px;
   --gss-r-md: 10px;
@@ -67,7 +67,7 @@
   /* --- Status Pills --- */
   .gss-pill {
     @apply inline-flex items-center gap-1.5 px-2 py-[3px] rounded-full
-           font-mono text-[11px] font-medium uppercase tracking-wide;
+           text-[11px] font-medium uppercase tracking-wide;
   }
   .gss-pill-excellent  { @apply bg-excellent-bg  text-excellent-fg; }
   .gss-pill-good       { @apply bg-good-bg       text-good-fg; }
@@ -93,13 +93,13 @@
 
   /* --- Eyebrow --- */
   .gss-eyebrow {
-    @apply font-mono text-eyebrow uppercase tracking-[0.12em] text-fg3 font-medium;
+    @apply text-eyebrow uppercase tracking-[0.12em] text-fg3 font-medium;
   }
 
   /* --- Tables --- */
   .gss-table { @apply w-full border-collapse text-body; }
   .gss-table thead th {
-    @apply text-left font-mono text-eyebrow uppercase tracking-[0.10em]
+    @apply text-left text-eyebrow uppercase tracking-[0.10em] font-medium
            text-fg3 px-3.5 py-3 border-b border-line bg-sunken;
   }
   .gss-table tbody td {
@@ -111,7 +111,7 @@
   /* --- Avatar --- */
   .gss-avatar {
     @apply inline-flex items-center justify-center w-8 h-8 rounded-full
-           bg-sunken text-fg2 text-[11px] font-medium font-mono border border-line shrink-0;
+           bg-sunken text-fg2 text-[11px] font-medium border border-line shrink-0;
   }
   .gss-avatar-lg { @apply w-11 h-11 text-sm; }
 

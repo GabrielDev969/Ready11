@@ -26,7 +26,7 @@
             </span>
             <div class="min-w-0">
                 <p class="truncate text-h3 font-semibold text-fg">{{ user.first_name }} {{ user.last_name }}</p>
-                <p class="truncate text-body text-fg3 font-mono">{{ user.email }}</p>
+                <p class="truncate text-body text-fg3">{{ user.email }}</p>
                 <p class="mt-0.5 text-xs text-fg4">{% blocktrans with date=user.created_at|date:"DATE_FORMAT" %}Member since {{ date }}{% endblocktrans %}</p>
             </div>
         </div>

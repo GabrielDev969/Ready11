@@ -47,8 +47,8 @@ module.exports = {
       },
 
       fontFamily: {
-        sans: ['IBM Plex Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
 
       fontSize: {
