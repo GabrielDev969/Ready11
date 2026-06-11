@@ -24,6 +24,49 @@ _SKIP_PREFIXES = ('/static/', '/ws/')
 _SKIP_EXACT = frozenset(['/healthz/', '/healthz', '/robots.txt', '/favicon.ico'])
 
 
+class CanonicalHostMiddleware:
+    """
+    Redirect public-schema requests served on a non-canonical host to
+    PUBLIC_DOMAIN (e.g. ``localhost:8000`` -> ``lvh.me:8000``).
+
+    The session cookie is scoped to ``.PUBLIC_DOMAIN`` so it can be shared with
+    workspace subdomains. A login performed on another host (an old public
+    domain, 127.0.0.1, ...) sets a cookie that subdomains never receive — the
+    user looks logged in on that host but logged out inside the workspace.
+    Canonicalizing the public host removes that trap entirely.
+
+    Only safe methods are redirected (a POST to the wrong host should fail
+    loudly, not silently lose its body), and infra endpoints (health checks,
+    static, websockets) are exempt because probes hit them by container
+    hostname or IP.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        tenant = getattr(request, 'tenant', None)
+        schema = getattr(tenant, 'schema_name', 'public')
+        path = request.path
+
+        if (
+            schema == 'public'
+            and request.method in ('GET', 'HEAD')
+            and path not in _SKIP_EXACT
+            and not any(path.startswith(p) for p in _SKIP_PREFIXES)
+        ):
+            host = request.get_host()
+            hostname = host.split(':')[0]
+            base_domain = settings.TENANT_BASE_DOMAIN
+            if hostname not in (base_domain, 'testserver'):
+                port = f":{host.split(':')[1]}" if ':' in host else ''
+                return HttpResponseRedirect(
+                    f"{request.scheme}://{base_domain}{port}{request.get_full_path()}"
+                )
+
+        return self.get_response(request)
+
+
 class PublicOnlyMiddleware:
     """
     Redirect auth routes (login, register, etc.) to the public domain when

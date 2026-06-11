@@ -1,7 +1,43 @@
-from django.test import RequestFactory, TestCase
+from types import SimpleNamespace
+
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 
+from apps.core.middleware import CanonicalHostMiddleware
 from apps.core.views import error_403, error_404, error_500
+
+
+@override_settings(TENANT_BASE_DOMAIN='example.com', ALLOWED_HOSTS=['*'])
+class CanonicalHostMiddlewareTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.middleware = CanonicalHostMiddleware(lambda request: 'reached-view')
+
+    def _request(self, method='get', host='other.host:8000', path='/', schema='public'):
+        request = getattr(self.factory, method)(path, HTTP_HOST=host)
+        request.tenant = SimpleNamespace(schema_name=schema)
+        return request
+
+    def test_get_on_non_canonical_host_redirects_to_public_domain(self):
+        response = self.middleware(self._request())
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, 'http://example.com:8000/')
+
+    def test_canonical_host_passes_through(self):
+        response = self.middleware(self._request(host='example.com:8000'))
+        self.assertEqual(response, 'reached-view')
+
+    def test_tenant_schema_is_not_redirected(self):
+        response = self.middleware(self._request(host='acme.other.host', schema='acme'))
+        self.assertEqual(response, 'reached-view')
+
+    def test_post_is_not_redirected(self):
+        response = self.middleware(self._request(method='post'))
+        self.assertEqual(response, 'reached-view')
+
+    def test_healthz_is_exempt(self):
+        response = self.middleware(self._request(path='/healthz/'))
+        self.assertEqual(response, 'reached-view')
 
 
 class ErrorPageTest(TestCase):

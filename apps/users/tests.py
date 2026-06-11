@@ -85,6 +85,40 @@ class LoginTest(TestCase):
 
 
 @override_settings(AXES_ENABLED=False)
+class LanguagePreferenceTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='lang@example.com',
+            password='SecurePass1!',
+            first_name='Lang',
+            last_name='User',
+            is_active=True,
+            email_verified=True,
+        )
+        self.client.force_login(self.user)
+
+    def test_language_switcher_persists_on_profile(self):
+        self.client.post(reverse('set_language'), {'language': 'pt-br', 'next': '/'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.language, 'pt-br')
+
+    def test_saved_language_is_applied_to_responses(self):
+        self.user.language = 'pt-br'
+        self.user.save(update_fields=['language'])
+        response = self.client.get(reverse('settings'))
+        self.assertEqual(response.headers.get('Content-Language'), 'pt-br')
+
+    def test_settings_language_form_saves(self):
+        self.client.post(reverse('settings'), {'action': 'language', 'language': 'pt-br'})
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.language, 'pt-br')
+
+    def test_profile_and_settings_pages_load(self):
+        self.assertEqual(self.client.get(reverse('profile')).status_code, 200)
+        self.assertEqual(self.client.get(reverse('settings')).status_code, 200)
+
+
+@override_settings(AXES_ENABLED=False)
 class PasswordResetTest(TestCase):
     def test_reset_request_page_loads(self):
         response = self.client.get(reverse('password_reset_request'))

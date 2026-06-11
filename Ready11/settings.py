@@ -143,14 +143,15 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'apps.core.middleware.RequestLoggingMiddleware',
+    'apps.core.middleware.CanonicalHostMiddleware',         # keeps public pages on PUBLIC_DOMAIN (cookie consistency)
     'apps.core.middleware.PublicOnlyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',            # i18n: detects language
     'apps.core.middleware.WorkspaceTimezoneMiddleware',          # activates workspace timezone for tenant requests
-    'apps.core.middleware.UserLanguageMiddleware',               # overrides with user's saved preference
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'apps.core.middleware.UserLanguageMiddleware',          # user's saved language; needs request.user, so after auth
     'django_otp.middleware.OTPMiddleware',                    # must follow AuthenticationMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
