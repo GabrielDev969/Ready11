@@ -15,11 +15,6 @@
         {% endif %}
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-4 p-3 rounded-md text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg{% else %}bg-good-bg text-good-fg{% endif %}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
 
     <div class="gss-card overflow-x-auto">
         <table class="gss-table">

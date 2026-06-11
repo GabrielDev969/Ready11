@@ -1,78 +1,114 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load widget_tweaks i18n %}
 
 {% block title %}{% trans "Settings" %} | Ready11{% endblock %}
 {% block main_class %}flex-grow{% endblock %}
 
 {% block content %}
-<div class="mx-auto w-full max-w-2xl px-6 py-10 space-y-6">
-    <h1 class="text-h1 font-semibold tracking-tight text-fg">{% trans "Settings" %}</h1>
-
-    <!-- Security -->
-    <section class="gss-card gss-card-pad space-y-4">
+<div class="mx-auto w-full max-w-2xl px-6 py-10 space-y-8">
+    <div class="flex items-start justify-between gap-4">
         <div>
-            <h2 class="text-h3 font-medium text-fg">{% trans "Security" %}</h2>
-            <p class="mt-1 text-body text-fg3">{% trans "Control two-factor authentication for your account." %}</p>
+            <h1 class="text-h1 font-semibold tracking-tight text-fg">{% trans "Settings" %}</h1>
+            <p class="mt-1 text-body text-fg3">{% trans "Security and preferences for your account." %}</p>
+        </div>
+        <a href="{% url 'profile' %}" class="gss-btn gss-btn-secondary gss-btn-sm shrink-0">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+            {% trans "Profile" %}
+        </a>
+    </div>
+
+    <!-- Language -->
+    <section class="gss-card gss-card-pad">
+        <div class="border-b border-line pb-4 mb-4">
+            <h2 class="text-h3 font-medium text-fg">{% trans "Language" %}</h2>
+            <p class="mt-1 text-body text-fg3">{% trans "Saved on your account and applied on every device you log in from." %}</p>
+        </div>
+        <form method="post" class="flex flex-col gap-4 sm:flex-row sm:items-end">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="language">
+            <div class="flex-1">
+                <label class="gss-label" for="{{ language_form.language.id_for_label }}">{{ language_form.language.label }}</label>
+                {% render_field language_form.language class="gss-input w-full" %}
+            </div>
+            <button type="submit" class="gss-btn gss-btn-primary shrink-0">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                {% trans "Save" %}
+            </button>
+        </form>
+    </section>
+
+    <!-- Security: 2FA -->
+    <section class="gss-card gss-card-pad">
+        <div class="border-b border-line pb-4 mb-4">
+            <h2 class="text-h3 font-medium text-fg">{% trans "Two-factor authentication" %}</h2>
+            <p class="mt-1 text-body text-fg3">{% trans "Add a second verification step to protect your sign-in." %}</p>
         </div>
 
-        <div class="flex items-start justify-between gap-4 py-3 border-t border-line">
+        <div class="flex items-start justify-between gap-4">
             <div class="flex items-start gap-3">
                 {% if totp_enabled %}
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-good-bg mt-0.5">
-                    <svg class="h-4 w-4 text-good-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-good-bg">
+                    <svg class="h-5 w-5 text-good-fg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
                 </span>
-                {% else %}
-                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sunken mt-0.5">
-                    <svg class="h-4 w-4 text-fg3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
-                </span>
-                {% endif %}
                 <div>
-                    <p class="text-body font-medium text-fg">{% trans "Two-factor authentication (2FA)" %}</p>
-                    {% if totp_enabled %}
-                    <p class="text-body text-fg3">
-                        {% blocktrans with count=backup_codes_count %}Active — {{ count }} backup code(s) remaining.{% endblocktrans %}
+                    <p class="text-body font-medium text-fg">{% trans "2FA is active" %}</p>
+                    <p class="text-body text-fg3 mt-0.5">
+                        {% blocktrans with count=backup_codes_count %}Your account is protected. You have {{ count }} backup code(s) remaining.{% endblocktrans %}
                     </p>
-                    {% else %}
-                    <p class="text-body text-fg3">{% trans "Not enabled. Add a second step to protect your sign-in." %}</p>
-                    {% endif %}
+                    <a href="{% url '2fa_backup_codes' %}" class="mt-1.5 inline-block text-xs font-medium text-fg2 hover:underline">{% trans "View backup codes →" %}</a>
                 </div>
+                {% else %}
+                <span class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sunken">
+                    <svg class="h-5 w-5 text-fg3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                </span>
+                <div>
+                    <p class="text-body font-medium text-fg">{% trans "2FA is not enabled" %}</p>
+                    <p class="text-body text-fg3 mt-0.5">{% trans "Use an authenticator app to add a second verification step at login." %}</p>
+                </div>
+                {% endif %}
             </div>
 
             {% if totp_enabled %}
-            <a href="{% url '2fa_disable' %}" class="gss-btn gss-btn-secondary gss-btn-sm shrink-0">
-                {% trans "Disable" %}
-            </a>
+            <a href="{% url '2fa_disable' %}" class="gss-btn gss-btn-secondary gss-btn-sm shrink-0">{% trans "Disable" %}</a>
             {% else %}
-            <a href="{% url '2fa_setup' %}" class="gss-btn gss-btn-primary gss-btn-sm shrink-0">
-                {% trans "Enable" %}
-            </a>
+            <a href="{% url '2fa_setup' %}" class="gss-btn gss-btn-primary gss-btn-sm shrink-0">{% trans "Enable" %}</a>
             {% endif %}
         </div>
     </section>
 
-    <!-- Language -->
-    <section class="gss-card gss-card-pad space-y-4">
-        <div>
-            <h2 class="text-h3 font-medium text-fg">{% trans "Language" %}</h2>
-            <p class="mt-1 text-body text-fg3">{% trans "Choose your preferred language." %}</p>
+    <!-- Security: password -->
+    <section class="gss-card gss-card-pad">
+        <div class="border-b border-line pb-4 mb-4">
+            <h2 class="text-h3 font-medium text-fg">{% trans "Change password" %}</h2>
+            <p class="mt-1 text-body text-fg3">{% trans "Use a strong password you don't use elsewhere." %}</p>
         </div>
-        <div class="border-t border-line pt-4">
-            {% include 'partials/language_switcher.html' %}
-        </div>
-    </section>
-
-    <!-- Account -->
-    <section class="gss-card gss-card-pad space-y-4">
-        <div>
-            <h2 class="text-h3 font-medium text-fg">{% trans "Account" %}</h2>
-            <p class="mt-1 text-body text-fg3">{% trans "Update your name and change your password." %}</p>
-        </div>
-        <div class="border-t border-line pt-4">
-            <a href="{% url 'profile' %}" class="gss-btn gss-btn-secondary">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-                {% trans "Go to profile" %}
-            </a>
-        </div>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="password">
+            <div>
+                <label class="gss-label" for="{{ password_form.old_password.id_for_label }}">{{ password_form.old_password.label }}</label>
+                {% render_field password_form.old_password class="gss-input w-full" %}
+                {% for e in password_form.old_password.errors %}<p class="mt-1 text-xs text-critical-fg">{{ e }}</p>{% endfor %}
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                    <label class="gss-label" for="{{ password_form.new_password1.id_for_label }}">{{ password_form.new_password1.label }}</label>
+                    {% render_field password_form.new_password1 class="gss-input w-full" %}
+                    {% for e in password_form.new_password1.errors %}<p class="mt-1 text-xs text-critical-fg">{{ e }}</p>{% endfor %}
+                </div>
+                <div>
+                    <label class="gss-label" for="{{ password_form.new_password2.id_for_label }}">{{ password_form.new_password2.label }}</label>
+                    {% render_field password_form.new_password2 class="gss-input w-full" %}
+                    {% for e in password_form.new_password2.errors %}<p class="mt-1 text-xs text-critical-fg">{{ e }}</p>{% endfor %}
+                </div>
+            </div>
+            <div class="flex justify-end border-t border-line pt-4">
+                <button type="submit" class="gss-btn gss-btn-primary">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+                    {% trans "Update password" %}
+                </button>
+            </div>
+        </form>
     </section>
 </div>
 {% endblock %}

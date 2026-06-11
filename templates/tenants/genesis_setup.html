@@ -12,13 +12,6 @@
         </p>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-4 p-3 rounded-md text-body bg-critical-bg text-critical-fg border border-critical-fg/20">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
 
     <form method="post" class="space-y-5">
         {% csrf_token %}

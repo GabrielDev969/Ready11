@@ -27,13 +27,6 @@
 
     <div class="w-full max-w-2xl mx-auto px-6 py-8 space-y-8">
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="p-3 rounded-md text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg{% else %}bg-good-bg text-good-fg{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
 
         <!-- General -->
         <div class="gss-card gss-card-pad space-y-4">

@@ -10,13 +10,6 @@
         <p class="text-body text-fg3 mt-2">{% trans "Welcome back to your workspace." %}</p>
     </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="mb-4 p-3 rounded-md text-body {% if message.tags == 'error' %}bg-critical-bg text-critical-fg border border-critical-fg/20{% else %}bg-good-bg text-good-fg{% endif %}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
 
     <form method="post" class="space-y-5">
         {% csrf_token %}
