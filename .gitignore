@@ -63,3 +63,11 @@ postgres_data/
 *.swp
 
 node_modules
+
+# =========================
+# Artefatos de teste e lint
+# =========================
+.coverage
+coverage.xml
+htmlcov/
+.ruff_cache/
