@@ -38,7 +38,7 @@ migrate:
 	$(MANAGE) migrate_schemas --tenant --noinput
 
 css:
-	npx tailwindcss -i ./input.css -o ./static/css/output.css --watch
+	npm run dev
 
 test:
 	$(MANAGE) test

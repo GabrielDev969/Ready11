@@ -7,14 +7,14 @@ WORKDIR /app
 
 # Instala as dependências de build do front-end (Tailwind, PostCSS, autoprefixer)
 COPY package.json package-lock.json* ./
-RUN npm install
+RUN npm ci --ignore-scripts
 
 # O Tailwind precisa varrer os templates para saber quais classes manter
 COPY tailwind.config.js input.css ./
 COPY templates ./templates
 
 # Gera o CSS final minificado em static/css/output.css
-RUN npx tailwindcss -i ./input.css -o ./static/css/output.css --minify
+RUN npm run build
 
 
 # ==========================================

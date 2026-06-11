@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tailwindcss -i ./input.css -o ./static/css/output.css --minify",
+    "dev": "tailwindcss -i ./input.css -o ./static/css/output.css --watch",
     "prepare": "husky"
   },
   "repository": {
@@ -23,11 +24,11 @@
   },
   "homepage": "https://github.com/GabrielDev969/Ready11#readme",
   "devDependencies": {
-    "@commitlint/cli": "^21.0.2",
-    "@commitlint/config-conventional": "^21.0.2",
-    "autoprefixer": "^10.5.0",
-    "husky": "^9.1.7",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^3.4.19"
+    "@commitlint/cli": "21.0.2",
+    "@commitlint/config-conventional": "21.0.2",
+    "autoprefixer": "10.5.0",
+    "husky": "9.1.7",
+    "postcss": "8.5.15",
+    "tailwindcss": "3.4.19"
   }
 }
