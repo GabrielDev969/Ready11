@@ -6,10 +6,13 @@ A **base project for B2B SaaS systems**: Django 6 + PostgreSQL with **schema-iso
 
 > This guide is for someone who **just cloned the repository** and has never run the project before.
 
+> 🚀 **Starting a new project from this template?** See [docs/TEMPLATE_USAGE.md](docs/TEMPLATE_USAGE.md) — create the repo from the GitHub Template, run `python scripts/bootstrap.py MyProject` and follow the printed steps.
+
 ---
 
 ## Table of contents
 
+- [Using as a template](docs/TEMPLATE_USAGE.md)
 - [Stack](#stack)
 - [Prerequisites](#prerequisites)
 - [Quick start (Makefile)](#quick-start-makefile)

@@ -6,10 +6,13 @@ Projeto **base para sistemas SaaS B2B**: Django 6 + PostgreSQL com **multi-tenan
 
 > Este guia foi escrito para quem **acabou de clonar o repositório** e nunca rodou o projeto antes.
 
+> 🚀 **Iniciando um novo projeto a partir deste template?** Veja [docs/TEMPLATE_USAGE.md](docs/TEMPLATE_USAGE.md) — crie o repositório pelo GitHub Template, rode `python scripts/bootstrap.py MeuProjeto` e siga os passos impressos.
+
 ---
 
 ## Sumário
 
+- [Usar como template](docs/TEMPLATE_USAGE.md)
 - [Stack](#stack)
 - [Pré-requisitos](#pré-requisitos)
 - [Setup rápido (Makefile)](#setup-rápido-makefile)

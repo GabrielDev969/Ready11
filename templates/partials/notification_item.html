@@ -11,14 +11,14 @@
             <form action="{% url 'notification_invite_accept' n.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="gss-btn gss-btn-primary gss-btn-sm">
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                     {% trans "Accept" %}
                 </button>
             </form>
             <form action="{% url 'notification_invite_decline' n.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="gss-btn gss-btn-secondary gss-btn-sm">
-                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     {% trans "Decline" %}
                 </button>
             </form>
@@ -26,7 +26,7 @@
         {% else %}
         <p class="mt-1 text-xs text-fg4">{{ n.invite.get_status_display }}</p>
         {% endif %}
-        <p class="mt-1 text-xs text-fg4 font-mono">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+        <p class="mt-1 text-xs text-fg4">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
     </div>
 </div>
 {% else %}
@@ -36,7 +36,7 @@
         <p class="text-body font-medium text-fg">{{ n.title }}</p>
         {% if n.body %}<p class="mt-0.5 truncate text-body text-fg2">{{ n.body|truncatechars:20 }}</p>{% endif %}
         {% if n.workspace %}<p class="mt-0.5 text-xs text-fg4">{{ n.workspace.name }}</p>{% endif %}
-        <p class="mt-1 text-xs text-fg4 font-mono">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
+        <p class="mt-1 text-xs text-fg4">{{ n.created_at|date:"SHORT_DATETIME_FORMAT" }}</p>
     </div>
 </a>
 {% endif %}

@@ -9,7 +9,6 @@ from django.db import transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 import apps.audit.actions as audit_actions
@@ -20,36 +19,17 @@ from .decorators import tenant_permission_required
 from .forms import EmployeeSetupForm, GenesisSetupForm, RoleForm, TeamInviteForm, WorkspaceSettingsForm
 from .models import (
     PERMISSION_GROUPS,
-    Domain,
     InviteStatus,
     Role,
-    Workspace,
     WorkspaceInvite,
     WorkspaceMembership,
     default_expiration,
 )
-from .services import provision_workspace_defaults
+from .services import create_workspace
 from .utils import tenant_permission_set, workspace_home_url
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
-
-# PostgreSQL identifiers (schema names) are limited to 63 bytes.
-MAX_SCHEMA_LENGTH = 63
-RESERVED_SCHEMA_NAMES = {'public', 'pg_catalog', 'information_schema'}
-
-
-def build_schema_name(company_name):
-    """
-    Derive a safe PostgreSQL schema name from a company name.
-
-    Returns a slug (underscores, <=63 chars) or 'workspace' as a safe fallback
-    when the name produces an empty/reserved identifier.
-    """
-    schema = slugify(company_name).replace('-', '_')[:MAX_SCHEMA_LENGTH].strip('_')
-    if not schema or schema in RESERVED_SCHEMA_NAMES or schema.startswith('pg_'):
-        schema = 'workspace'
-    return schema
 
 
 def _send_invite_email(request, invite):
@@ -106,47 +86,10 @@ def genesis_setup_view(request, token):
                         user.set_password(password)
                         user.save()
 
-                    schema_name = build_schema_name(company_name)
-
-                    base_schema_name = schema_name
-                    base_domain_slug = schema_name.replace('_', '-')
-                    counter = 1
-                    # If the schema gets a counter suffix, the domain must match it.
-                    domain_slug = base_domain_slug
-
-                    while Workspace.objects.filter(schema_name=schema_name).exists():
-                        suffix = f"_{counter}"
-                        schema_name = f"{base_schema_name[:MAX_SCHEMA_LENGTH - len(suffix)]}{suffix}"
-                        domain_slug = f"{base_domain_slug}-{counter}"
-                        counter += 1
-
-                    workspace = Workspace.objects.create(
-                        name=company_name,
-                        schema_name=schema_name,
-                    )
-
-                    workspace.owner = user
-                    workspace.save()
-
-                    domain_name = f"{domain_slug}.{settings.TENANT_BASE_DOMAIN}"
-                    Domain.objects.create(
-                        domain=domain_name,
-                        tenant=workspace,
-                        is_primary=True,
-                    )
-
-                    # Create the default roles ("Owner" + "Team Member") and the
-                    # owner's membership (domain already created above).
-                    provision_workspace_defaults(workspace, owner=user)
-
-                    user.default_workspace = workspace
-                    user.save()
+                    workspace = create_workspace(company_name, user, request=request)
 
                     invite.status = InviteStatus.ACCEPTED
                     invite.save()
-
-                    log_action(user, audit_actions.WORKSPACE_CREATED, resource=workspace,
-                               detail={'workspace_name': workspace.name}, request=request)
 
                     login(request, user)
                     return render(request, 'tenants/genesis_success.html', {

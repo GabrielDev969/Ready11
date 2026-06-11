@@ -1,0 +1,23 @@
+{% load i18n %}
+{% if messages %}
+<div id="flash-toasts" class="toast-root" aria-live="polite">
+    {% for message in messages %}
+    <div class="toast {% if 'error' in message.tags %}toast-error{% elif 'warning' in message.tags %}toast-warning{% else %}toast-success{% endif %}" role="status">
+        <div class="toast-title flex-1 min-w-0">{{ message }}</div>
+        <button type="button" class="toast-close" aria-label="{% trans 'Close' %}">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+<script>
+(function () {
+    document.querySelectorAll('#flash-toasts .toast').forEach(function (t) {
+        function dismiss() {
+            t.classList.add('toast-out');
+            setTimeout(function () { t.remove(); }, 200);
+        }
+        t.querySelector('.toast-close').addEventListener('click', dismiss);
+        setTimeout(dismiss, 5000);
+    });
+})();
+</script>
+{% endif %}

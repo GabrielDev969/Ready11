@@ -12,12 +12,12 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.forms import PasswordResetForm as DjangoPasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.translation import gettext as _
+from django.views.i18n import set_language as django_set_language
 from django_otp import login as otp_login
 from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
 from django_otp.plugins.otp_totp.models import TOTPDevice
@@ -99,13 +99,8 @@ def verify_email_view(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.email_verified = True
         user.save()
-        return HttpResponse(
-            "<h1>{}</h1><p>{}</p>".format(
-                _("Email verified successfully!"),
-                _("You can now log in."),
-            )
-        )
-    return HttpResponse("<h1>{}</h1>".format(_("Invalid or expired link.")), status=400)
+        return render(request, 'users/verify_email_result.html', {'success': True})
+    return render(request, 'users/verify_email_result.html', {'success': False}, status=400)
 
 
 def login_view(request):
@@ -175,30 +170,59 @@ def logout_view(request):
     return redirect('landing')
 
 
-def profile_view(request):
+def set_language_view(request):
     """
-    The user's own profile: edit basic info and change password. Works on any
-    host (the user is global). Two forms on one page, distinguished by 'action'.
+    Language switcher endpoint. Wraps Django's ``set_language`` (cookie/session)
+    and also persists the choice as the user's saved preference — otherwise
+    ``UserLanguageMiddleware`` would override the cookie on the next request.
+    """
+    response = django_set_language(request)
+    if request.method == 'POST' and request.user.is_authenticated:
+        lang = request.POST.get('language', '')
+        if lang in dict(settings.LANGUAGES):
+            request.user.language = lang
+            request.user.save(update_fields=['language'])
+    return response
+
+
+def profile_view(request):
+    """The user's own identity: name and email. Security and preferences live
+    in settings. Works on any host (the user is global)."""
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if request.method == 'POST':
+        profile_form = ProfileForm(request.POST, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, _("Profile updated."))
+            return redirect('profile')
+    else:
+        profile_form = ProfileForm(instance=request.user)
+
+    return render(request, 'users/profile.html', {'profile_form': profile_form})
+
+
+def settings_view(request):
+    """
+    Account settings: language preference, password change and 2FA management.
+    Multiple forms on one page, distinguished by 'action'.
     """
     if not request.user.is_authenticated:
         return redirect('login')
 
-    profile_form = ProfileForm(instance=request.user)
-    password_form = PasswordChangeForm(request.user)
     language_form = LanguageForm(instance=request.user)
-    totp_device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
-    static_device = StaticDevice.objects.filter(user=request.user, confirmed=True).first()
-    backup_codes_count = static_device.token_set.count() if static_device else 0
+    password_form = PasswordChangeForm(request.user)
 
     if request.method == 'POST':
         action = request.POST.get('action')
 
-        if action == 'profile':
-            profile_form = ProfileForm(request.POST, instance=request.user)
-            if profile_form.is_valid():
-                profile_form.save()
-                messages.success(request, _("Profile updated."))
-                return redirect('profile')
+        if action == 'language':
+            language_form = LanguageForm(request.POST, instance=request.user)
+            if language_form.is_valid():
+                language_form.save()
+                messages.success(request, _("Language preference saved."))
+                return redirect('settings')
 
         elif action == 'password':
             password_form = PasswordChangeForm(request.user, request.POST)
@@ -207,30 +231,14 @@ def profile_view(request):
                 # Keep the user logged in after the password change.
                 update_session_auth_hash(request, user)
                 messages.success(request, _("Password changed."))
-                return redirect('profile')
+                return redirect('settings')
 
-        elif action == 'language':
-            language_form = LanguageForm(request.POST, instance=request.user)
-            if language_form.is_valid():
-                language_form.save()
-                messages.success(request, _("Language preference saved."))
-                return redirect('profile')
-
-    return render(request, 'users/profile.html', {
-        'profile_form': profile_form,
-        'password_form': password_form,
-        'language_form': language_form,
-        'totp_enabled': bool(totp_device),
-        'backup_codes_count': backup_codes_count,
-    })
-
-
-def settings_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
     totp_device = TOTPDevice.objects.filter(user=request.user, confirmed=True).first()
     static_device = StaticDevice.objects.filter(user=request.user, confirmed=True).first()
+
     return render(request, 'users/settings.html', {
+        'language_form': language_form,
+        'password_form': password_form,
         'totp_enabled': bool(totp_device),
         'backup_codes_count': static_device.token_set.count() if static_device else 0,
     })
@@ -369,7 +377,7 @@ def setup_2fa_view(request):
     user = request.user
 
     if TOTPDevice.objects.filter(user=user, confirmed=True).exists():
-        return redirect('profile')
+        return redirect('settings')
 
     if request.method == 'GET':
         TOTPDevice.objects.filter(user=user, confirmed=False).delete()
@@ -387,7 +395,8 @@ def setup_2fa_view(request):
             StaticDevice.objects.filter(user=user).delete()
             static_device = StaticDevice.objects.create(user=user, name='Backup codes', confirmed=True)
             backup_codes = []
-            for _ in range(8):
+            # NOTE: don't name the loop variable `_` — it would shadow gettext.
+            for _i in range(8):
                 raw = secrets.token_hex(4).upper()
                 code = f'{raw[:4]}-{raw[4:]}'
                 StaticToken.objects.create(device=static_device, token=code)
@@ -449,7 +458,7 @@ def disable_2fa_view(request):
     user = request.user
 
     if not TOTPDevice.objects.filter(user=user, confirmed=True).exists():
-        return redirect('profile')
+        return redirect('settings')
 
     if request.method == 'POST':
         password = request.POST.get('password', '')
@@ -457,7 +466,7 @@ def disable_2fa_view(request):
             TOTPDevice.objects.filter(user=user).delete()
             StaticDevice.objects.filter(user=user).delete()
             messages.success(request, _('Two-factor authentication disabled.'))
-            return redirect('profile')
+            return redirect('settings')
         messages.error(request, _('Incorrect password.'))
 
     return render(request, 'users/2fa_disable.html')

@@ -58,7 +58,7 @@ class ProfileForm(forms.ModelForm):
 class LanguageForm(forms.ModelForm):
     language = forms.ChoiceField(
         label=_('Language'),
-        choices=[('', _('System default (English)'))] + [
+        choices=[('', _('Auto-detect (browser language)'))] + [
             (code, name) for code, name in settings.LANGUAGES
         ],
         required=False,
