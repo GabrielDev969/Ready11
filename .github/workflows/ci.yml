@@ -28,7 +28,9 @@ jobs:
         run: ruff check .
 
       - name: Run Bandit (SAST)
-        run: bandit -r apps Ready11 -x ./apps/*/migrations -ll
+        # -x takes ONE comma-separated argument; an unquoted ./apps/*/migrations
+        # glob expands into multiple paths and breaks the command.
+        run: bandit -r apps Ready11 -x "*/migrations/*" -ll
 
   commitlint:
     runs-on: ubuntu-latest
