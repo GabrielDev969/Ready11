@@ -13,6 +13,7 @@ Ready11 is a **B2B SaaS starter template** (Django 6 + PostgreSQL) meant to be f
 - **Services layer**: business logic lives in `apps/<app>/services.py`; views stay thin. Follow this for new code.
 - **Realtime**: Django Channels + Redis (in-memory fallback in dev) pushes notifications over `ws/notifications/`.
 - **Audit**: call `apps.audit.services.log_action()` for any state-changing user action.
+- **Metrics**: `django-prometheus` exposes `GET /metrics` (optionally gated by `METRICS_TOKEN`); Prometheus (:9090) + Grafana (:3000, dashboard "Django — Overview") ship in docker-compose. DB metrics come from `ORIGINAL_BACKEND` pointing django-tenants at the instrumented postgres backend. See `docs/OBSERVABILITY.md`.
 - **Cleanup schedulers**: notifications, audit logs and invites have retention purges. Pattern: a service function + management command (`cleanup_notifications`, `cleanup_audit_logs`, `cleanup_invites`) + optional in-process daemon scheduler (see `apps/notifications/scheduler.py` and `apps.py` guards). Copy that trio to add another.
 - **Middleware order matters**: `TenantMainMiddleware` first, `AxesMiddleware` last (see `settings.py`).
 
