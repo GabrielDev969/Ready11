@@ -17,7 +17,7 @@ help:
 	@echo "  make messages     Extract translatable strings"
 	@echo "  make compile      Compile .po translation files"
 	@echo "  make check        Run Django deployment checks"
-	@echo "  make docker-up    Start PostgreSQL + Redis services"
+	@echo "  make docker-up    Start PostgreSQL, Redis, Mailpit, Prometheus and Grafana"
 	@echo "  make docker-down  Stop Docker services"
 	@echo "  make clean        Remove compiled/generated files"
 	@echo "  make rename       Rename the template into a new project (name=MyProject)"
@@ -45,7 +45,7 @@ test:
 	$(MANAGE) test
 
 coverage:
-	coverage run $(MANAGE) test
+	coverage run manage.py test
 	coverage report -m
 
 lint:

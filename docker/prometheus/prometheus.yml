@@ -1,0 +1,27 @@
+# Prometheus configuration for Ready11 development.
+#
+# Scrapes the Django app running on the HOST (runserver/daphne on :8000)
+# through Docker's host gateway. In production, point the target at your
+# app container/service instead, and add the bearer token if METRICS_TOKEN
+# is set on the Django side:
+#
+#   authorization:
+#     type: Bearer
+#     credentials: <METRICS_TOKEN value>
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: django
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:8000']
+        labels:
+          app: ready11
+
+  # Prometheus monitoring itself (useful to confirm the stack is alive).
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']

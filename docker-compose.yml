@@ -34,5 +34,46 @@ services:
       - "1025:1025"   # SMTP
       - "8025:8025"   # Web UI
 
+  # ==========================================
+  # Observability: Prometheus + Grafana
+  # ==========================================
+  # Prometheus scrapes the Django /metrics endpoint (django-prometheus).
+  # UI at http://localhost:9090
+  prometheus:
+    image: prom/prometheus:v3.8.0
+    container_name: ready_prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    extra_hosts:
+      # Lets the container reach the host's runserver in dev (Linux needs this
+      # mapping; Docker Desktop on macOS/Windows provides it natively).
+      - "host.docker.internal:host-gateway"
+
+  # Dashboards at http://localhost:3000 (anonymous viewer enabled in dev;
+  # admin login: admin / admin unless GRAFANA_ADMIN_PASSWORD is set).
+  grafana:
+    image: grafana/grafana:12.4.0
+    container_name: ready_grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_USERS_DEFAULT_THEME: system
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
 volumes:
   postgres_data:
+  prometheus_data:
+  grafana_data:
