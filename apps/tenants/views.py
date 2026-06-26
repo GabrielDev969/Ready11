@@ -91,15 +91,15 @@ def genesis_setup_view(request, token):
                     invite.status = InviteStatus.ACCEPTED
                     invite.save()
 
-                    login(request, user)
-                    return render(request, 'tenants/genesis_success.html', {
-                        'workspace': workspace,
-                        'workspace_url': workspace_home_url(request, workspace),
-                    })
-
             except Exception:
                 logger.exception("Failed to provision workspace from genesis invite %s", invite.pk)
                 messages.error(request, _("Something went wrong while provisioning your workspace. Please try again."))
+            else:
+                login(request, user)
+                return render(request, 'tenants/genesis_success.html', {
+                    'workspace': workspace,
+                    'workspace_url': workspace_home_url(request, workspace),
+                })
     else:
         form = GenesisSetupForm()
 
