@@ -123,6 +123,13 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Invite endpoints are not login forms; exclude them so axes doesn't count
+# failed workspace/invite provisioning as authentication failures.
+AXES_EXCLUDE_URLS = [
+    r'^/invite/',
+    r'^/accept-invite/',
+]
+
 
 # ==========================================
 # Email

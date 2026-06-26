@@ -95,7 +95,7 @@ def genesis_setup_view(request, token):
                 logger.exception("Failed to provision workspace from genesis invite %s", invite.pk)
                 messages.error(request, _("Something went wrong while provisioning your workspace. Please try again."))
             else:
-                login(request, user)
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return render(request, 'tenants/genesis_success.html', {
                     'workspace': workspace,
                     'workspace_url': workspace_home_url(request, workspace),
@@ -368,7 +368,7 @@ def accept_invite_view(request, token):
 
                         log_action(user, audit_actions.MEMBER_JOINED, resource=invite,
                                    detail={'email': user.email, 'role': invite.role.name}, request=request)
-                        login(request, user)
+                        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                         return redirect('tenant_home')
 
                 except Exception:
