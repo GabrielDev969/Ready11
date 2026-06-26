@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db import connection
 from django.utils import timezone
 from django.utils.text import slugify
 
@@ -107,6 +108,11 @@ def create_workspace(name, owner, request=None):
 
     log_action(owner, audit_actions.WORKSPACE_CREATED, resource=workspace,
                detail={'workspace_name': workspace.name}, request=request)
+
+    # auto_create_schema runs tenant migrations in a schema_context, which may
+    # leave the connection pointing at the new tenant schema. Reset to public so
+    # callers (and the session middleware) operate on the correct schema.
+    connection.set_schema_to_public()
 
     return workspace
 
